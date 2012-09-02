@@ -1,7 +1,7 @@
 # Board Ultimatum WebApp
 
-A [noir]() webapp acting as the front-end to the board-ultimatum board game
-recommendation engine.
+A [noir](https://github.com/noir-clojure/noir/blob/master/project.clj) webapp
+acting as the front-end to the board-ultimatum board game recommendation engine.
 
 ## Usage
 
