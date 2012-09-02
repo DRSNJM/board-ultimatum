@@ -1,10 +1,11 @@
-# board-ultimatum
+# Board Ultimatum WebApp
 
-A website written in noir.
+A [noir]() webapp acting as the front-end to the board-ultimatum board game
+recommendation engine.
 
 ## Usage
 
-If you use cake, substitute 'lein' with 'cake' below. Everything should work fine.
+Just get the dependencies and run the web app.
 
 ```bash
 lein deps
@@ -13,7 +14,6 @@ lein run
 
 ## License
 
-Copyright (C) 2011 FIXME
+Copyright (C) 2012 DRSNJM
 
 Distributed under the Eclipse Public License, the same as Clojure.
-
