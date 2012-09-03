@@ -1,4 +1,3 @@
-ORIGINAL_BRANCH=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 DOCS_BRANCH=gh-pages
 SEPARATOR="============================================================================"
 
@@ -21,7 +20,7 @@ prepare_docs: marg
 	git checkout gh-pages
 	cp .git/_deploy/* .
 	-git commit -am "Updating documentation."
-	@git checkout master > /dev/null
+	@git checkout - > /dev/null
 	@echo
 
 # Deploy prepared documents
