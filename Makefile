@@ -19,7 +19,7 @@ prepare_docs: marg
 	cp docs/* .git/_deploy/
 	git checkout gh-pages
 	cp .git/_deploy/* .
-	-git commit -am "Updating documentation."
+	-git commit -am "Update documentation."
 	@git checkout - > /dev/null
 	@echo
 
