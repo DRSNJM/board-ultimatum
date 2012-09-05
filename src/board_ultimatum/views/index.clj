@@ -1,4 +1,4 @@
-(ns board-ultimatum.views.welcome
+(ns board-ultimatum.views.index
   (:require [board-ultimatum.views.common :as common])
   (:use [noir.core :only [defpage]]))
 
