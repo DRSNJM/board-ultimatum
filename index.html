@@ -3031,7 +3031,20 @@ net.brehaut.ClojureTools = (function (SH) {
 })(SyntaxHighlighter);
 </script><title>board-ultimatum -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">board-ultimatum</h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>Noir front-end to the board-ultimatum board game recomendation
                engine.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0-beta10</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#board-ultimatum.server">board-ultimatum.server</a></li><li><a href="#board-ultimatum.views.common">board-ultimatum.views.common</a></li><li><a href="#board-ultimatum.views.welcome">board-ultimatum.views.welcome</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.server" name="board-ultimatum.server"><h1 class="project-name">board-ultimatum.server</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0-beta10</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#board-ultimatum.config">board-ultimatum.config</a></li><li><a href="#board-ultimatum.server">board-ultimatum.server</a></li><li><a href="#board-ultimatum.views.common">board-ultimatum.views.common</a></li><li><a href="#board-ultimatum.views.welcome">board-ultimatum.views.welcome</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.config" name="board-ultimatum.config"><h1 class="project-name">board-ultimatum.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.config
+  (:require [clojure.string :as string]
+            [clojure.java.io :as io]))</pre></td></tr><tr><td class="docs"><p>Define a map read from config.clj on the resource path.</p>
+</td><td class="codes"><pre class="brush: clojure">(def config-from-file
+  (if-let [cres (io/resource &quot;config.clj&quot;)]
+    (-&gt; cres (.getPath) (load-file))
+    {}))</pre></td></tr><tr><td class="docs"><p>Reads config by first accessing the map from the config file and falling back
+  on environment variables. This is heroku "friendly".</p>
+</td><td class="codes"><pre class="brush: clojure">(defn read-config
+  [config-var]
+  (get config-from-file
+       (keyword (string/replace (string/lower-case config-var) &quot;_&quot; &quot;-&quot;))
+       (System/getenv config-var)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.server" name="board-ultimatum.server"><h1 class="project-name">board-ultimatum.server</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.server
   (:require [noir.server :as server]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(server/load-views-ns 'board-ultimatum.views)</pre></td></tr><tr><td class="docs">
