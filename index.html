@@ -3054,21 +3054,90 @@ net.brehaut.ClojureTools = (function (SH) {
     (server/start port {:mode mode
                         :ns 'board-ultimatum})))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.common" name="board-ultimatum.views.common"><h1 class="project-name">board-ultimatum.views.common</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.common
+  (:require [clojure.string :as string]
+            [noir.session :as sess])
   (:use [noir.core :only [defpartial]]
-        [hiccup.page :only [include-css html5]]))</pre></td></tr><tr><td class="docs">
+        [hiccup.core]
+        [hiccup.element]
+        [hiccup.page :only [include-js include-css html5]]))</pre></td></tr><tr><td class="docs"><h2>Macros</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Set a dynamicly bindable default site title.</p>
+</td><td class="codes"><pre class="brush: clojure">(def site-title &quot;Board Ultimatum&quot;)
+(def ^:dynamic *site-title* site-title)</pre></td></tr><tr><td class="docs"><p>Specify what site title to use dynamically.</p>
+</td><td class="codes"><pre class="brush: clojure">(defmacro with-title
+  [title &amp; body]
+  `(binding [*site-titel ~title]
+     ~@body))</pre></td></tr><tr><td class="docs"><p>Set a dynamicly bindable default vector of js files to include.</p>
+</td><td class="codes"><pre class="brush: clojure">(def ^:dynamic *javascripts* [&quot;/js/bootstrap.min.js&quot;])</pre></td></tr><tr><td class="docs"><p>Specify what javascripts to use dynamically.</p>
+</td><td class="codes"><pre class="brush: clojure">(defmacro with-javascripts
+  [js-paths &amp; body]
+  `(binding [*javascripts* ~js-paths]
+     ~@body))</pre></td></tr><tr><td class="docs"><h2>Helper Functions</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Displays an alert box.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn alert
+  ([class type message show-close?]
+   [:div {:id &quot;flash&quot; :class (str &quot;alert fade in alert-&quot; (name class))}
+    (when show-close?
+      [:a.close {:data-dismiss &quot;alert&quot;} &quot;&amp;times;&quot;])
+    [:strong (if (keyword? type)
+               (string/capitalize (name type))
+               type) &quot; &quot;] message])
+  ([class type message] (alert class type message true))
+  ([type message] (alert type type message true)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defpartial layout [&amp; content]
             (html5
               [:head
-               [:title &quot;board-ultimatum&quot;]
-               (include-css &quot;/css/reset.css&quot;)]
+               [:title &quot;Board Ultimatum&quot;]
+               (include-css &quot;/css/bootstrap.css.min&quot;)]
               [:body
                [:div#wrapper
-                content]]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.welcome" name="board-ultimatum.views.welcome"><h1 class="project-name">board-ultimatum.views.welcome</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+                content]]))</pre></td></tr><tr><td class="docs"><h2>Layouts</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Base layout used by the web app.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial base-layout [&amp; content]
+  (html5
+    [:head
+     [:title *site-title*]
+     ; Meta Tag Necessary for Twitter Boostrap
+     [:meta {:name &quot;viewport&quot;
+             :content &quot;width=device-width, initial-scale=1.0&quot;}]
+     [:link {:rel &quot;shortcut icon&quot; :type &quot;image/x-icon&quot; :href &quot;/favicon.ico&quot;}]
+     (include-css &quot;/css/bootstrap.min.css&quot;)
+     ; Get jQuery
+     (include-js (str &quot;https://ajax.googleapis.com/ajax/libs/&quot;
+                      &quot;jquery/1.7.2/jquery.min.js&quot;)
+                 &quot;/js/jquery-1.7.2.min.js&quot;)]
+    [:body
+     content
+     (html (map include-js *javascripts*))]))</pre></td></tr><tr><td class="docs"><p>Standard layout used by most pages on the website.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial layout [&amp; content]
+  (base-layout
+    [:div#navbar.navbar.navbar-fixed-top
+     [:div.navbar-inner
+      [:div.container-fluid
+       [:a.btn.btn-navbar
+        {:data-toggle &quot;collapse&quot; :data-target &quot;.nav-collapse&quot;}
+        [:span.icon-bar] [:span.icon-bar] [:span.icon-bar]]
+       [:a.brand.dropdown-toggle {:href &quot;/&quot;} site-title]
+       [:div.nav-collapse
+        [:ul.nav
+         [:li.divider-vertical]
+         [:li [:a
+               {:href &quot;http://drsnjm.github.com/board-ultimatum&quot;}
+               &quot;Documentation&quot;]]
+         [:li [:a
+               {:href &quot;https://github.com/DRSNJM/board-ultimatum&quot;}
+               &quot;Source&quot;]]]]]]]
+    [:div#main-wrapper
+     [:div#main.container-fluid
+      (when-let [{t :type c :class m :message} (sess/flash-get :alert)]
+        (alert (if (nil? c) t c) t m))
+      content
+      [:footer#footer.footer
+       [:a.label.label-success {:href &quot;http://drsnjm.github.com/about/&quot;} &quot;About&quot;]
+       &quot; &amp;copy; 2012 &quot; (link-to &quot;http://drsnjm.github.com/&quot; &quot;DRSNJM&quot;)]]]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.welcome" name="board-ultimatum.views.welcome"><h1 class="project-name">board-ultimatum.views.welcome</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.welcome
-  (:require [board-ultimatum.views.common :as common]
-            [noir.content.getting-started])
+  (:require [board-ultimatum.views.common :as common])
   (:use [noir.core :only [defpage]]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defpage &quot;/welcome&quot; []
+</td><td class="codes"><pre class="brush: clojure">(defpage &quot;/&quot; []
          (common/layout
            [:p &quot;Welcome to board-ultimatum&quot;]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
        SyntaxHighlighter.all()</script></body></html>
