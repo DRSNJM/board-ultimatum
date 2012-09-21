@@ -4,4 +4,7 @@
 
 (defpage "/" []
          (common/layout
-           [:p "Welcome to board-ultimatum"]))
+           [:h1 "Welcome to board-ultimatum"]
+           [:p "The board-ultimatum is a board game recommendation system" 
+               [:br] 
+               "This system is implemented in Clojure"]))
