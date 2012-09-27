@@ -13,7 +13,7 @@ bootstrap:
 	$(ECHO) "\n${SEPARATOR}"
 	$(ECHO) "Copying bootstrap generated assets into resources/public/"
 	$(ECHO) ${SEPARATOR}
-	cp -R resources/bootstrap/bootstrap/* resources/public/
+	cp -R ${BOOTSTRAP_DIR}bootstrap/* resources/public/
 	$(ECHO) "\n${SEPARATOR}"
 	$(ECHO) "Cleaning up..."
 	$(ECHO) ${SEPARATOR}
@@ -21,7 +21,7 @@ bootstrap:
 
 # Quickly regenerate less.  For development use only.
 quickbs:
-	recess --compile ${BOOTSTRAP_DIR}less/bootstrap.less > resource/public/css/bootstrap.min.css
+	recess --compile ${BOOTSTRAP_DIR}less/bootstrap.less > resources/public/css/bootstrap.min.css
 
 watch:
 	$(ECHO) "Watching less files..."; \
