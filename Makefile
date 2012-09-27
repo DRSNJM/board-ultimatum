@@ -72,3 +72,7 @@ init_docs:
 	$(ECHO) "\tAttempting an initial commit. . ."
 	$(ECHO)
 	git commit -m "Initial commit."
+
+deps:
+	$(ECHO) "Get dependencies for building bootstrap."
+	sudo npm install recess connect uglify-js jshint -g
