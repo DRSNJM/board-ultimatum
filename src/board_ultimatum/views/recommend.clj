@@ -1,5 +1,6 @@
 (ns board-ultimatum.views.recommend
   (:require [board-ultimatum.views.common :as common])
+  (:require [board-ultimatum.engine :as engine])
   (:use [noir.core :only [defpage]]))
 
 (defpage "/recommend" []
@@ -15,4 +16,4 @@
     (common/layout
         [:h1 "Here are your results"]
         [:h2 "Have fun playing!"]
-        [:p (str "You wanted a game with " num-players " players")]))
+        [:p (str "Your games: " (str (list (engine/query3 (Integer/parseInt num-players) 0))))]))
