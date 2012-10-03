@@ -21,7 +21,7 @@ bootstrap:
 
 # Quickly regenerate less.  For development use only.
 quickbs:
-	recess --compile ${BOOTSTRAP_DIR}less/bootstrap.less > resources/public/css/bootstrap.min.css
+	recess --compile ${BOOTSTRAP_DIR}less/board-ultimatum.less > resources/public/css/bootstrap.min.css
 
 watch:
 	$(ECHO) "Watching less files..."; \
