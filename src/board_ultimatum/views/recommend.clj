@@ -6,7 +6,13 @@
     (common/layout
         [:h1 "Want a game recommendation?"]
         [:h2 "Fill in the inputs below with your preferences"]
-        [:form {:action "/games"} 
+        [:form {:action "/recommend" :method "post"} 
             [:dl [:dt "Number of players"]
-                 [:dd [:input {:id "num-players"}]]]
+                 [:dd [:input {:name "num-players"}]]]
             [:input {:type "submit" :value "Search"}]]))
+
+(defpage [:post "/recommend"] {:keys [num-players]}
+    (common/layout
+        [:h1 "Here are your results"]
+        [:h2 "Have fun playing!"]
+        [:p (str "You wanted a game with " num-players " players")]))
