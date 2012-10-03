@@ -5,4 +5,7 @@
 (defpage "/recommend" []
          (common/layout
            [:h1 "Want a game recommendation?"]
-           [:h2 "Fill in the inputs below with your preferences"]))
+           [:h2 "Fill in the inputs below with your preferences"]
+           [:form {:action "/games"} [:dl [:dt "Number of players"]
+                       [:dd [:input {:id "num-players"}]]]
+                  [:input {:type "submit" :value "Search"}]]))
