@@ -3,7 +3,5 @@
                engine."
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [noir "1.3.0-beta10"]
-                 [board-ultimatum-engine "0.1.0-SNAPSHOT"]
-                 [org.clojure/core.logic "0.7.5"]
-                 [com.leadtune/clj-ml "0.2.4"]]
+                 [board-ultimatum-engine "0.1.0-SNAPSHOT"]]
   :main board-ultimatum.server)
