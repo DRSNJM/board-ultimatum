@@ -14,6 +14,20 @@ lein run
 
 You can also launch a REPL with `lein repl`.
 
+### Datastore
+
+You need mongo to run the web app. Once mongo is installed and running all the
+current setup should work out of the box. By default it will use a database
+called "*board*". To change this simply copy the given sample config and modify
+it.
+
+```bash
+cp resources/config.sample.clj resources/config.clj
+$EDITOR resources/config.clj
+```
+
+This file is read during the `-main` function.
+
 ### Modifying styles
 
 You'll want to get the [our bootstrap](https://github.com/DRSNJM/bootstrap)
@@ -29,7 +43,7 @@ Or if you have already cloned, from the base of the repository:
 Once you've pulled in the submodule you can use the Makefile in the root of this
 project. It has four helpful tasks:
 
-1.  `make deps` -- Install bootstrap compiliation dependencies. Requires having
+1.  `make deps` -- Install bootstrap compilation dependencies. Requires having
     npm installed already.
 2.  `make bootstrap` -- The default task (so simply running `make` will work
     just as well) compiles all bootstrap resources completely.
