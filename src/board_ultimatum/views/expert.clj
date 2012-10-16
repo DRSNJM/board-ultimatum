@@ -1,6 +1,7 @@
 (ns board-ultimatum.views.expert
   (:require [board-ultimatum.views.common :as common])
-  (:use [noir.core :only [defpage]]))
+  (:use [noir.core :only [defpage]])
+  (:use [hiccup.page]))
 
 ; grid-cols must divide 12
 (def grid-cols 3)
@@ -24,17 +25,7 @@
 
 (defpage [:get "/expert-select"] []
   (common/layout
-    [:script {:type "text/javascript"}
-      "// make game selections toggle hidden input
-      $('.btn-input').live('click', function(event){
-        event.preventDefault();
-        var input = $(this).find('input[type=hidden]');
-        if (input.val() == 'off') {
-          input.val('on');
-        } else {
-          input.val('off');
-        }
-      });"]
+    (include-js "/js/expert.js")
 
     [:h1 "Welcome, Board Game Expert!"]
     [:h2 "Please select games that you are familiar with:"]
