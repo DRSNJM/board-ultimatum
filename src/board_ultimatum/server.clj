@@ -7,13 +7,16 @@
 
 (defn -main [& m]
   (let [mode (keyword (or (first m) :dev))
-        port (Integer. (get (System/getenv) "PORT" "8080"))]
+        port (Integer. (get (System/getenv) "PORT" "8080"))
+        connection-info (if (nil? (:db-name config/storage))
+                          (assoc config/storage :db-name "board")
+                          config/storage)]
     (try
-      (model/connect)
+      (model/connect connection-info)
       (server/start port {:mode mode
                           :ns 'board-ultimatum})
       (catch java.io.IOException e
         (println "ERROR: Could not connect to MongoDB."))
       (catch java.lang.NullPointerException e
         (println "ERROR: Could not authenticate with Mongo. See config: \n\t"
-                 (str (assoc config/storage :password "********")))))))
+                 (str (assoc connection-info :password "********")))))))
