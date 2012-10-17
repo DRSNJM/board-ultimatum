@@ -13,21 +13,23 @@
       [:button {:type "button" :class "btn btn-success"} [:i {:class "icon-thumbs-up"}]]]
    [:input {:type "hidden" :name (str "mechanic[" form-name "]") :value "0"}]])
 
+;; Page for querying the logic based recommendation engine.
 (defpage "/recommend" []
     (common/layout
       (include-js "/js/recommend.js")
 
         [:h1 "Want a game recommendation?"]
         [:h2 "Fill in the inputs below with your preferences"]
-        [:div {:class "row-fluid"}
+        [:div#recommend.row-fluid
+         [:div#sidebar.span3
+          [:ul#select.span3.nav.nav-pills.nav-stacked.affix
+            [:li#length [:a "Game Length"]]
+            [:li#num-players [:a "Number of Players"]]
+            [:li#mechanics [:a "Mechanics"]]
+            [:li#weight [:a "Weight"]]]]
 
-          [:ul {:id "select" :class "span2 offset2 nav nav-pills nav-stacked affix"}
-            [:li {:id "length" :style "cursor:pointer;"} [:a "Game Length"]]
-            [:li {:id "num-players" :style "cursor:pointer;"} [:a "Number of Players"]]
-            [:li {:id "mechanics" :style "cursor:pointer;"} [:a "Mechanics"]]
-            [:li {:id "weight" :style "cursor:pointer;"} [:a "Weight"]]]
-
-          [:form {:id "game-params" :class "span4 offset5" :action "/recommend" :method "post"}
+         [:div.span9
+          [:form#game-params {:action "/recommend" :method "post"}
 
             [:div {:id "input-length" :class "param well well-small"}
               [:input {:type "hidden" :name "length-active" :value "false"}]
@@ -45,8 +47,8 @@
               [:input {:type "hidden" :name "mechanics-active" :value "false"}]
               [:h3 "Mechanics"]
               [:p "Select gameplay mechanics that you like or dislike"]
-              (build-tri-state "Hand Management" "card-draft")
-              (build-tri-state "Deck Building" "card-draft")
+              (build-tri-state "Hand Management" "hand-management")
+              (build-tri-state "Deck Building" "deck-building")
               (build-tri-state "Card Drafting" "card-draft")
               ]
 
@@ -56,9 +58,7 @@
               [:p "This is a description of this field"]
               [:input {:type "text" :name "weight-value"}]]
 
-              
-            [:button {:type "submit" :class "btn"} "Submit"]]]))
-
+            [:button {:type "submit" :class "btn"} "Submit"]]]]))
 
 ;; Process queries received from the interface
 (defpage [:post "/recommend"] {:as params}
