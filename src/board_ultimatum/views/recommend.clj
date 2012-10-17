@@ -25,8 +25,8 @@
   [:div.selection
    [:label.checkbox
     [:div.icon.time]
-    (check-box num false num)
-    [:div.bottom-label num]]])
+    (check-box "length[]" false num)
+    [:div.bottom-label (game-length num)]]])
 
 ;; Page for querying the logic based recommendation engine.
 (defpage "/recommend" []
@@ -49,7 +49,7 @@
               [:input {:type "hidden" :name "length-active" :value "false"}]
               [:h3 "Game Length"]
               [:p "This is a description of this field"]
-              (map time-checkboxes ["<20 minutes" "~30 minutes" "~45 minutes" "~1 hour" "~2 hours" "~3 hours" "~4 hours" "5+ hours"])]
+              (map time-checkboxes [20 30 45 60 90 120 180 240 300])]
 
             [:div {:id "input-num-players" :class "param well well-small"}
               [:input {:type "hidden" :name "num-players-active" :value "false"}]
@@ -94,7 +94,7 @@
    [:td (:min_age game) "+"]])
 
 (defpage [:post "/recommend"] {:as params}
-  (println "POST PARAMS: " params)
+;  (println "POST PARAMS: " (params :length))
     (common/layout
         [:h1 "Have fun playing!"]
         [:table.games.table.table-striped
@@ -108,7 +108,10 @@
           [:th "Min Age"]]
          [:tbody
           (map display-game
-               (sort #(compare (:rank %1) (:rank %2))
-                     (model/find-by-length 20 30)))]]))
+               (take 30
+                     (sort #(compare (:rank %1) (:rank %2))
+                           (model/find-by-length
+                            (map #(Integer/parseInt %)
+                                 (params :length))))))]]))
 
 ; (model/find-by-players 5 10)

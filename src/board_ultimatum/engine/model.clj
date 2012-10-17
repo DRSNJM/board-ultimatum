@@ -47,7 +47,7 @@
   Usage: (times [30 45]) => (25 30 35 40 45 50)"
   (mapcat #(time-map %) selected))
 
-(defn find-by-length [& selected-times]
+(defn find-by-length [selected-times]
     "Queries mongo for games matching any of the selected time ranges."
     (let [collection "board_games"]
       (mc/find-maps collection {:length {$in (times selected-times)}})))
