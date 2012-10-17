@@ -10021,6 +10021,10 @@ a.badge:hover {
   cursor: pointer;
 }
 
+#recommend #game-params .param {
+  overflow: hidden;
+}
+
 .btn-group.tri-state .btn.option {
   min-width: 13em;
 }
@@ -10032,17 +10036,16 @@ a.badge:hover {
 }
 
 .selection {
-  position: relative;
   float: left;
   width: 100px;
   height: 84px;
 }
 
+.selection label {
+  cursor: pointer;
+}
+
 .selection .icon {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
   width: 64px;
   height: 64px;
   margin: 0 auto;
@@ -10070,9 +10073,5 @@ a.badge:hover {
 }
 
 .selection .bottom-label {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
   text-align: center;
 }
