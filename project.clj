@@ -3,5 +3,7 @@
                engine."
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [noir "1.3.0-beta10"]
-                 [board-ultimatum-engine "0.1.0-SNAPSHOT"]]
+                 [enclog "0.5.8-SNAPSHOT"]
+                 [org.clojure/core.logic "0.7.5"]
+                 [com.novemberain/monger "1.1.2"]]
   :main board-ultimatum.server)
