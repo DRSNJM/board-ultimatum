@@ -9,7 +9,7 @@
   (let [mode (keyword (or (first m) :dev))
         port (Integer. (get (System/getenv) "PORT" "8080"))
         connection-info (if (nil? (:db-name config/storage))
-                          (assoc config/storage :db-name "board")
+                          (assoc config/storage :db-name "board_ultimatum")
                           config/storage)]
     (try
       (model/connect connection-info)
