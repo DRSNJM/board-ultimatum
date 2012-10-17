@@ -84,7 +84,7 @@
      [:div#main.container-fluid
       (when-let [{t :type c :class m :message} (sess/flash-get :alert)]
         (alert (if (nil? c) t c) t m))
-      content
-      [:footer#footer.footer
-       [:a.label.label-success {:href "http://drsnjm.github.com/about/"} "About"]
-       " &copy; 2012 " (link-to "http://drsnjm.github.com/" "DRSNJM")]]]))
+      content]
+     [:footer#footer.container-fluid
+      [:a.label.label-success {:href "http://drsnjm.github.com/about/"} "About"]
+      " &copy; 2012 " (link-to "http://drsnjm.github.com/" "DRSNJM")]]))
