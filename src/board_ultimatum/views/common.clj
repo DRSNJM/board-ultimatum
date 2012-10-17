@@ -54,9 +54,7 @@
      [:link {:rel "shortcut icon" :type "image/x-icon" :href "/favicon.ico"}]
      (include-css "/css/bootstrap.min.css")
      ; Get jQuery
-     (include-js (str "https://ajax.googleapis.com/ajax/libs/"
-                      "jquery/1.7.2/jquery.min.js")
-                 "/js/jquery-1.7.2.min.js")]
+     (include-js "/js/jquery-1.7.2.min.js")]
     [:body
      content
      (html (map include-js *javascripts*))]))
@@ -84,7 +82,7 @@
      [:div#main.container-fluid
       (when-let [{t :type c :class m :message} (sess/flash-get :alert)]
         (alert (if (nil? c) t c) t m))
-      content
-      [:footer#footer.footer
-       [:a.label.label-success {:href "http://drsnjm.github.com/about/"} "About"]
-       " &copy; 2012 " (link-to "http://drsnjm.github.com/" "DRSNJM")]]]))
+      content]
+     [:footer#footer.container-fluid
+      [:a.label.label-success {:href "http://drsnjm.github.com/about/"} "About"]
+      " &copy; 2012 " (link-to "http://drsnjm.github.com/" "DRSNJM")]]))

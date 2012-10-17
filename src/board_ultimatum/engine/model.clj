@@ -22,7 +22,8 @@
       (when (not (nil? (:username connection-info)))
         (mg/authenticate db-name
                          (:username connection-info)
-                         (into-array Character/TYPE (:password connection-info))))
+                         (into-array Character/TYPE
+                                     (:password connection-info))))
       (mg/set-db! (mg/get-db db-name))))
   ; Set up the indexes necessary for decent performance.
   (ensure-indexes))
@@ -40,7 +41,10 @@
    360 [420 480 600 720 1200 6000]})
 
 (defn times [selected]
-  "Turns user inputted time approx. ranges into database queries matching the actual game lengths in the database. Usage: (times [30 45]) => (25 30 35 40 45 50)"
+  "Turns user inputted time approx. ranges into database queries matching the
+  actual game lengths in the database.
+
+  Usage: (times [30 45]) => (25 30 35 40 45 50)"
   (mapcat #(time-map %) selected))
 
 (defn find-by-length [& selected-times]

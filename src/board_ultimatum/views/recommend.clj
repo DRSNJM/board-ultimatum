@@ -1,66 +1,77 @@
 (ns board-ultimatum.views.recommend
-  (:require [board-ultimatum.views.common :as common])
-  (:require [board-ultimatum.engine.model :as model])
-  (:use [noir.core :only [defpage]]
-        [hiccup.element]))
+  (:require [board-ultimatum.views.common :as common]
+            [board-ultimatum.engine.model :as model])
+  (:use [noir.core :only [defpage defpartial]]
+        [hiccup.element]
+        [hiccup.form]))
 
+;; Build preference selection button
+(defpartial build-tri-state [name form-name]
+  [:div
+    [:div {:class "btn-group tri-state"}
+      [:button {:type "button" :class "btn btn-danger"} [:i {:class "icon-thumbs-down"}]]
+      [:button {:type "button" :class "btn option"} name]
+      [:button {:type "button" :class "btn btn-success"} [:i {:class "icon-thumbs-up"}]]]
+   [:input {:type "hidden" :name (str "mechanic[" form-name "]") :value "0"}]])
+
+(defn player-checkboxes [num]
+  [:div.selection
+   [:label.checkbox
+    [:div.icon.player]
+    (check-box num false num)
+    [:div.bottom-label (str num " Players")]]])
+
+(defn time-checkboxes [num]
+  [:div.selection
+   [:label.checkbox
+    [:div.icon.time]
+    (check-box num false num)
+    [:div.bottom-label num]]])
+
+;; Page for querying the logic based recommendation engine.
 (defpage "/recommend" []
-    (common/layout
-
-        [:script {:type "text/javascript"}
-          "$(document).ready(function(){
-            $('.param').hide();
-            
-            $('#select li').click(function() {
-              $(this).toggleClass('active');
-              $('#input-' + $(this).attr('id')).toggle('medium', function() {
-              });
-              var active = $('input[name=' + $(this).attr('id') + '-active]');
-              $(active[0]).attr('value', $(active[0]).attr('value') == 'false' ? 'true' : 'false');
-              
-            });
-          });"
-        ]
-
+    (common/with-javascripts (cons "/js/recommend.js" common/*javascripts*)
+      (common/layout
         [:h1 "Want a game recommendation?"]
         [:h2 "Fill in the inputs below with your preferences"]
-        [:div {:class "row-fluid"}
+        [:div#recommend.row-fluid
+         [:div#sidebar.span3
+          [:ul#select.span3.nav.nav-pills.nav-stacked.affix
+            [:li#length [:a "Game Length"]]
+            [:li#num-players [:a "Number of Players"]]
+            [:li#mechanics [:a "Mechanics"]]
+            [:li#weight [:a "Weight"]]]]
 
-          [:ul {:id "select" :class "span3 nav nav-pills nav-stacked"}
-            [:li {:id "param1" } [:a {:href "#"} "param1"]]
-            [:li {:id "param2" } [:a {:href "#"} "param2"]]
-            [:li {:id "param3" } [:a {:href "#"} "param3"]]
-            [:li {:id "param4" } [:a {:href "#"} "param4"]]]
+         [:div.span9
+          [:form#game-params {:action "/recommend" :method "post"}
 
-          [:form {:id "game-params" :class "span9" :action "/recommend" :method "post"} 
-
-            [:div {:id "input-param1" :class "param well well-small"}
-              [:h3 "param1"]
+            [:div {:id "input-length" :class "param well well-small"}
+              [:input {:type "hidden" :name "length-active" :value "false"}]
+              [:h3 "Game Length"]
               [:p "This is a description of this field"]
-              [:input {:hidden "text" :name "param1-active" :value "false"}]
-              [:input {:type "text" :name "param1-value"}]]
+              (map time-checkboxes ["<20 minutes" "~30 minutes" "~45 minutes" "~1 hour" "~2 hours" "~3 hours" "~4 hours" "5+ hours"])]
 
-            [:div {:id "input-param2" :class "param well well-small"}
-              [:h3 "param2"]
+            [:div {:id "input-num-players" :class "param well well-small"}
+              [:input {:type "hidden" :name "num-players-active" :value "false"}]
+              [:h3 "Number of Players"]
               [:p "This is a description of this field"]
-              [:input {:hidden "text" :name "param2-active" :value "false"}]
-              [:input {:type "text" :name "param2-value"}]]
+              (map player-checkboxes ["1" "2" "3" "4" "5" "6" "7+"])]
 
-            [:div {:id "input-param3" :class "param well well-small"}
-              [:h3 "param3"]
+            [:div {:id "input-mechanics" :class "param well well-small"}
+              [:input {:type "hidden" :name "mechanics-active" :value "false"}]
+              [:h3 "Mechanics"]
+              [:p "Select gameplay mechanics that you like or dislike"]
+              (build-tri-state "Hand Management" "hand-management")
+              (build-tri-state "Deck Building" "deck-building")
+              (build-tri-state "Card Drafting" "card-draft")]
+
+            [:div {:id "input-weight" :class "param well well-small"}
+              [:input {:type "hidden" :name "weight-active" :value "false"}]
+              [:h3 "Weight"]
               [:p "This is a description of this field"]
-              [:input {:hidden "text" :name "param3-active" :value "false"}]
-              [:input {:type "text" :name "param3-value"}]]
+              [:input {:type "text" :name "weight-value"}]]
+            [:button {:type "submit" :class "btn"} "Submit"]]]])))
 
-            [:div {:id "input-param4" :class "param well well-small"}
-              [:h3 "param4"]
-              [:p "This is a description of this field"]
-              [:input {:hidden "text" :name "param4-active" :value "false"}]
-              [:input {:type "text" :name "param4-value"}]]
-
-              
-            [:button {:type "submit" :class "btn"} "Submit"]]
-        ]))
 
 (defn num-players [min-players max-players]
   (cond
@@ -82,8 +93,8 @@
    [:td (num-players (:min_players game) (:max_players game))]
    [:td (:min_age game) "+"]])
 
-(defpage [:post "/recommend"] {:keys [lengths]}
-  (println "POST PARAMS: " lengths)
+(defpage [:post "/recommend"] {:as params}
+  (println "POST PARAMS: " params)
     (common/layout
         [:h1 "Have fun playing!"]
         [:table.games.table.table-striped
@@ -98,6 +109,6 @@
          [:tbody
           (map display-game
                (sort #(compare (:rank %1) (:rank %2))
-                     (model/find-by-length lengths)))]]))
+                     (model/find-by-length 20 30)))]]))
 
 ; (model/find-by-players 5 10)
