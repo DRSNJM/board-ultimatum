@@ -1,7 +1,8 @@
 (ns board-ultimatum.views.recommend
   (:require [board-ultimatum.views.common :as common])
-  (:use [noir.core :only [defpage defpartial]]))
-
+  (:use [noir.core :only [defpage defpartial]]
+        [hiccup.element]
+        [hiccup.form]))
 
 ;; Build preference selection button
 (defpartial build-tri-state [name form-name]
@@ -11,6 +12,20 @@
       [:button {:type "button" :class "btn option"} name]
       [:button {:type "button" :class "btn btn-success"} [:i {:class "icon-thumbs-up"}]]]
    [:input {:type "hidden" :name (str "mechanic[" form-name "]") :value "0"}]])
+
+(defn player-checkboxes [num]
+  [:div.selection
+   [:label.checkbox
+    [:div.icon.player]
+    (check-box num false num)
+    [:span.bottom-label (str num " Players")]]])
+
+(defn time-checkboxes [num]
+  [:div.selection
+   [:label.checkbox
+    [:div.icon.time]
+    (check-box num false num)
+    [:span.bottom-label num]]])
 
 ;; Page for querying the logic based recommendation engine.
 (defpage "/recommend" []
@@ -33,13 +48,13 @@
               [:input {:type "hidden" :name "length-active" :value "false"}]
               [:h3 "Game Length"]
               [:p "This is a description of this field"]
-              [:input {:type "text" :name "length-value"}]]
+              (map time-checkboxes ["<20 minutes" "~30 minutes" "~45 minutes" "~1 hour" "~2 hours" "~3 hours" "~4 hours" "5+ hours"])]
 
             [:div {:id "input-num-players" :class "param well well-small"}
               [:input {:type "hidden" :name "num-players-active" :value "false"}]
               [:h3 "Number of Players"]
               [:p "This is a description of this field"]
-              [:input {:type "text" :name "num-players-value"}]]
+              (map player-checkboxes ["1" "2" "3" "4" "5" "6" "7+"])]
 
             [:div {:id "input-mechanics" :class "param well well-small"}
               [:input {:type "hidden" :name "mechanics-active" :value "false"}]
