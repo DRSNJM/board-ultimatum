@@ -62,17 +62,28 @@
             [:button {:type "submit" :class "btn"} "Submit"]]
         ]))
 
+(defn num-players [min-players max-players]
+  (cond
+   (= min-players max-players) (str max-players " Player")
+   :else (str min-players "-" max-players " Players")))
+
+(defn game-length [length]
+  (cond
+   (>= length 120) (str (/ length 60) " hours")
+   :else (str length " minutes")))
+
 (defn display-game [game]
   [:tr.game
    [:td (:rank game) ". "]
    [:td (image (:thumbnail game))]
    [:td (:bgg_id game) ". "]
    [:td (:name game)]
-   [:td (:length game) " minutes"]
-   [:td (:min_players game) "-" (:max_players game) " Players"]
-   [:td (:min_age game)]])
+   [:td (game-length (:length game))]
+   [:td (num-players (:min_players game) (:max_players game))]
+   [:td (:min_age game) "+"]])
 
-(defpage [:post "/recommend"] {:keys [num-players]}
+(defpage [:post "/recommend"] {:keys [lengths]}
+  (println "POST PARAMS: " lengths)
     (common/layout
         [:h1 "Have fun playing!"]
         [:table.games.table.table-striped
@@ -87,4 +98,6 @@
          [:tbody
           (map display-game
                (sort #(compare (:rank %1) (:rank %2))
-                     (model/find-by-length 20 30)))]]))
+                     (model/find-by-length lengths)))]]))
+
+; (model/find-by-players 5 10)

@@ -47,3 +47,11 @@
     "Queries mongo for games matching any of the selected time ranges."
     (let [collection "board_games"]
       (mc/find-maps collection {:length {$in (times selected-times)}})))
+
+(defn find-by-players [& selected-players]
+    "Queries mongo for games matching any of the selected player ranges."
+    (let [collection "board_games"]
+      (mc/find-maps collection
+                    {$and [{:max_players {$lte (apply max selected-players)}}
+                           {:min_players {$gte (apply min selected-players)}}]})))
+
