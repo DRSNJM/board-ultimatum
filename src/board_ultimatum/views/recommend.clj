@@ -60,8 +60,9 @@
             [:button {:type "submit" :class "btn"} "Submit"]]]))
 
 
-(defpage [:post "/recommend"] {:keys [num-players]}
+;; Process queries received from the interface
+(defpage [:post "/recommend"] {:as params}
     (common/layout
         [:h1 "Here are your results"]
         [:h2 "Have fun playing!"]
-        [:p (str "Your games: " (str (list (engine/query3 (Integer/parseInt num-players) 0))))]))
+        [:p (str "Your games: " (str params))]))
