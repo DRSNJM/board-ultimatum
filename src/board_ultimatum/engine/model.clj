@@ -1,11 +1,7 @@
 (ns board-ultimatum.engine.model
   (:require [monger.core :as mg]
-            [monger.collection :as mc]
-            [monger.query :as mq]
-            [clojure.java.io :as io]
-            [clojure.zip :as zip]
-            [clojure.xml :as xml])
-  (:use monger.operators))
+            [monger.collection :as mc])
+  (:use [monger.operators]))
 
 ;; This namespace contains all functions related to manipulating the
 ;; applications "model" (which is mostly mongo).
@@ -31,7 +27,23 @@
   ; Set up the indexes necessary for decent performance.
   (ensure-indexes))
 
-(defn add-games
-  "Batch inserts the given sequence of games into mongo."
-  [games]
-  (mc/insert-batch "games" games))
+(def time-map
+  {20 [10 15 20]
+   30 [25 30 35]
+   45 [40 45 50]
+   60 [45 50 60 70 75]
+   90 [75 80 90 100]
+   120 [100 120 135]
+   180 [150 180 200]
+   240 [210 240]
+   300 [300]
+   360 [420 480 600 720 1200 6000]})
+
+(defn times [selected]
+  "Turns user inputted time approx. ranges into database queries matching the actual game lengths in the database. Usage: (times [30 45]) => (25 30 35 40 45 50)"
+  (mapcat #(time-map %) selected))
+
+(defn find-by-length [& selected-times]
+    "Queries mongo for games matching any of the selected time ranges."
+    (let [collection "board_games"]
+      (mc/find-maps collection {:length {$in (times selected-times)}})))

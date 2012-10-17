@@ -1,7 +1,8 @@
 (ns board-ultimatum.views.recommend
   (:require [board-ultimatum.views.common :as common])
-  (:require [board-ultimatum.engine :as engine])
-  (:use [noir.core :only [defpage]]))
+  (:require [board-ultimatum.engine.model :as model])
+  (:use [noir.core :only [defpage]]
+        [hiccup.element]))
 
 (defpage "/recommend" []
     (common/layout
@@ -61,8 +62,29 @@
             [:button {:type "submit" :class "btn"} "Submit"]]
         ]))
 
+(defn display-game [game]
+  [:tr.game
+   [:td (:rank game) ". "]
+   [:td (image (:thumbnail game))]
+   [:td (:bgg_id game) ". "]
+   [:td (:name game)]
+   [:td (:length game) " minutes"]
+   [:td (:min_players game) "-" (:max_players game) " Players"]
+   [:td (:min_age game)]])
+
 (defpage [:post "/recommend"] {:keys [num-players]}
     (common/layout
-        [:h1 "Here are your results"]
-        [:h2 "Have fun playing!"]
-        [:p (str "Your games: " (str (list (engine/query3 (Integer/parseInt num-players) 0))))]))
+        [:h1 "Have fun playing!"]
+        [:table.games.table.table-striped
+         [:thead
+          [:th "Rank"]
+          [:th "Thumb"]
+          [:th "BGG ID"]
+          [:th "Name"]
+          [:th "Length"]
+          [:th "Num Players"]
+          [:th "Min Age"]]
+         [:tbody
+          (map display-game
+               (sort #(compare (:rank %1) (:rank %2))
+                     (model/find-by-length 20 30)))]]))
