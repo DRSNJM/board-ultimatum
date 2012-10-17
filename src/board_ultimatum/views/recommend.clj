@@ -14,6 +14,11 @@
       [:button {:type "button" :class "btn btn-success"} [:i {:class "icon-thumbs-up"}]]]
    [:input {:type "hidden" :name (str "mechanic[" form-name "]") :value "0"}]])
 
+(defn game-length [length]
+  (cond
+   (>= length 120) (str (/ length 60) " hours")
+   :else (str length " minutes")))
+
 (defn player-checkboxes [num]
   [:div.selection
    [:label.checkbox
@@ -77,11 +82,6 @@
   (cond
    (= min-players max-players) (str max-players " Player")
    :else (str min-players "-" max-players " Players")))
-
-(defn game-length [length]
-  (cond
-   (>= length 120) (str (/ length 60) " hours")
-   :else (str length " minutes")))
 
 (defn display-game [game]
   [:tr.game
