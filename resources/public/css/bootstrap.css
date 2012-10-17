@@ -10002,3 +10002,13 @@ a.badge:hover {
 #main-wrapper {
   margin: 40px 0 0 0;
 }
+
+.navbar-fixed-top {
+  margin-bottom: 0;
+}
+
+@media (max-width: 979px) {
+  #main-wrapper {
+    margin-top: 0;
+  }
+}
