@@ -1,65 +1,64 @@
 (ns board-ultimatum.views.recommend
   (:require [board-ultimatum.views.common :as common])
   (:require [board-ultimatum.engine :as engine])
-  (:use [noir.core :only [defpage]]))
+  (:use [noir.core :only [defpage]])
+  (:use [hiccup.page]))
+
+(defn build-tri-state [name form-name]
+  ; Build preference selection button
+  [:div
+    [:div {:class "btn-group tri-state"} 
+      [:button {:type "button" :class "btn btn-danger"} [:i {:class "icon-thumbs-down"}]]
+      [:button {:type "button" :class "btn option"} name]
+      [:button {:type "button" :class "btn btn-success"} [:i {:class "icon-thumbs-up"}]]]
+    [:input {:type "hidden" :name form-name :value "0"}]])
 
 (defpage "/recommend" []
     (common/layout
-
-        [:script {:type "text/javascript"}
-          "$(document).ready(function(){
-            $('.param').hide();
-            
-            $('#select li').click(function() {
-              $(this).toggleClass('active');
-              $('#input-' + $(this).attr('id')).toggle('medium', function() {
-              });
-              var active = $('input[name=' + $(this).attr('id') + '-active]');
-              $(active[0]).attr('value', $(active[0]).attr('value') == 'false' ? 'true' : 'false');
-              
-            });
-          });"
-        ]
+      (include-js "/js/recommend.js")
 
         [:h1 "Want a game recommendation?"]
         [:h2 "Fill in the inputs below with your preferences"]
         [:div {:class "row-fluid"}
 
-          [:ul {:id "select" :class "span3 nav nav-pills nav-stacked"}
-            [:li {:id "param1" } [:a {:href "#"} "param1"]]
-            [:li {:id "param2" } [:a {:href "#"} "param2"]]
-            [:li {:id "param3" } [:a {:href "#"} "param3"]]
-            [:li {:id "param4" } [:a {:href "#"} "param4"]]]
+          [:ul {:id "select" :class "span2 offset2 nav nav-pills nav-stacked affix"}
+            [:li {:id "length" :style "cursor:pointer;"} [:a "Game Length"]]
+            [:li {:id "num-players" :style "cursor:pointer;"} [:a "Number of Players"]]
+            [:li {:id "mechanics" :style "cursor:pointer;"} [:a "Mechanics"]]
+            [:li {:id "weight" :style "cursor:pointer;"} [:a "Weight"]]]
 
-          [:form {:id "game-params" :class "span9" :action "/recommend" :method "post"} 
+          [:form {:id "game-params" :class "span4 offset5" :action "/recommend" :method "post"}
 
-            [:div {:id "input-param1" :class "param well well-small"}
-              [:h3 "param1"]
+            [:div {:id "input-length" :class "param well well-small"}
+              [:input {:type "hidden" :name "length-active" :value "false"}]
+              [:h3 "Game Length"]
               [:p "This is a description of this field"]
-              [:input {:hidden "text" :name "param1-active" :value "false"}]
-              [:input {:type "text" :name "param1-value"}]]
+              [:input {:type "text" :name "length-value"}]]
 
-            [:div {:id "input-param2" :class "param well well-small"}
-              [:h3 "param2"]
+            [:div {:id "input-num-players" :class "param well well-small"}
+              [:input {:type "hidden" :name "num-players-active" :value "false"}]
+              [:h3 "Number of Players"]
               [:p "This is a description of this field"]
-              [:input {:hidden "text" :name "param2-active" :value "false"}]
-              [:input {:type "text" :name "param2-value"}]]
+              [:input {:type "text" :name "num-players-value"}]]
 
-            [:div {:id "input-param3" :class "param well well-small"}
-              [:h3 "param3"]
-              [:p "This is a description of this field"]
-              [:input {:hidden "text" :name "param3-active" :value "false"}]
-              [:input {:type "text" :name "param3-value"}]]
+            [:div {:id "input-mechanics" :class "param well well-small"}
+              [:input {:type "hidden" :name "mechanics-active" :value "false"}]
+              [:h3 "Mechanics"]
+              [:p "Select gameplay mechanics that you like or dislike"]
+              (build-tri-state "Hand Management" "card-draft")
+              (build-tri-state "Deck Building" "card-draft")
+              (build-tri-state "Card Drafting" "card-draft")
+              ]
 
-            [:div {:id "input-param4" :class "param well well-small"}
-              [:h3 "param4"]
+            [:div {:id "input-weight" :class "param well well-small"}
+              [:input {:type "hidden" :name "weight-active" :value "false"}]
+              [:h3 "Weight"]
               [:p "This is a description of this field"]
-              [:input {:hidden "text" :name "param4-active" :value "false"}]
-              [:input {:type "text" :name "param4-value"}]]
+              [:input {:type "text" :name "weight-value"}]]
 
               
-            [:button {:type "submit" :class "btn"} "Submit"]]
-        ]))
+            [:button {:type "submit" :class "btn"} "Submit"]]]))
+
 
 (defpage [:post "/recommend"] {:keys [num-players]}
     (common/layout
