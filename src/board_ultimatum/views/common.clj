@@ -54,9 +54,7 @@
      [:link {:rel "shortcut icon" :type "image/x-icon" :href "/favicon.ico"}]
      (include-css "/css/bootstrap.min.css")
      ; Get jQuery
-     (include-js (str "https://ajax.googleapis.com/ajax/libs/"
-                      "jquery/1.7.2/jquery.min.js")
-                 "/js/jquery-1.7.2.min.js")]
+     (include-js "/js/jquery-1.7.2.min.js")]
     [:body
      content
      (html (map include-js *javascripts*))]))

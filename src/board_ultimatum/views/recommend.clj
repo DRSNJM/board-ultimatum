@@ -1,8 +1,8 @@
 (ns board-ultimatum.views.recommend
-  (:require [board-ultimatum.views.common :as common])
-  (:require [board-ultimatum.engine :as engine])
-  (:use [noir.core :only [defpage defpartial]])
-  (:use [hiccup.page]))
+  (:require [board-ultimatum.views.common :as common]
+            [board-ultimatum.engine :as engine])
+  (:use [noir.core :only [defpage defpartial]]))
+
 
 ;; Build preference selection button
 (defpartial build-tri-state [name form-name]
@@ -15,9 +15,8 @@
 
 ;; Page for querying the logic based recommendation engine.
 (defpage "/recommend" []
-    (common/layout
-      (include-js "/js/recommend.js")
-
+    (common/with-javascripts (cons "/js/recommend.js" common/*javascripts*)
+      (common/layout
         [:h1 "Want a game recommendation?"]
         [:h2 "Fill in the inputs below with your preferences"]
         [:div#recommend.row-fluid
@@ -49,8 +48,7 @@
               [:p "Select gameplay mechanics that you like or dislike"]
               (build-tri-state "Hand Management" "hand-management")
               (build-tri-state "Deck Building" "deck-building")
-              (build-tri-state "Card Drafting" "card-draft")
-              ]
+              (build-tri-state "Card Drafting" "card-draft")]
 
             [:div {:id "input-weight" :class "param well well-small"}
               [:input {:type "hidden" :name "weight-active" :value "false"}]
@@ -58,7 +56,7 @@
               [:p "This is a description of this field"]
               [:input {:type "text" :name "weight-value"}]]
 
-            [:button {:type "submit" :class "btn"} "Submit"]]]]))
+            [:button {:type "submit" :class "btn"} "Submit"]]]])))
 
 ;; Process queries received from the interface
 (defpage [:post "/recommend"] {:as params}
