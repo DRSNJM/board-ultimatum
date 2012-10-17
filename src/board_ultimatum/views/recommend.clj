@@ -1,17 +1,17 @@
 (ns board-ultimatum.views.recommend
   (:require [board-ultimatum.views.common :as common])
   (:require [board-ultimatum.engine :as engine])
-  (:use [noir.core :only [defpage]])
+  (:use [noir.core :only [defpage defpartial]])
   (:use [hiccup.page]))
 
-(defn build-tri-state [name form-name]
-  ; Build preference selection button
+;; Build preference selection button
+(defpartial build-tri-state [name form-name]
   [:div
-    [:div {:class "btn-group tri-state"} 
+    [:div {:class "btn-group tri-state"}
       [:button {:type "button" :class "btn btn-danger"} [:i {:class "icon-thumbs-down"}]]
       [:button {:type "button" :class "btn option"} name]
       [:button {:type "button" :class "btn btn-success"} [:i {:class "icon-thumbs-up"}]]]
-    [:input {:type "hidden" :name form-name :value "0"}]])
+   [:input {:type "hidden" :name (str "mechanic[" form-name "]") :value "0"}]])
 
 (defpage "/recommend" []
     (common/layout
