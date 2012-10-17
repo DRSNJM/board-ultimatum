@@ -1,6 +1,7 @@
-$(function(){
+jQuery(document).ready(function ($) {
   $('.param').hide();
 
+  // Toggle what form elements are available
   $('#select li').on('click', function() {
     $(this).toggleClass('active');
     $('#input-' + $(this).attr('id')).toggle('medium');
@@ -8,27 +9,35 @@ $(function(){
     active.attr('value', active.attr('value') == 'false' ? 'true' : 'false');
   });
 
-  $('.tri-state').on('click', function(event) {
-    event.preventDefault();
-    var option = $(this).children('.option');
-    var state = option.hasClass('btn-danger') ? '-1' :
-    option.hasClass('btn-success') ? '1' : '0';
-    var stateClicked = $(event.target).hasClass('btn-danger') ? '-1' :
-    $(event.target).hasClass('btn-success') ? '1' : '0';
-    var formInput = $(this).siblings('input[type=hidden]');
+  $('#input-mechanics').on('click', '.tri-state button', function(event) {
+    var $btn = $(this);
+    // If the clicked button is not the option (center) button then find it.
+    var $option = $btn.hasClass('option') ? $btn : $btn.siblings('.option');
 
-    if (stateClicked == state) {
-      option.removeClass('btn-danger btn-success');
-      formInput.val('0')
-    } else if (stateClicked == '1') {
-      option.removeClass('btn-danger');
-      option.addClass('btn-success');
-      formInput.val('1')
-    } else if (stateClicked == '-1') {
-      option.removeClass('btn-success');
-      option.addClass('btn-danger')
-      formInput.val('-1')
+    var formInput = $btn.parent().siblings('input[type=hidden]');
+    // Current state is stored on the input field.
+    var state = formInput.val();
+
+    $option.removeClass('btn-danger btn-success');
+
+    // Determine what newState should be.
+    var newState = 0;
+    if ($btn != $option) {
+      // It is not the center button
+      if ($btn.hasClass('btn-success')) {
+        newState = state == 1 ? 0 : 1;
+      } else if ($btn.hasClass('btn-danger')) {
+        newState = state == -1 ? 0 : -1;
+      }
     }
+
+    // New state is not 0 so set the appropriate class on the option button.
+    if (newState !== 0) {
+      $option.addClass(newState == 1 ? 'btn-success' : 'btn-danger');
+    }
+
+    // Change the input field.
+    formInput.val(newState);
   });
 
   $('.selection').on('change', 'input[type="checkbox"]', function(e) {
