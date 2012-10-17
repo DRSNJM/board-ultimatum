@@ -15,8 +15,6 @@
 
 (defpage "/recommend" []
     (common/layout
-      (include-js "/js/recommend.js")
-
         [:h1 "Want a game recommendation?"]
         [:h2 "Fill in the inputs below with your preferences"]
         [:div {:class "row-fluid"}

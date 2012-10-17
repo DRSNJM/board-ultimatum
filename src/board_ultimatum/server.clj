@@ -1,5 +1,9 @@
 (ns board-ultimatum.server
-  (:require [noir.server :as server]))
+  (:require [noir.server :as server]
+            [board-ultimatum.engine.model :as model]
+            [board-ultimatum.engine.config :as config]
+            [monger.core :as mg])
+  (:import [com.mongodb MongoOptions ServerAddress]))
 
 (server/load-views-ns 'board-ultimatum.views)
 
