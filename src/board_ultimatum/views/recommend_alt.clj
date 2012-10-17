@@ -1,6 +1,5 @@
 (ns board-ultimatum.views.recommend-alt
-  (:require [board-ultimatum.views.common :as common]
-            [board-ultimatum.engine :as engine])
+  (:require [board-ultimatum.views.common :as common])
   (:use [noir.core :only [defpage]]
         [hiccup.element]
         [hiccup.form]))
