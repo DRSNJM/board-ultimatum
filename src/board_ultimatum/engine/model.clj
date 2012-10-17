@@ -7,7 +7,7 @@
 ;; applications "model" (which is mostly mongo).
 
 (defn ensure-indexes
-  "Ensures the existence of several indexes to use mongo effectively."
+  "Ensures the existence of several indexes to use mongo efficiently."
   []
   (mc/ensure-index "games" {:id 1})
   (mc/ensure-index "games" {:name 1}))
