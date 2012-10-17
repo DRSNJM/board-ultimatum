@@ -3031,28 +3031,27 @@ net.brehaut.ClojureTools = (function (SH) {
 })(SyntaxHighlighter);
 </script><title>board-ultimatum -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">board-ultimatum</h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>Noir front-end to the board-ultimatum board game recomendation
                engine.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0-beta10</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#board-ultimatum.config">board-ultimatum.config</a></li><li><a href="#board-ultimatum.server">board-ultimatum.server</a></li><li><a href="#board-ultimatum.views.common">board-ultimatum.views.common</a></li><li><a href="#board-ultimatum.views.index">board-ultimatum.views.index</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.config" name="board-ultimatum.config"><h1 class="project-name">board-ultimatum.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.config
-  (:require [clojure.string :as string]
-            [clojure.java.io :as io]))</pre></td></tr><tr><td class="docs"><p>Define a map read from config.clj on the resource path.</p>
-</td><td class="codes"><pre class="brush: clojure">(def config-from-file
-  (if-let [cres (io/resource &quot;config.clj&quot;)]
-    (-&gt; cres (.getPath) (load-file))
-    {}))</pre></td></tr><tr><td class="docs"><p>Reads config by first accessing the map from the config file and falling back
-  on environment variables. This is heroku "friendly".</p>
-</td><td class="codes"><pre class="brush: clojure">(defn read-config
-  [config-var]
-  (get config-from-file
-       (keyword (string/replace (string/lower-case config-var) &quot;_&quot; &quot;-&quot;))
-       (System/getenv config-var)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.server" name="board-ultimatum.server"><h1 class="project-name">board-ultimatum.server</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0-beta10</td></tr><tr><td class="dep-name">board-ultimatum-engine</td><td class="dotted"><hr /></td><td class="dep-version">0.1.0-SNAPSHOT</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#board-ultimatum.server">board-ultimatum.server</a></li><li><a href="#board-ultimatum.views.common">board-ultimatum.views.common</a></li><li><a href="#board-ultimatum.views.expert">board-ultimatum.views.expert</a></li><li><a href="#board-ultimatum.views.index">board-ultimatum.views.index</a></li><li><a href="#board-ultimatum.views.recommend">board-ultimatum.views.recommend</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.server" name="board-ultimatum.server"><h1 class="project-name">board-ultimatum.server</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.server
-  (:require [noir.server :as server]))</pre></td></tr><tr><td class="docs">
+  (:require [noir.server :as server]
+            [board-ultimatum.engine.model :as model]
+            [board-ultimatum.engine.config :as config]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(server/load-views-ns 'board-ultimatum.views)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn -main [&amp; m]
   (let [mode (keyword (or (first m) :dev))
-        port (Integer. (get (System/getenv) &quot;PORT&quot; &quot;8080&quot;))]
-    (server/start port {:mode mode
-                        :ns 'board-ultimatum})))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.common" name="board-ultimatum.views.common"><h1 class="project-name">board-ultimatum.views.common</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+        port (Integer. (get (System/getenv) &quot;PORT&quot; &quot;8080&quot;))
+        connection-info (if (nil? (:db-name config/storage))
+                          (assoc config/storage :db-name &quot;board&quot;)
+                          config/storage)]
+    (try
+      (model/connect connection-info)
+      (server/start port {:mode mode
+                          :ns 'board-ultimatum})
+      (catch java.io.IOException e
+        (println &quot;ERROR: Could not connect to MongoDB.&quot;))
+      (catch java.lang.NullPointerException e
+        (println &quot;ERROR: Could not authenticate with Mongo. See config: \n\t&quot;
+                 (str (assoc connection-info :password &quot;********&quot;)))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.common" name="board-ultimatum.views.common"><h1 class="project-name">board-ultimatum.views.common</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.common
   (:require [clojure.string :as string]
             [noir.session :as sess])
@@ -3082,15 +3081,7 @@ net.brehaut.ClojureTools = (function (SH) {
                (string/capitalize (name type))
                type) &quot; &quot;] message])
   ([class type message] (alert class type message true))
-  ([type message] (alert type type message true)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defpartial layout [&amp; content]
-            (html5
-              [:head
-               [:title &quot;Board Ultimatum&quot;]
-               (include-css &quot;/css/bootstrap.css.min&quot;)]
-              [:body
-               [:div#wrapper
-                content]]))</pre></td></tr><tr><td class="docs"><h2>Layouts</h2>
+  ([type message] (alert type type message true)))</pre></td></tr><tr><td class="docs"><h2>Layouts</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Base layout used by the web app.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial base-layout [&amp; content]
   (html5
@@ -3133,11 +3124,113 @@ net.brehaut.ClojureTools = (function (SH) {
       content
       [:footer#footer.footer
        [:a.label.label-success {:href &quot;http://drsnjm.github.com/about/&quot;} &quot;About&quot;]
-       &quot; &amp;copy; 2012 &quot; (link-to &quot;http://drsnjm.github.com/&quot; &quot;DRSNJM&quot;)]]]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.index" name="board-ultimatum.views.index"><h1 class="project-name">board-ultimatum.views.index</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+       &quot; &amp;copy; 2012 &quot; (link-to &quot;http://drsnjm.github.com/&quot; &quot;DRSNJM&quot;)]]]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.expert" name="board-ultimatum.views.expert"><h1 class="project-name">board-ultimatum.views.expert</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.expert
+  (:require [board-ultimatum.views.common :as common])
+  (:use [noir.core :only [defpage]]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpage &quot;/expert&quot; []
+  (common/layout
+     [:h1 &quot;Welcome, Board Game Expert!&quot;]
+     [:h2 &quot;Please log in below&quot;]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn gameThumb [gId gName gDesc]
+  [:div {:class &quot;span3 well well-small&quot; :id gId} 
+    [:h4 gName] 
+    [:p gDesc]
+    [:div {:class &quot;btn-group&quot;}
+      [:a {:class &quot;btn btn-primary&quot;}
+        [:i {:class &quot;icon-ok icon-white&quot;}]]
+      [:a {:class &quot;btn&quot;}
+        [:i {:class &quot;icon-remove&quot;}]]]])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpage &quot;/expert-select&quot; []
+  (common/layout
+    [:h1 &quot;Welcome, Board Game Expert!&quot;]
+    [:h2 &quot;Please select games that you are familiar with&quot;]
+    [:div {:class &quot;row-fluid&quot;}
+
+      (for [i (range 1 5)] 
+        (gameThumb (str i) (str &quot;Game&quot; i) &quot;Game picture and/or desc. goes here&quot;))
+
+    ]
+
+    [:div {:class &quot;row-fluid&quot;} 
+
+      (for [i (range 5 9)] 
+        (gameThumb (str i) (str &quot;Game&quot; i) &quot;Game picture and/or desc. goes here&quot;))
+
+    ])) </pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.index" name="board-ultimatum.views.index"><h1 class="project-name">board-ultimatum.views.index</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.index
   (:require [board-ultimatum.views.common :as common])
   (:use [noir.core :only [defpage]]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defpage &quot;/&quot; []
          (common/layout
-           [:p &quot;Welcome to board-ultimatum&quot;]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+           [:h1 &quot;Welcome to board-ultimatum&quot;]
+           [:p &quot;The board-ultimatum is a board game recommendation system&quot; 
+               [:br] 
+               &quot;This system is implemented in Clojure&quot;]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.recommend" name="board-ultimatum.views.recommend"><h1 class="project-name">board-ultimatum.views.recommend</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.recommend
+  (:require [board-ultimatum.views.common :as common])
+  (:require [board-ultimatum.engine :as engine])
+  (:use [noir.core :only [defpage]]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpage &quot;/recommend&quot; []
+    (common/layout
+
+        [:script {:type &quot;text/javascript&quot;}
+          &quot;$(document).ready(function(){
+            $('.param').hide();
+            
+            $('#select li').click(function() {
+              $(this).toggleClass('active');
+              $('#input-' + $(this).attr('id')).toggle('medium', function() {
+              });
+              var active = $('input[name=' + $(this).attr('id') + '-active]');
+              $(active[0]).attr('value', $(active[0]).attr('value') == 'false' ? 'true' : 'false');
+              
+            });
+          });&quot;
+        ]
+
+        [:h1 &quot;Want a game recommendation?&quot;]
+        [:h2 &quot;Fill in the inputs below with your preferences&quot;]
+        [:div {:class &quot;row-fluid&quot;}
+
+          [:ul {:id &quot;select&quot; :class &quot;span3 nav nav-pills nav-stacked&quot;}
+            [:li {:id &quot;param1&quot; } [:a {:href &quot;#&quot;} &quot;param1&quot;]]
+            [:li {:id &quot;param2&quot; } [:a {:href &quot;#&quot;} &quot;param2&quot;]]
+            [:li {:id &quot;param3&quot; } [:a {:href &quot;#&quot;} &quot;param3&quot;]]
+            [:li {:id &quot;param4&quot; } [:a {:href &quot;#&quot;} &quot;param4&quot;]]]
+
+          [:form {:id &quot;game-params&quot; :class &quot;span9&quot; :action &quot;/recommend&quot; :method &quot;post&quot;} 
+
+            [:div {:id &quot;input-param1&quot; :class &quot;param well well-small&quot;}
+              [:h3 &quot;param1&quot;]
+              [:p &quot;This is a description of this field&quot;]
+              [:input {:hidden &quot;text&quot; :name &quot;param1-active&quot; :value &quot;false&quot;}]
+              [:input {:type &quot;text&quot; :name &quot;param1-value&quot;}]]
+
+            [:div {:id &quot;input-param2&quot; :class &quot;param well well-small&quot;}
+              [:h3 &quot;param2&quot;]
+              [:p &quot;This is a description of this field&quot;]
+              [:input {:hidden &quot;text&quot; :name &quot;param2-active&quot; :value &quot;false&quot;}]
+              [:input {:type &quot;text&quot; :name &quot;param2-value&quot;}]]
+
+            [:div {:id &quot;input-param3&quot; :class &quot;param well well-small&quot;}
+              [:h3 &quot;param3&quot;]
+              [:p &quot;This is a description of this field&quot;]
+              [:input {:hidden &quot;text&quot; :name &quot;param3-active&quot; :value &quot;false&quot;}]
+              [:input {:type &quot;text&quot; :name &quot;param3-value&quot;}]]
+
+            [:div {:id &quot;input-param4&quot; :class &quot;param well well-small&quot;}
+              [:h3 &quot;param4&quot;]
+              [:p &quot;This is a description of this field&quot;]
+              [:input {:hidden &quot;text&quot; :name &quot;param4-active&quot; :value &quot;false&quot;}]
+              [:input {:type &quot;text&quot; :name &quot;param4-value&quot;}]]
+
+              
+            [:button {:type &quot;submit&quot; :class &quot;btn&quot;} &quot;Submit&quot;]]
+        ]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/recommend&quot;] {:keys [num-players]}
+    (common/layout
+        [:h1 &quot;Here are your results&quot;]
+        [:h2 &quot;Have fun playing!&quot;]
+        [:p (str &quot;Your games: &quot; (str (list (engine/query3 (Integer/parseInt num-players) 0))))]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
        SyntaxHighlighter.all()</script></body></html>
