@@ -9999,10 +9999,6 @@ a.badge:hover {
   }
 }
 
-#main-wrapper {
-  margin: 40px 0 0 0;
-}
-
 .navbar-fixed-top {
   margin-bottom: 0;
 }
@@ -10011,4 +10007,72 @@ a.badge:hover {
   #main-wrapper {
     margin-top: 0;
   }
+}
+
+#main-wrapper {
+  margin: 40px 0 0 0;
+}
+
+#recommend #sidebar {
+  min-height: 150px;
+}
+
+#recommend ul#select li {
+  cursor: pointer;
+}
+
+.btn-group.tri-state .btn.option {
+  min-width: 13em;
+}
+
+.players,
+.length,
+.tags {
+  clear: left;
+}
+
+.selection {
+  position: relative;
+  float: left;
+  width: 100px;
+  height: 84px;
+}
+
+.selection .icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto;
+}
+
+.selection .icon.player {
+  background: url("/img/player_icon.png") no-repeat;
+}
+
+.selection .icon.player.active {
+  background: url("/img/player_icon_selected.png") no-repeat;
+}
+
+.selection .icon.time {
+  width: 44px;
+  background: url("/img/hourglass.png") no-repeat;
+}
+
+.selection .icon.time.active {
+  background: url("/img/hourglass_selected.png") no-repeat;
+}
+
+.selection input[type="checkbox"] {
+  display: none;
+}
+
+.selection .bottom-label {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
 }
