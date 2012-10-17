@@ -18,14 +18,14 @@
    [:label.checkbox
     [:div.icon.player]
     (check-box num false num)
-    [:span.bottom-label (str num " Players")]]])
+    [:div.bottom-label (str num " Players")]]])
 
 (defn time-checkboxes [num]
   [:div.selection
    [:label.checkbox
     [:div.icon.time]
     (check-box num false num)
-    [:span.bottom-label num]]])
+    [:div.bottom-label num]]])
 
 ;; Page for querying the logic based recommendation engine.
 (defpage "/recommend" []
