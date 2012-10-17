@@ -41,15 +41,6 @@
   ([class type message] (alert class type message true))
   ([type message] (alert type type message true)))
 
-(defpartial layout [& content]
-            (html5
-              [:head
-               [:title "Board Ultimatum"]
-               (include-css "/css/bootstrap.css.min")]
-              [:body
-               [:div#wrapper
-                content]]))
-
 ;; ## Layouts
 
 ;; Base layout used by the web app.
