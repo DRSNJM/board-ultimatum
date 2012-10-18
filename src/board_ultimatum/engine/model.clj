@@ -59,3 +59,8 @@
                     {$and [{:max_players {$lte (apply max selected-players)}}
                            {:min_players {$gte (apply min selected-players)}}]})))
 
+(defn find-all []
+    "Queries mongo for all games."
+    (let [collection "board_games"]
+      (mc/find-maps collection {})))
+
