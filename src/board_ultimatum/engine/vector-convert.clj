@@ -17,4 +17,23 @@
       (println "ERROR: Could not authenticate with Mongo. See config: \n\t"
                (str (assoc connection-info :password "********"))))))
 
-(model/find-all)
+; Vector format:
+; 0 - game length
+; 1 - min players
+; 2 - max players
+; 3 - min age
+; 4 - rank
+; 5 - weight
+
+(defn to-vector [game]
+  "Convert Mongo game record to normalized numeric vector"
+  (vector (/ (:length game) 6000.0)
+          (/ (:min_players game) 8.0)
+          (/ (:max_players game) 8.0)
+          (/ (:min_age game) 18.0)
+          (/ (:rank game) 1000.0)
+          (/ (:weight_num game) 2000.0)
+          ))
+
+(pprint (map to-vector
+  (model/find-all)))
