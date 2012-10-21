@@ -24,16 +24,21 @@
 ; 3 - min age
 ; 4 - rank
 ; 5 - weight
+; 6 - rating
+; 7 - rank
 
 (defn to-vector [game]
   "Convert Mongo game record to normalized numeric vector"
-  (vector (/ (:length game) 6000.0)
-          (/ (:min_players game) 8.0)
-          (/ (:max_players game) 8.0)
-          (/ (:min_age game) 18.0)
-          (/ (:rank game) 1000.0)
-          (/ (:weight_num game) 2000.0)
-          ))
+  { :id (:bgg_id game)
+    :data [ (/ (:length game) 6000.0)
+            (/ (:min_players game) 8.0)
+            (/ (:max_players game) 8.0)
+            (/ (:min_age game) 18.0)
+            (/ (:rank game) 1000.0)
+            (/ (:weight_average game) 5.0)
+            (/ (:rating_average game) 10.0)
+            (/ (:rank game) 1000.0)
+          ]})
 
 (pprint (map to-vector
   (model/find-all)))
