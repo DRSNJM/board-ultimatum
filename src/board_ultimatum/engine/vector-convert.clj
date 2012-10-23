@@ -48,6 +48,7 @@
             (/ (:rating_average game) 10.0)
             (/ (:rank game) 1000.0)
             (has-tag game "category" "Card Game")
+            (has-tag game "mechanic" "Dice Rolling")
           ]})
 
 (pprint (map to-vector
