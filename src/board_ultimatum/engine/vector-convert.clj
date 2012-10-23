@@ -26,6 +26,15 @@
 ; 5 - weight
 ; 6 - rating
 ; 7 - rank
+; 8 - category - card game
+
+(defn has-tag [game subtype value]
+  (cond
+    (some #(= value %) 
+      (remove nil? 
+        (map (fn [tag] 
+          (cond (= (:subtype tag) subtype) (:value tag))) (:tags game)))) 1.0
+     :else 0.0))
 
 (defn to-vector [game]
   "Convert Mongo game record to normalized numeric vector"
@@ -38,6 +47,7 @@
             (/ (:weight_average game) 5.0)
             (/ (:rating_average game) 10.0)
             (/ (:rank game) 1000.0)
+            (has-tag game "category" "Card Game")
           ]})
 
 (pprint (map to-vector
