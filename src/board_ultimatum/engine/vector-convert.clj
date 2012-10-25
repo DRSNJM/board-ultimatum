@@ -214,3 +214,15 @@
                     :x-label "PC1" 
                     :y-label "PC2" 
                     :title "Game Data"))
+
+(def game-ids
+  (into [] 
+    (map 
+      (fn [game] (:bgg_id game))
+      (model/find-all))))
+
+(def data-2d (dataset 
+  ["id" "x1" "x2"]
+  (trans (matrix [game-ids x1 x2]))))
+
+(view ($order [:x1 :x2] :desc data-2d))
