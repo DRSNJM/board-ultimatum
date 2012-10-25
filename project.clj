@@ -6,6 +6,6 @@
                  [enclog "0.5.8-SNAPSHOT"]
                  [org.clojure/core.logic "0.7.5"]
                  [com.novemberain/monger "1.1.2"]
-                 [incanter "1.3.0"]]
+                 [incanter "1.2.4"]]
   :plugins [[lein-exec "0.2.1"]]
   :main board-ultimatum.server)

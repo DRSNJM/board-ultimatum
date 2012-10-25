@@ -2,7 +2,8 @@
   (:require [board-ultimatum.engine.model :as model]
             [board-ultimatum.engine.config :as config])
   (:use clojure.pprint)
-  (:use clojure.set))
+  (:use clojure.set)
+  (:use incanter.core incanter.stats incanter.charts))
 
 ; run this script via:
 ; lein exec -p src/board_ultimatum/engine/vector-convert.clj
@@ -195,5 +196,21 @@
             (has-tag game "mechanic" "Area Enclosure")
           ]})
 
-(map to-vector
-  (model/find-all))
+(def full-data (matrix (into [] (map 
+  (fn [game] (:data game)) 
+  (map to-vector
+    (model/find-all))))))
+
+(def pca (principal-components full-data))
+
+(def components (:rotation pca))
+(def pc1 (sel components :cols 0))
+(def pc2 (sel components :cols 1))
+
+(def x1 (mmult full-data pc1)) 
+(def x2 (mmult full-data pc2))
+
+(view (scatter-plot x1 x2 
+                    :x-label "PC1" 
+                    :y-label "PC2" 
+                    :title "Game Data"))
