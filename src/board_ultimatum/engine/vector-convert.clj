@@ -1,6 +1,7 @@
 (ns board-ultimatum.script.vector
   (:require [board-ultimatum.engine.model :as model]
-            [board-ultimatum.engine.config :as config])
+            [board-ultimatum.engine.config :as config]
+            [taoensso.carmine :as car])
   (:use clojure.pprint)
   (:use clojure.set)
   (:use incanter.core incanter.stats incanter.charts))
@@ -196,24 +197,15 @@
             (has-tag game "mechanic" "Area Enclosure")
           ]})
 
-(def full-data (matrix (into [] (map 
-  (fn [game] (:data game)) 
-  (map to-vector
-    (model/find-all))))))
+; establish redis connection
 
-(def pca (principal-components full-data))
+(def pool (car/make-conn-pool))
+(def spec-server1 (car/make-conn-spec))
+(defmacro wcar [& body] `(car/with-conn pool spec-server1 ~@body))
 
-(def components (:rotation pca))
-(def pc1 (sel components :cols 0))
-(def pc2 (sel components :cols 1))
+(wcar (car/ping))
 
-(def x1 (mmult full-data pc1)) 
-(def x2 (mmult full-data pc2))
-
-(view (scatter-plot x1 x2 
-                    :x-label "PC1" 
-                    :y-label "PC2" 
-                    :title "Game Data"))
+;; compile full vector data into a matrix
 
 (def game-ids
   (into [] 
@@ -221,8 +213,47 @@
       (fn [game] (:bgg_id game))
       (model/find-all))))
 
+(def full-data (matrix (into [] (map 
+  (fn [game] (:data game)) 
+  (map to-vector
+    (model/find-all))))))
+
+;; perform pca on the data
+
+(def pca (principal-components full-data))
+
+(def components (:rotation pca))
+
+(def pc (into [] (map 
+    (fn [i] 
+      (sel components :cols i))
+    (range 10))))
+
+(def x (into [] (map 
+    (fn [i] 
+      (mmult full-data (nth pc i)))
+    (range 10))))
+
+;; add the data to the redis store
+
+(pprint (map (fn [id data] (wcar 
+    (car/del id)
+    (doseq [n data]
+        (car/lpush id n))))
+    game-ids 
+    (trans (matrix x)))) 
+            
+;; plot the data in 2D
+
+(view (scatter-plot (nth x 0) (nth x 1) 
+                    :x-label "PC1" 
+                    :y-label "PC2" 
+                    :title "Game Data"))
+
+;; view a table of the dataset
+
 (def data-2d (dataset 
   ["id" "x1" "x2"]
-  (trans (matrix [game-ids x1 x2]))))
+  (trans (matrix [game-ids (nth x 0) (nth x 1)]))))
 
 (view ($order [:x1 :x2] :desc data-2d))
