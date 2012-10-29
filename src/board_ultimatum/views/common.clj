@@ -1,6 +1,6 @@
 (ns board-ultimatum.views.common
   (:require [clojure.string :as string]
-            [noir.session :as sess])
+            [board-ultimatum.flash :as flash])
   (:use [noir.core :only [defpartial]]
         [hiccup.core]
         [hiccup.element]
@@ -32,7 +32,7 @@
 (defn alert
   "Displays an alert box."
   ([class type message show-close?]
-   [:div {:id "flash" :class (str "alert fade in alert-" (name class))}
+   [:div#flash {:class (str "alert fade in alert-" (name class))}
     (when show-close?
       [:a.close {:data-dismiss "alert"} "&times;"])
     [:strong (if (keyword? type)
@@ -80,7 +80,7 @@
                "Source"]]]]]]]
     [:div#main-wrapper
      [:div#main.container-fluid
-      (when-let [{t :type c :class m :message} (sess/flash-get :alert)]
+      (when-let [{t :type c :class m :message} (flash/get)]
         (alert (if (nil? c) t c) t m))
       content]
      [:footer#footer.container-fluid
