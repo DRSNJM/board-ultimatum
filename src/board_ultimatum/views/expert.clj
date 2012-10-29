@@ -34,8 +34,11 @@
     [:div.well
      (form-to {:id "expert-login" :class "form-inline"} [:post "/expert"]
               (text-field {:id "identity" :placeholder "Your identifier"} "identity") " "
-              (submit-button {:class "btn btn-primary"} "Log In") " "
-              (submit-button {:class "btn"} "Register"))]))
+              (submit-button {:name "action" :class "btn btn-primary"} "Log In") " "
+              (submit-button {:name "action" :class "btn"} "Register"))]))
+
+(defpage [:post "/expert"] {:as attempt}
+  (str "Attempt: " attempt))
 
 ;; Logout the currently logged in expert.
 (defpage "/expert/logout" []
