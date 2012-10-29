@@ -4,7 +4,8 @@
   (:require [board-ultimatum.views.common :as common]
             [board-ultimatum.flash :as flash]
             [noir.response :as resp])
-  (:use [noir.core :only [defpage defpartial pre-route]]))
+  (:use [noir.core :only [defpage defpartial pre-route]]
+        [hiccup.form :only [form-to label text-field submit-button]]))
 
 (defn expert-logged-in?
   "Determine if there is an expert logged in right now."
@@ -24,7 +25,17 @@
 (defpage "/expert" []
   (common/layout
     [:h1 "Welcome, Board Game Expert!"]
-    [:h2 "Please log in."]))
+    [:p "Since this is not a security required application there is no strong
+        authentication. However, to keep track of your history of
+        recommendations we still need to identify you."]
+    [:p "The resulting system is very simple. As an expert you will use the same
+        identifier each time you use the application. Your identifier can be
+        anything you want including your name or random string of numbers."]
+    [:div.well
+     (form-to {:id "expert-login" :class "form-inline"} [:post "/expert"]
+              (text-field {:id "identity" :placeholder "Your identifier"} "identity") " "
+              (submit-button {:class "btn btn-primary"} "Log In") " "
+              (submit-button {:class "btn"} "Register"))]))
 
 ;; Logout the currently logged in expert.
 (defpage "/expert/logout" []
