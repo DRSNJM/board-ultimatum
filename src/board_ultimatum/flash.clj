@@ -9,7 +9,9 @@
   [t m] (sess/flash-put! :alert {:type t :message (apply str m)}))
 
 (defn put!
-  "A simple wrapper around noir's built-in flash put."
+  "A simple wrapper around noir's built-in flash put. Takes a variable number of
+  aguments. If the first argument is a keyword then it is assumed to be the type
+  of alert.  Otherwise the type is set to :info."
   [flash-type & message]
   (println message)
   (if (keyword? flash-type)
