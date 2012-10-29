@@ -10075,3 +10075,7 @@ a.badge:hover {
 .selection .bottom-label {
   text-align: center;
 }
+
+.form-inline {
+  margin: 0;
+}
