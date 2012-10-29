@@ -13,4 +13,4 @@
            [:h3 "Pages"]
            [:p (link-to "/recommend" "Recommend V1")]
            [:p (link-to "/recommend_alt" "Recommend Alt")]
-           [:p (link-to "/expert-select" "Expert Select")]))
+           [:p (link-to "/expert" "Expert Interface")]))
