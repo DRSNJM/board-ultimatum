@@ -3031,7 +3031,7 @@ net.brehaut.ClojureTools = (function (SH) {
 })(SyntaxHighlighter);
 </script><title>board-ultimatum -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">board-ultimatum</h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>Noir front-end to the board-ultimatum board game recomendation
                engine.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0-beta10</td></tr><tr><td class="dep-name">enclog</td><td class="dotted"><hr /></td><td class="dep-version">0.5.8-SNAPSHOT</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.7.5</td></tr><tr><td class="dep-name">com.novemberain/monger</td><td class="dotted"><hr /></td><td class="dep-version">1.1.2</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#board-ultimatum.engine">board-ultimatum.engine</a></li><li><a href="#board-ultimatum.engine.config">board-ultimatum.engine.config</a></li><li><a href="#board-ultimatum.engine.model">board-ultimatum.engine.model</a></li><li><a href="#board-ultimatum.engine.neural">board-ultimatum.engine.neural</a></li><li><a href="#board-ultimatum.server">board-ultimatum.server</a></li><li><a href="#board-ultimatum.views.common">board-ultimatum.views.common</a></li><li><a href="#board-ultimatum.views.expert">board-ultimatum.views.expert</a></li><li><a href="#board-ultimatum.views.index">board-ultimatum.views.index</a></li><li><a href="#board-ultimatum.views.recommend">board-ultimatum.views.recommend</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine" name="board-ultimatum.engine"><h1 class="project-name">board-ultimatum.engine</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0-beta10</td></tr><tr><td class="dep-name">enclog</td><td class="dotted"><hr /></td><td class="dep-version">0.5.8-SNAPSHOT</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.7.5</td></tr><tr><td class="dep-name">com.novemberain/monger</td><td class="dotted"><hr /></td><td class="dep-version">1.1.2</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#board-ultimatum.engine">board-ultimatum.engine</a></li><li><a href="#board-ultimatum.engine.config">board-ultimatum.engine.config</a></li><li><a href="#board-ultimatum.engine.model">board-ultimatum.engine.model</a></li><li><a href="#board-ultimatum.engine.model.expert">board-ultimatum.engine.model.expert</a></li><li><a href="#board-ultimatum.engine.neural">board-ultimatum.engine.neural</a></li><li><a href="#board-ultimatum.flash">board-ultimatum.flash</a></li><li><a href="#board-ultimatum.form-validators">board-ultimatum.form-validators</a></li><li><a href="#board-ultimatum.server">board-ultimatum.server</a></li><li><a href="#board-ultimatum.views.common">board-ultimatum.views.common</a></li><li><a href="#board-ultimatum.views.expert">board-ultimatum.views.expert</a></li><li><a href="#board-ultimatum.views.index">board-ultimatum.views.index</a></li><li><a href="#board-ultimatum.views.recommend">board-ultimatum.views.recommend</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine" name="board-ultimatum.engine"><h1 class="project-name">board-ultimatum.engine</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine
     (:refer-clojure :exclude [==])
     (:use [clojure.core.logic]))</pre></td></tr><tr><td class="docs"><p>I don't do a whole lot.</p>
@@ -3102,16 +3102,13 @@ net.brehaut.ClojureTools = (function (SH) {
               :password (read-config &quot;MONGO_PASSWORD&quot;)})</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.model" name="board-ultimatum.engine.model"><h1 class="project-name">board-ultimatum.engine.model</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.model
   (:require [monger.core :as mg]
-            [monger.collection :as mc]
-            [monger.query :as mq]
-            [clojure.java.io :as io]
-            [clojure.zip :as zip]
-            [clojure.xml :as xml])
-  (:use monger.operators))</pre></td></tr><tr><td class="docs"><p>This namespace contains all functions related to manipulating the
+            [monger.collection :as mc])
+  (:use [monger.operators]))</pre></td></tr><tr><td class="docs"><p>This namespace contains all functions related to manipulating the
 applications "model" (which is mostly mongo).</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Ensures the existence of several indexes to use mongo effectively.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Ensures the existence of several indexes to use mongo efficiently.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn ensure-indexes
   []
+  (mc/ensure-index &quot;experts&quot; {:identifier 1})
   (mc/ensure-index &quot;games&quot; {:id 1})
   (mc/ensure-index &quot;games&quot; {:name 1}))</pre></td></tr><tr><td class="docs"><p>Connect to mongo based on the given connection information.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn connect
@@ -3123,13 +3120,68 @@ applications "model" (which is mostly mongo).</p>
       (when (not (nil? (:username connection-info)))
         (mg/authenticate db-name
                          (:username connection-info)
-                         (into-array Character/TYPE (:password connection-info))))
+                         (into-array Character/TYPE
+                                     (:password connection-info))))
       (mg/set-db! (mg/get-db db-name))))
   ; Set up the indexes necessary for decent performance.
-  (ensure-indexes))</pre></td></tr><tr><td class="docs"><p>Batch inserts the given sequence of games into mongo.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn add-games
-  [games]
-  (mc/insert-batch &quot;games&quot; games))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.neural" name="board-ultimatum.engine.neural"><h1 class="project-name">board-ultimatum.engine.neural</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+  (ensure-indexes))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def time-map
+  {20 [10 15 20]
+   30 [25 30 35]
+   45 [40 45 50]
+   60 [45 50 60 70 75]
+   90 [75 80 90 100]
+   120 [100 120 135]
+   180 [150 180 200]
+   240 [210 240]
+   300 [300]
+   360 [420 480 600 720 1200 6000]})</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn times [selected]
+  &quot;Turns user inputted time approx. ranges into database queries matching the
+  actual game lengths in the database.
+  Usage: (times [30 45]) =&gt; (25 30 35 40 45 50)&quot;
+  (mapcat #(time-map %) selected))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn find-by-length [&amp; selected-times]
+    &quot;Queries mongo for games matching any of the selected time ranges.&quot;
+    (let [collection &quot;board_games&quot;]
+      (mc/find-maps collection {:length {$in (times selected-times)}})))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.model.expert" name="board-ultimatum.engine.model.expert"><h1 class="project-name">board-ultimatum.engine.model.expert</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>A namespace for maniuplating the experts as part of the datastore</p>
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.model.expert
+  (:require [board-ultimatum.views.common :as common]
+            [noir.session :as sess]
+            [noir.validation :as vali]
+            [monger.core :as mg]
+            [monger.collection :as mc])
+  (:use [monger.operators]))</pre></td></tr><tr><td class="docs"><p>The name of the collection on mongo containing experts.</p>
+</td><td class="codes"><pre class="brush: clojure">(def ^:private coll
+  &quot;experts&quot;)</pre></td></tr><tr><td class="docs"><p>An expert with the given id exists in the database.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn exists?
+  [id] (boolean (mc/find-one coll {:identifier id} [:identifier])))</pre></td></tr><tr><td class="docs"><p>Get an expert from the database by id.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn from-id
+  [id]
+  (mc/find-one-as-map coll {:identifier id}))</pre></td></tr><tr><td class="docs"><p>Add an expert with the given id to the datastore.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn add
+  [id]
+  (if (exists? id)
+    (vali/set-error :identity &quot;Another expert is already using that identity.&quot;)
+    (mc/insert coll {:identifier id})))</pre></td></tr><tr><td class="docs"><p>Get the logged in expert's id from the session.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn current-id
+  [] (sess/get :expert-id))</pre></td></tr><tr><td class="docs"><p>Determine if there is an expert logged in right now.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn logged-in?
+  [] (boolean (current-id)))</pre></td></tr><tr><td class="docs"><p>Logout the currently logged in expert.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn logout
+  [] (sess/remove! :expert-id))</pre></td></tr><tr><td class="docs"><p>Login the given expert.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn login
+  [id]
+  (if (exists? id)
+    (sess/put! :expert-id id)
+    (vali/set-error :identity &quot;No user with that identity exists. Try
+                         registering.&quot;)))</pre></td></tr><tr><td class="docs"><p>A mapping of attempt actions to functions. The sign up action maps to adding
+  an expert to the database and the Log In action simply logs in the given id.</p>
+</td><td class="codes"><pre class="brush: clojure">(def ^:private attempt-action-to-function
+  {&quot;Register&quot; add &quot;Log In&quot; login})</pre></td></tr><tr><td class="docs"><p>Process the given attempt by either creating a new user or logging them in.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn process-attempt
+  [{:keys [action identity]}]
+  ((get attempt-action-to-function action) identity))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.neural" name="board-ultimatum.engine.neural"><h1 class="project-name">board-ultimatum.engine.neural</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.neural
     (use [enclog nnets training]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def net
@@ -3137,7 +3189,38 @@ applications "model" (which is mostly mongo).</p>
     :activation :sigmoid
     :input   200
     :output  1
-    :hidden [200 100]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.server" name="board-ultimatum.server"><h1 class="project-name">board-ultimatum.server</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+    :hidden [200 100]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.flash" name="board-ultimatum.flash"><h1 class="project-name">board-ultimatum.flash</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Wrap noir's flash functionality with some helper functions to simplify the
+  default use case of an alert flash.</p>
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.flash
+  (:refer-clojure :exclude [get])
+  (:require [noir.session :as sess]))</pre></td></tr><tr><td class="docs"><p>Helper method to public put!. Wraps around flash-put!.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- a-put!
+  [t m] (sess/flash-put! :alert {:type t :message (apply str m)}))</pre></td></tr><tr><td class="docs"><p>A simple wrapper around noir's built-in flash put. Takes a variable number of
+  aguments. If the first argument is a keyword then it is assumed to be the type
+  of alert.  Otherwise the type is set to :info.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn put!
+  [flash-type &amp; message]
+  (println message)
+  (if (keyword? flash-type)
+    (a-put! flash-type message)
+    (a-put! :info (cons flash-type message))))</pre></td></tr><tr><td class="docs"><p>Alias this namespace's get to noir's flash-get.</p>
+</td><td class="codes"><pre class="brush: clojure">(def get (partial sess/flash-get :alert))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.form-validators" name="board-ultimatum.form-validators"><h1 class="project-name">board-ultimatum.form-validators</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.form-validators
+  (:require [noir.session :as sess])
+  (:use noir.validation))</pre></td></tr><tr><td class="docs"><p>Returns whether the given expert attempt is valid or not.</p>
+</td><td class="codes"><pre class="brush: clojure">(def ^:private attempt-actions #{&quot;Register&quot; &quot;Log In&quot;})
+(defn attempt?
+  [{:keys [action identity]}]
+  (rule (min-length? identity 3)
+        [:identity &quot;identity must be at least 5 characters long.&quot;])
+  (rule (max-length? identity 32)
+        [:identity &quot;identity must be no more than 32 characters long.&quot;])
+  (rule (re-find #&quot;^[a-zA-z][\-_\w]*( [\-_\w]+)*\w$&quot; identity)
+        [:identity (str &quot;identity must match this regex &quot;
+                        &quot;/^[a-zA-z][\\-_\\w]*( [\\-_\\w]+)*\\w$/&quot;)])
+  (rule (contains? attempt-actions action)
+        [:identity (str &quot;Given action (\&quot;&quot; action &quot;\&quot;) is not a valid action.&quot;)])
+  (not (errors? :identity)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.server" name="board-ultimatum.server"><h1 class="project-name">board-ultimatum.server</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.server
   (:require [noir.server :as server]
             [board-ultimatum.engine.model :as model]
@@ -3147,7 +3230,7 @@ applications "model" (which is mostly mongo).</p>
   (let [mode (keyword (or (first m) :dev))
         port (Integer. (get (System/getenv) &quot;PORT&quot; &quot;8080&quot;))
         connection-info (if (nil? (:db-name config/storage))
-                          (assoc config/storage :db-name &quot;board&quot;)
+                          (assoc config/storage :db-name &quot;board_ultimatum&quot;)
                           config/storage)]
     (try
       (model/connect connection-info)
@@ -3160,7 +3243,7 @@ applications "model" (which is mostly mongo).</p>
                  (str (assoc connection-info :password &quot;********&quot;)))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.common" name="board-ultimatum.views.common"><h1 class="project-name">board-ultimatum.views.common</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.common
   (:require [clojure.string :as string]
-            [noir.session :as sess])
+            [board-ultimatum.flash :as flash])
   (:use [noir.core :only [defpartial]]
         [hiccup.core]
         [hiccup.element]
@@ -3180,14 +3263,19 @@ applications "model" (which is mostly mongo).</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Displays an alert box.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn alert
   ([class type message show-close?]
-   [:div {:id &quot;flash&quot; :class (str &quot;alert fade in alert-&quot; (name class))}
+   [:div#flash {:class (str &quot;alert fade in alert-&quot; (name class))}
     (when show-close?
       [:a.close {:data-dismiss &quot;alert&quot;} &quot;&amp;times;&quot;])
     [:strong (if (keyword? type)
                (string/capitalize (name type))
                type) &quot; &quot;] message])
   ([class type message] (alert class type message true))
-  ([type message] (alert type type message true)))</pre></td></tr><tr><td class="docs"><h2>Layouts</h2>
+  ([type message] (alert type type message true)))</pre></td></tr><tr><td class="docs"><p>Takes a collection of error messages and formats it into html.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial format-errors
+  [errs]
+  (when-not (empty? errs)
+    [:div.help-block
+     [:ul (map #(html [:li %]) errs)]]))</pre></td></tr><tr><td class="docs"><h2>Layouts</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Base layout used by the web app.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial base-layout [&amp; content]
   (html5
@@ -3223,18 +3311,68 @@ applications "model" (which is mostly mongo).</p>
                &quot;Source&quot;]]]]]]]
     [:div#main-wrapper
      [:div#main.container-fluid
-      (when-let [{t :type c :class m :message} (sess/flash-get :alert)]
+      (when-let [{t :type c :class m :message} (flash/get)]
         (alert (if (nil? c) t c) t m))
       content]
      [:footer#footer.container-fluid
       [:a.label.label-success {:href &quot;http://drsnjm.github.com/about/&quot;} &quot;About&quot;]
-      &quot; &amp;copy; 2012 &quot; (link-to &quot;http://drsnjm.github.com/&quot; &quot;DRSNJM&quot;)]]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.expert" name="board-ultimatum.views.expert"><h1 class="project-name">board-ultimatum.views.expert</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+      &quot; &amp;copy; 2012 &quot; (link-to &quot;http://drsnjm.github.com/&quot; &quot;DRSNJM&quot;)]]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.expert" name="board-ultimatum.views.expert"><h1 class="project-name">board-ultimatum.views.expert</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Namespace containing all expert views including login, logout, selection and
+  rating.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.expert
-  (:require [board-ultimatum.views.common :as common])
-  (:use [noir.core :only [defpage defpartial]]))</pre></td></tr><tr><td class="docs">
+  (:require [board-ultimatum.views.common :as common]
+            [board-ultimatum.flash :as flash]
+            [board-ultimatum.form-validators :as valid]
+            [board-ultimatum.engine.model.expert :as expert]
+            [noir.session :as sess]
+            [noir.validation :as vali]
+            [noir.response :as resp])
+  (:use [noir.core :only [defpage defpartial pre-route render]]
+        [hiccup core element]
+        [hiccup.form :only [form-to label text-field submit-button]]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(pre-route [:any &quot;/expert/*&quot;] {:as req}
+           (when-not (expert/logged-in?)
+             (flash/put! :warning &quot;You must log in before accessing this
+                                  functionality.&quot;)
+             (resp/redirect &quot;/expert&quot;)))</pre></td></tr><tr><td class="docs"><p>The route from which an expert should start at. If they are not logged in
+they can here. If they are then they are redirected to select.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage &quot;/expert&quot; []
+  (common/layout
+    [:h1 &quot;Welcome, Board Game Expert!&quot;]
+    (if (expert/logged-in?)
+      (html
+        [:h3 &quot;You have two choices&quot;]
+        [:div.span6 (link-to &quot;/expert/logout&quot; &quot;Logout&quot;)]
+        [:div.span6 (link-to &quot;/expert/select&quot; &quot;Do some work!&quot;)])
+      (html
+        [:p &quot;Since this is not a security required application there is no
+            strong authentication. However, to keep track of your history of
+            recommendations we still need to identify you.&quot;]
+        [:p &quot;The resulting system is very simple. As an expert you will use the
+             same identifier each time you use the application. Your identifier
+             can be anything you want including your name or random string of
+             numbers.&quot;]
+        [:div.well
+         (form-to {:id &quot;expert-login&quot; :class &quot;form-inline&quot;} [:post &quot;/expert&quot;]
+                  (text-field {:id &quot;identity&quot; :placeholder &quot;Your identifier&quot;}
+                              &quot;identity&quot;) &quot; &quot;
+                  (submit-button {:name &quot;action&quot; :class &quot;btn btn-primary&quot;}
+                                 &quot;Log In&quot;) &quot; &quot;
+                  (submit-button {:name &quot;action&quot; :class &quot;btn&quot;}
+                                 &quot;Register&quot;))]))))</pre></td></tr><tr><td class="docs"><p>POST version of the /expert route. This route processes the login/register
+attempt and redirects back to the GET page.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/expert&quot;] {:as attempt}
+  (when-not (expert/logged-in?)
+    (when (valid/attempt? attempt)
+      (expert/process-attempt attempt))
+    (if-let [errors (vali/get-errors :identity)]
+      (flash/put! :error (common/format-errors errors))))
+  (resp/redirect &quot;/expert&quot;))</pre></td></tr><tr><td class="docs"><p>Logout the currently logged in expert.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage &quot;/expert/logout&quot; []
+  (expert/logout)
+  (resp/redirect &quot;/expert&quot;))</pre></td></tr><tr><td class="docs"><p>grid-cols must divide 12 for use with CSS grid system.</p>
 </td><td class="codes"><pre class="brush: clojure">(def grid-cols 3)
 (def grid-rows 3)
-(def grid-size (* grid-cols grid-rows))</pre></td></tr><tr><td class="docs">
+(def grid-size (* grid-cols grid-rows))</pre></td></tr><tr><td class="docs"><p>Construct a list of game titles and cover images</p>
 </td><td class="codes"><pre class="brush: clojure">(def retrieved-games
   ; Currently produces dummy values, will eventually retrieve random games from database
   (for [x (range grid-cols)]
@@ -3249,7 +3387,7 @@ applications "model" (which is mostly mongo).</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial grid-row [coll]
   [:div.row-fluid
    (map game-thumb coll)])</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defpage &quot;/expert-select&quot; []
+</td><td class="codes"><pre class="brush: clojure">(defpage &quot;/expert/select&quot; []
   (common/with-javascripts (cons &quot;/js/expert.js&quot; common/*javascripts*)
     (common/layout
       [:h1 &quot;Welcome, Board Game Expert!&quot;]
@@ -3259,7 +3397,7 @@ applications "model" (which is mostly mongo).</p>
        [:div.row-fluid
         [:button.btn.btn-large.btn-primary.span6 &quot;I know these games!&quot;]
         [:a.btn.btn-large.span6 {:href &quot;/expert-select&quot;} &quot;Try the next set&quot;]]])))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/expert-select&quot;] {:as m}
+</td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/expert/select&quot;] {:as m}
   (str &quot;parameters: &quot; m))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.index" name="board-ultimatum.views.index"><h1 class="project-name">board-ultimatum.views.index</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.index
   (:require [board-ultimatum.views.common :as common])
@@ -3275,9 +3413,10 @@ applications "model" (which is mostly mongo).</p>
            [:h3 &quot;Pages&quot;]
            [:p (link-to &quot;/recommend&quot; &quot;Recommend V1&quot;)]
            [:p (link-to &quot;/recommend_alt&quot; &quot;Recommend Alt&quot;)]
-           [:p (link-to &quot;/expert-select&quot; &quot;Expert Select&quot;)]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.recommend" name="board-ultimatum.views.recommend"><h1 class="project-name">board-ultimatum.views.recommend</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+           [:p (link-to &quot;/expert&quot; &quot;Expert Interface&quot;)]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.recommend" name="board-ultimatum.views.recommend"><h1 class="project-name">board-ultimatum.views.recommend</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.recommend
-  (:require [board-ultimatum.views.common :as common])
+  (:require [board-ultimatum.views.common :as common]
+            [board-ultimatum.engine.model :as model])
   (:use [noir.core :only [defpage defpartial]]
         [hiccup.element]
         [hiccup.form]))</pre></td></tr><tr><td class="docs"><p>Build preference selection button</p>
@@ -3342,10 +3481,30 @@ applications "model" (which is mostly mongo).</p>
               [:p &quot;This is a description of this field&quot;]
               [:input {:type &quot;text&quot; :name &quot;weight-value&quot;}]]
 
-            [:button {:type &quot;submit&quot; :class &quot;btn&quot;} &quot;Submit&quot;]]]])))</pre></td></tr><tr><td class="docs"><p>Process queries received from the interface</p>
+            [:button {:type &quot;submit&quot; :class &quot;btn&quot;} &quot;Submit&quot;]]]])))
+(defn display-game [game]
+  [:tr.game
+   [:td (:rank game) &quot;. &quot;]
+   [:td (image (:thumbnail game))]
+   [:td (:bgg_id game) &quot;. &quot;]
+   [:td (:name game)]
+   [:td (:length game) &quot; minutes&quot;]
+   [:td (:min_players game) &quot;-&quot; (:max_players game) &quot; Players&quot;]
+   [:td (:min_age game)]])</pre></td></tr><tr><td class="docs"><p>Process queries received from the interface</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/recommend&quot;] {:as params}
     (common/layout
-        [:h1 &quot;Here are your results&quot;]
-        [:h2 &quot;Have fun playing!&quot;]
-        [:p (str &quot;Your games: &quot; (str params))]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+        [:h1 &quot;Have fun playing!&quot;]
+        [:table.games.table.table-striped
+         [:thead
+          [:th &quot;Rank&quot;]
+          [:th &quot;Thumb&quot;]
+          [:th &quot;BGG ID&quot;]
+          [:th &quot;Name&quot;]
+          [:th &quot;Length&quot;]
+          [:th &quot;Num Players&quot;]
+          [:th &quot;Min Age&quot;]]
+         [:tbody
+          (map display-game
+               (sort #(compare (:rank %1) (:rank %2))
+                     (model/find-by-length 20 30)))]]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
        SyntaxHighlighter.all()</script></body></html>
