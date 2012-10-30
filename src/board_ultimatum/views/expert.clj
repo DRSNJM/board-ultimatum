@@ -3,19 +3,17 @@
   rating."
   (:require [board-ultimatum.views.common :as common]
             [board-ultimatum.flash :as flash]
+            [board-ultimatum.form-validators :as valid]
+            [board-ultimatum.engine.model.expert :as expert]
+            [noir.session :as sess]
+            [noir.validation :as vali]
             [noir.response :as resp])
-  (:use [noir.core :only [defpage defpartial pre-route]]
+  (:use [noir.core :only [defpage defpartial pre-route render]]
+        [hiccup core element]
         [hiccup.form :only [form-to label text-field submit-button]]))
 
-(defn expert-logged-in?
-  "Determine if there is an expert logged in right now."
-  [] false)
-
-(defn expert-logout "Logout the currently logged in expert."
-  [])
-
 (pre-route [:any "/expert/*"] {:as req}
-           (when-not (expert-logged-in?)
+           (when-not (expert/logged-in?)
              (flash/put! :warning "You must log in before accessing this
                                   functionality.")
              (resp/redirect "/expert")))
@@ -42,7 +40,7 @@
 
 ;; Logout the currently logged in expert.
 (defpage "/expert/logout" []
-  (expert-logout)
+  (expert/logout)
   (resp/redirect "/expert"))
 
 ;; grid-cols must divide 12 for use with CSS grid system.
