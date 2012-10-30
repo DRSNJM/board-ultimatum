@@ -96,22 +96,22 @@
 (defpage [:post "/recommend"] {:as params}
 ;  (println "POST PARAMS: " (params :length))
     (common/layout
-        [:h1 "Have fun playing!"]
-        [:table.games.table.table-striped
-         [:thead
-          [:th "Rank"]
-          [:th "Thumb"]
-          [:th "BGG ID"]
-          [:th "Name"]
-          [:th "Length"]
-          [:th "Num Players"]
-          [:th "Min Age"]]
-         [:tbody
-          (map display-game
-               (take 30
-                     (sort #(compare (:rank %1) (:rank %2))
-                           (model/find-by-length
-                            (map #(Integer/parseInt %)
-                                 (params :length))))))]]))
+      [:h1 "Have fun playing!"]
+      [:table.games.table.table-striped
+       [:thead
+        [:th "Rank"]
+        [:th "Thumb"]
+        [:th "BGG ID"]
+        [:th "Name"]
+        [:th "Length"]
+        [:th "Num Players"]
+        [:th "Min Age"]]
+       [:tbody
+        (map display-game
+          (take 30
+            (sort-by :rank
+              (model/find-games
+                (map #(Integer/parseInt %)
+                  (params :length))
+                ))))]]))
 
-; (model/find-by-players 5 10)
