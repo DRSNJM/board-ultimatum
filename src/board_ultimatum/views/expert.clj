@@ -35,8 +35,15 @@
               (submit-button {:name "action" :class "btn btn-primary"} "Log In") " "
               (submit-button {:name "action" :class "btn"} "Register"))]))
 
+;; POST version of the /expert route. This route processes the login/register
+;; attempt and redirects back to the GET page.
 (defpage [:post "/expert"] {:as attempt}
-  (str "Attempt: " attempt))
+  (when-not (expert/logged-in?)
+    (when (valid/attempt? attempt)
+      (expert/process-attempt attempt))
+    (if-let [errors (vali/get-errors :identity)]
+      (flash/put! :error (common/format-errors errors))))
+  (resp/redirect "/expert"))
 
 ;; Logout the currently logged in expert.
 (defpage "/expert/logout" []
