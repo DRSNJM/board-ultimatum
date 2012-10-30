@@ -4,16 +4,15 @@
   (:require [board-ultimatum.views.common :as common]
             [board-ultimatum.flash :as flash]
             [board-ultimatum.form-validators :as valid]
-            [board-ultimatum.engine.model.expert :as expert]
-            [noir.session :as sess]
             [noir.validation :as vali]
             [noir.response :as resp])
   (:use [noir.core :only [defpage defpartial pre-route render]]
+        [board-ultimatum.session]
         [hiccup core element]
         [hiccup.form :only [form-to label text-field submit-button]]))
 
 (pre-route [:any "/expert/*"] {:as req}
-           (when-not (expert/logged-in?)
+           (when-not (expert-logged-in?)
              (flash/put! :warning "You must log in before accessing this
                                   functionality.")
              (resp/redirect "/expert")))
@@ -23,7 +22,7 @@
 (defpage "/expert" []
   (common/layout
     [:h1 "Welcome, Board Game Expert!"]
-    (if (expert/logged-in?)
+    (if (expert-logged-in?)
       (html
         [:h3 "You have two choices"]
         [:div.span6 (link-to "/expert/logout" "Logout")]
@@ -48,16 +47,16 @@
 ;; POST version of the /expert route. This route processes the login/register
 ;; attempt and redirects back to the GET page.
 (defpage [:post "/expert"] {:as attempt}
-  (when-not (expert/logged-in?)
+  (when-not (expert-logged-in?)
     (when (valid/attempt? attempt)
-      (expert/process-attempt attempt))
+      (process-login-attempt attempt))
     (if-let [errors (vali/get-errors :identity)]
       (flash/put! :error (common/format-errors errors))))
   (resp/redirect "/expert"))
 
 ;; Logout the currently logged in expert.
 (defpage "/expert/logout" []
-  (expert/logout)
+  (expert-logout)
   (resp/redirect "/expert"))
 
 ;; grid-cols must divide 12 for use with CSS grid system.
