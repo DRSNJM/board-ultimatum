@@ -23,17 +23,27 @@
 (defpage "/expert" []
   (common/layout
     [:h1 "Welcome, Board Game Expert!"]
-    [:p "Since this is not a security required application there is no strong
-        authentication. However, to keep track of your history of
-        recommendations we still need to identify you."]
-    [:p "The resulting system is very simple. As an expert you will use the same
-        identifier each time you use the application. Your identifier can be
-        anything you want including your name or random string of numbers."]
-    [:div.well
-     (form-to {:id "expert-login" :class "form-inline"} [:post "/expert"]
-              (text-field {:id "identity" :placeholder "Your identifier"} "identity") " "
-              (submit-button {:name "action" :class "btn btn-primary"} "Log In") " "
-              (submit-button {:name "action" :class "btn"} "Register"))]))
+    (if (expert/logged-in?)
+      (html
+        [:h3 "You have two choices"]
+        [:div.span6 (link-to "/expert/logout" "Logout")]
+        [:div.span6 (link-to "/expert/select" "Do some work!")])
+      (html
+        [:p "Since this is not a security required application there is no
+            strong authentication. However, to keep track of your history of
+            recommendations we still need to identify you."]
+        [:p "The resulting system is very simple. As an expert you will use the
+             same identifier each time you use the application. Your identifier
+             can be anything you want including your name or random string of
+             numbers."]
+        [:div.well
+         (form-to {:id "expert-login" :class "form-inline"} [:post "/expert"]
+                  (text-field {:id "identity" :placeholder "Your identifier"}
+                              "identity") " "
+                  (submit-button {:name "action" :class "btn btn-primary"}
+                                 "Log In") " "
+                  (submit-button {:name "action" :class "btn"}
+                                 "Register"))]))))
 
 ;; POST version of the /expert route. This route processes the login/register
 ;; attempt and redirects back to the GET page.
