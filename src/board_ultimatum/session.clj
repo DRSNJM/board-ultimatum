@@ -22,7 +22,7 @@
   [id]
   (if (expert/exists? id)
     (do
-      (sess/put! :expert-id id)
+      (sess/put! :expert-id (expert/name-from-id id))
       (flash/put! :success "Hello, " id ". You have logged in successfully!"))
     (vali/set-error :identity "No user with that identity exists. Try
                          registering.")))
