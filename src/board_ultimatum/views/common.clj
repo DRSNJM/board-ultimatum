@@ -41,6 +41,13 @@
   ([class type message] (alert class type message true))
   ([type message] (alert type type message true)))
 
+(defpartial format-errors
+  "Takes a collection of error messages and formats it into html."
+  [errs]
+  (when-not (empty? errs)
+    [:div.help-block
+     [:ul (map #(html [:li %]) errs)]]))
+
 ;; ## Layouts
 
 ;; Base layout used by the web app.
