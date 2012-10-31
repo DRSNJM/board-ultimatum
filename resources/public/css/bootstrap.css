@@ -9999,6 +9999,11 @@ a.badge:hover {
   }
 }
 
+.container-fluid {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
 .navbar-fixed-top {
   margin-bottom: 0;
 }
@@ -10009,8 +10014,10 @@ a.badge:hover {
   }
 }
 
-#main-wrapper {
-  margin: 40px 0 0 0;
+@media (min-width: 980px) {
+  #main-wrapper {
+    margin: 40px 0 0 0;
+  }
 }
 
 #recommend #sidebar {
@@ -10023,6 +10030,10 @@ a.badge:hover {
 
 #recommend #game-params .param {
   overflow: hidden;
+}
+
+#expert-choices .hero-unit a.btn {
+  float: right;
 }
 
 .btn-group.tri-state .btn.option {
@@ -10078,4 +10089,33 @@ a.badge:hover {
 
 .form-inline {
   margin: 0;
+}
+
+ol.row-fluid,
+ol.row {
+  padding: 0;
+  margin: 0;
+}
+
+.hero-unit.small {
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.hero-unit.small h1,
+.hero-unit.small h2,
+.hero-unit.small h3,
+.hero-unit.small h4,
+.hero-unit.small h5,
+.hero-unit.small h6 {
+  line-height: 1em;
+}
+
+footer#footer {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.alert {
+  margin-top: 20px;
 }
