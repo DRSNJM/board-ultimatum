@@ -47,24 +47,25 @@
   Usage: (times [30 45]) => (25 30 35 40 45 50)"
   (mapcat #(time-map %) selected))
 
-(defn filter-on-times [games selected-times attrs]
-  (if (and (boolean (count selected-times)) (Boolean/valueOf (:length-active attrs)))
+(defn filter-on-times [selected-times attrs games]
+  (if (and (> (count selected-times) 0) (Boolean/valueOf (:length-active attrs)))
     (filter #(boolean (some #{(:length %)} (times selected-times))) games)
     games))
 
-(defn filter-on-num-players [games selected-num-players]
-  ; (if (and (boolean (count selected-num-players)) ...
-  (let [min-pl (min selected-num-players)
-        max-pl (max selected-num-players)]
-
-    )
-  )
+(defn filter-on-num-players [selected-num-players attrs games]
+  (if (and (> (count selected-num-players) 0) (Boolean/valueOf (:num-players-active attrs)))
+    (let [min-pl (apply min selected-num-players)
+          max-pl (apply max selected-num-players)]
+      (filter #(not (or (> min-pl (:max_players %))
+                        (< max-pl (:min_players %)))) games))
+    games))
 
 (defn find-games [selected-times selected-num-players attrs]
     "Queries mongo for games matching selected inputs."
     (let [collection "board_games"]
       (let [games (mc/find-maps collection)]
-        (filter-on-times games selected-times attrs))))
+        (filter-on-times selected-times attrs 
+          (filter-on-num-players selected-num-players attrs games)))))
 
 ;%(defn find-by-players [& selected-players]
 ;    "Queries mongo for games matching any of the selected player ranges."

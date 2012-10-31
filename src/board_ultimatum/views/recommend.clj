@@ -32,7 +32,7 @@
   [:div.selection
    [:label.checkbox
     [:div.icon.player]
-    (check-box "players[]" false num)
+    (check-box "num-players[]" false num)
     [:div.bottom-label (str num " Players")]]])
 
 (defn time-checkboxes [num]
@@ -126,7 +126,7 @@
                 (map #(Integer/parseInt %)
                   (params :length))
                 (map #(Integer/parseInt %)
-                  (params :length))
+                  (params :num-players))
                 params
                 ))))]]))
 
