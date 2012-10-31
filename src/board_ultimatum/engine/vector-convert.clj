@@ -27,9 +27,9 @@
 ; 3 - min age
 ; 4 - rank
 ; 5 - weight
-; 6 - ratingg
+; 6 - rating
 ; 7 - rank
-; 8 - category - card game
+; 8... categories/mechanics
 
 (defn has-tag [game subtype value]
   (cond
@@ -53,13 +53,13 @@
 
 (defn all-categories []
   "Return all possible categories"
-  (seq (eval (cons union (map game-categories
-    (model/find-all))))))
+  (seq (apply union (map game-categories
+    (model/find-all)))))
 
 (defn all-mechanics []
   "Return all possible mechanics"
-  (seq (eval (cons union (map game-mechanics
-    (model/find-all))))))
+  (seq (apply union (map game-mechanics
+    (model/find-all)))))
 
 (defn to-vector [game]
   "Convert Mongo game record to normalized numeric vector"
@@ -236,7 +236,7 @@
 
 ;; add the data to the redis store
 
-(pprint (map (fn [id data] (wcar 
+(dorun (map (fn [id data] (wcar 
     (car/del id)
     (doseq [n data]
         (car/lpush id n))))
