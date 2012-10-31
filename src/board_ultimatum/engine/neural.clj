@@ -60,8 +60,8 @@
 
 (defn join-vector [id-A id-B] (into [] (concat (get-vector id-A) (get-vector id-B))))
 
-(defn to-dataset [id-A id-B] (data :basic-dataset [(join-vector id-A id-B) (join-vector id-B id-A)]
-                                [[-1.0] [-1.0]]))
+(defn to-dataset [id-A id-B] (data :basic-dataset [(join-vector id-A id-B)]
+                                [[-1.0]]))
 
 (defn add-result [id-A id-B weight] (wcar2 
   (car/zadd id-A weight id-B)))
@@ -72,8 +72,7 @@
 
 (doseq [id-A game-ids]
   (doseq [id-B game-ids]
-    (add-result id-A id-B (nth (output-pair id-A id-B) 0))
-    (add-result id-B id-A (nth (output-pair id-B id-A) 1))))
+    (add-result id-A id-B (nth (output-pair id-A id-B) 0))))
 
 ;(doseq [pair (to-dataset 2955 3685)] 
 ;    (. (. net compute (. pair getInput)) getData 0))
