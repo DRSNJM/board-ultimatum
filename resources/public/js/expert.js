@@ -4,25 +4,34 @@ jQuery(document).ready(function ($) {
   // This avoids odd behaviour when using back and forward buttons.
   $expertSelect.find('input[type=hidden]').val('false');
 
-  // make game selections toggle hidden input
-  var selectedCount = 0;
+  // Store some jQuery objects for commonly used elements.
   var $mainButton = $('#main-button');
   var $mainButtonStrong = $mainButton.find('strong');
   var origButtonText = $mainButtonStrong.html();
-  $('#expert-select').on('click', '.game', function (event) {
+  var selectedClass = 'selected';
+
+  // Keep track of the number of selected games.
+  var selectedCount = 0;
+  $expertSelect.on('click', '.game', function (event) {
     event.preventDefault();
+    // The game being clicked.
     var $this = $(this);
+    // The hidden element used by the form.
     var input = $this.find('input[type=hidden]');
-    var selectedClass = 'selected';
+
     $this.toggleClass(selectedClass);
     if ($this.hasClass(selectedClass)) {
+      // This games has been selected!
       input.val('true');
       selectedCount++;
     } else {
+      // This games has been unselected.
       input.val('false');
       selectedCount--;
     }
 
+    // Change the submit button to reflect whether the user has made in
+    // selections.
     if (selectedCount > 0) {
       if (!$mainButton.hasClass('btn-primary')) {
         $mainButtonStrong.html("I know these games!");
