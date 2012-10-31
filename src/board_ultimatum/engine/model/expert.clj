@@ -1,7 +1,6 @@
 (ns board-ultimatum.engine.model.expert
   "A namespace for maniuplating the experts as part of the datastore"
-  (:require [board-ultimatum.views.common :as common]
-            [clojure.string :as string]
+  (:require [clojure.string :as string]
             [monger.core :as mg]
             [monger.collection :as mc])
   (:use [monger.operators]))
