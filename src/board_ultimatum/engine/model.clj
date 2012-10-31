@@ -1,6 +1,7 @@
 (ns board-ultimatum.engine.model
   (:require [monger.core :as mg]
-            [monger.collection :as mc])
+            [monger.collection :as mc]
+            [board-ultimatum.attr_engine :as attr_engine])
   (:use [monger.operators]))
 
 ;; This namespace contains all functions related to manipulating the
@@ -53,6 +54,7 @@
     games))
 
 (defn filter-on-num-players [selected-num-players attrs games]
+  ;(println (:tags (first games)))
   (if (and (> (count selected-num-players) 0) (Boolean/valueOf (:num-players-active attrs)))
     (let [min-pl (apply min selected-num-players)
           max-pl (apply max selected-num-players)]
@@ -64,13 +66,6 @@
     "Queries mongo for games matching selected inputs."
     (let [collection "board_games"]
       (let [games (mc/find-maps collection)]
-        (filter-on-times selected-times attrs 
-          (filter-on-num-players selected-num-players attrs games)))))
-
-;%(defn find-by-players [& selected-players]
-;    "Queries mongo for games matching any of the selected player ranges."
-;    (let [collection "board_games"]
-;      (mc/find-maps collection
-;                    {$and [{:max_players {$lte (apply max selected-players)}}
-;                           {:min_players {$gte (apply min selected-players)}}]})))
-
+        (attr_engine/score-games attrs
+          (filter-on-times selected-times attrs 
+            (filter-on-num-players selected-num-players attrs games))))))

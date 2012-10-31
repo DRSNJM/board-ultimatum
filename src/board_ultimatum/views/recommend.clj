@@ -75,9 +75,9 @@
               [:input {:type "hidden" :name "mechanics-active" :value "false"}]
               [:h3 "Mechanics"]
               [:p "Select gameplay mechanics that you like or dislike"]
-              (build-tri-state "Hand Management" "mechanics" "hand-management")
-              (build-tri-state "Deck Building" "mechanics" "deck-building")
-              (build-tri-state "Card Drafting" "mechanics" "card-draft")]
+              (build-tri-state "Hand Management" "mechanics" "Hand Management")
+              (build-tri-state "Deck Building" "mechanics" "Deck Building")
+              (build-tri-state "Card Drafting" "mechanics" "Card Drafting")]
 
             [:div {:id "input-weight" :class "param well well-small"}
               [:input {:type "hidden" :name "weight-active" :value "false"}]
@@ -121,12 +121,12 @@
        [:tbody
         (map display-game
           (take 30
-            (sort-by :rank
+            (sort-by (juxt :score :rank)
               (model/find-games
                 (map #(Integer/parseInt %)
-                  (params :length))
+                  (:length params))
                 (map #(Integer/parseInt %)
-                  (params :num-players))
+                  (:num-players params))
                 params
                 ))))]]))
 
