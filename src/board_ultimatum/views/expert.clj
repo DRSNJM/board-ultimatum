@@ -4,6 +4,8 @@
   (:require [board-ultimatum.views.common :as common]
             [board-ultimatum.flash :as flash]
             [board-ultimatum.form-validators :as valid]
+            [board-ultimatum.engine.model.expert :as expert]
+            [noir.session :as sess]
             [noir.validation :as vali]
             [noir.response :as resp])
   (:use [noir.core :only [defpage defpartial pre-route render]]
@@ -83,24 +85,23 @@
 (def grid-rows 3)
 (def grid-size (* grid-cols grid-rows))
 
-;; Construct a list of game titles and cover images
-(def retrieved-games
-  ; Currently produces dummy values, will eventually retrieve random games from
-  ; database
+(defn games-to-grid
+  "Takes a collection of games and returns a grid-cols by grid-rows 2-D vector."
+  [games]
+  {:pre [(= (count games) grid-size)]
+   :post [(= (count %) grid-rows) (= (count (first %)) grid-cols)]}
   (for [y (range grid-rows)]
     (for [x (range grid-cols)]
-      [(+ (* y grid-rows) x)
-       "Game Title: Might Be a Bit Long"
-       "http://placehold.it/150x100"])))
+      (nth games (+ (* y grid-rows) x)))))
 
-(defpartial game-thumb [[game-id game-name imgURL]]
-  [:div {:id (str "game-" game-id)
+(defpartial game-thumb [{:keys [bgg_id name thumbnail]}]
+  [:div {:id (str "game-" bgg_id)
          :class (str "game-container span" (/ 12 grid-cols))
          :data-toggle "button"}
    [:div.game
-    [:input {:type "hidden" :name (str "games[" game-id "]") :value "false"}]
-    [:img.img-rounded {:src imgURL}]
-    [:h5 game-name]]])
+    [:input {:type "hidden" :name (str "games[" bgg_id "]") :value "false"}]
+    [:img.img-rounded {:src thumbnail}]
+    [:h5 name]]])
 
 (defpartial grid-row [coll]
   [:div.row-fluid
