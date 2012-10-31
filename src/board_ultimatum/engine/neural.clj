@@ -49,7 +49,13 @@
 (pprint (wcar0 (car/ping)))
 (pprint (wcar1 (car/ping)))
 
-(pprint (wcar0 (car/keys "*")))
+;; for each id, join each id with every other id
+
+(def game-ids (wcar0 (car/keys "*")))
+
+(doseq [id-A game-ids]
+  (doseq [id-B game-ids]
+    (pprint (str id-A " " id-B))))
 
 (doseq [pair input] 
   (let [output (. net compute (. pair getInput ))] 
