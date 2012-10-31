@@ -1,5 +1,8 @@
 jQuery(document).ready(function ($) {
-  $('.btn-input').find('input[type=hidden]').val('off');
+  var $expertSelect = $('#expert-select');
+  // When navigating to the page by always ensure that inputs default to false.
+  // This avoids odd behaviour when using back and forward buttons.
+  $expertSelect.find('input[type=hidden]').val('false');
 
   // make game selections toggle hidden input
   var selectedCount = 0;
