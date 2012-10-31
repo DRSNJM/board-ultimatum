@@ -78,37 +78,47 @@
   (resp/redirect "/expert"))
 
 ;; grid-cols must divide 12 for use with CSS grid system.
-(def grid-cols 3)
+(def grid-cols 4)
 (def grid-rows 3)
 (def grid-size (* grid-cols grid-rows))
 
 ;; Construct a list of game titles and cover images
 (def retrieved-games
-  ; Currently produces dummy values, will eventually retrieve random games from database
-  (for [x (range grid-cols)]
-    (for [y (range grid-rows)]
-      [(+ (* x grid-cols) y) "Game Title: Might Be a Bit Long" "http://lorempixel.com/150/100/"])))
+  ; Currently produces dummy values, will eventually retrieve random games from
+  ; database
+  (for [y (range grid-rows)]
+    (for [x (range grid-cols)]
+      [(+ (* y grid-rows) x)
+       "Game Title: Might Be a Bit Long"
+       "http://placehold.it/150x100"])))
 
 (defpartial game-thumb [[game-id game-name imgURL]]
-  [:div.span4.game {:id (str "game-" game-id)}
-   [:button.btn.btn-info.btn-input {:data-toggle "button"}
+  [:div {:id (str "game-" game-id)
+         :class (str "game-container span" (/ 12 grid-cols))
+         :data-toggle "button"}
+   [:div.game
     [:input {:type "hidden" :name (str "game-field-" game-id) :value "off"}]
     [:img.img-rounded {:src imgURL}]
-    [:h4 game-name]]])
+    [:h5 game-name]]])
 
 (defpartial grid-row [coll]
   [:div.row-fluid
    (map game-thumb coll)])
 
+;; A page show to the expert
 (defpage "/expert/select" []
   (common/with-javascripts (cons "/js/expert.js" common/*javascripts*)
     (common/layout
-      [:h2 "Please select games that you are familiar with:"]
-      [:form#expert-select.container-fluid {:method "post"}
+      [:div.page-header
+       [:h1 "Select all of the games you are familiar with"]]
+      [:form#expert-select {:method "post"}
        (map grid-row retrieved-games)
-       [:div.row-fluid
-        [:button.btn.btn-large.btn-primary.span6 "I know these games!"]
-        [:a.btn.btn-large.span6 {:href "/expert-select"} "Try the next set"]]])))
+       [:div.form-actions
+        [:div.row-fluid
+         [:button.btn.btn-large.span8
+          [:strong "I am unfamiliar with all of these games. Next!"]]
+         [:a.btn.btn-large.span4 {:href "/expert"}
+          "I'm done with this for today."]]]])))
 
 (defpage [:post "/expert/select"] {:as m}
-  (str "parameters: " m))
+  (render "/expert/select"))
