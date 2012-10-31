@@ -26,11 +26,24 @@
                                   1.0 1.0 1.0 1.0 1.0
                                   1.0 1.0 1.0 1.0 1.0
                                   1.0 1.0 1.0 1.0 1.0]]
-                                [[-1.0]
-                                 [-1.0]]))
+                                 [[-1.0]
+                                  [-1.0]]))
 
 (def prop-train (trainer :resilient-prop :network net :training-set training-set)) 
 
+;; establish redis connections
+;; db 0 => list of vector values keyed on game id
+;; db 1 => sorted sets keyed on game id where weight is output and member is second game
+
+(def pool (car/make-conn-pool))
+
+(defn spec-server [db-num] (car/make-conn-spec :db db-num))
+
+(defmacro wcar0 [& body] `(car/with-conn pool (spec-server 0) ~@body))
+(defmacro wcar1 [& body] `(car/with-conn pool (spec-server 1) ~@body))
+
+(pprint (wcar0 (car/ping)))
+(pprint (wcar1 (car/ping)))
 
 (doseq [pair input] 
   (let [output (. net compute (. pair getInput ))] 

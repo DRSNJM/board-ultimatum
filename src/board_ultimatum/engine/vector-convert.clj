@@ -200,7 +200,7 @@
 ; establish redis connection
 
 (def pool (car/make-conn-pool))
-(def spec-server1 (car/make-conn-spec))
+(def spec-server1 (car/make-conn-spec :db 0))
 (defmacro wcar [& body] `(car/with-conn pool spec-server1 ~@body))
 
 (wcar (car/ping))
