@@ -17,44 +17,50 @@
                                   functionality.")
              (resp/redirect "/expert")))
 
+;; Partial used by the GET /expert route when there is an expert logged in.
+(defpartial expert-logged-in []
+  [:div.page-header
+   [:h1 "You have two choices"]]
+  [:ol#expert-choices.row-fluid
+   [:li.span6
+    [:div.hero-unit.small
+     [:h2 "Select games you know "
+      [:small "and tell us how good of a recommendation they are for
+              eachother."]]
+     (link-to {:class "btn btn-primary btn-large"}
+              "/expert/select" [:strong "Do some work!"])]]
+   [:li.span6
+    [:h2 "&hellip;or be boring" [:small " and log out."]]
+    (link-to {:class "btn btn-large"}
+             "/expert/logout" "Log out")]])
+
+;; Partial used by the GET /expert route when there is not an expert logged in.
+(defpartial expert-not-logged-in []
+  [:div.page-header
+   [:h1 "Welcome, Board Game Expert!"]]
+  [:p "Since this is not a security required application there is no
+      strong authentication. However, to keep track of your history of
+      recommendations we still need to identify you."]
+  [:p "The resulting system is very simple. As an expert you will use the
+      same identifier each time you use the application. Your identifier
+      can be anything you want including your name or random string of
+      numbers."]
+  [:div.well
+   (form-to {:id "expert-login" :class "form-inline"} [:post "/expert"]
+            (text-field {:id "identity" :placeholder "Your identifier"}
+                        "identity") " "
+            (submit-button {:name "action" :class "btn btn-primary"}
+                           "Log In") " "
+            (submit-button {:name "action" :class "btn"}
+                           "Register"))])
+
 ;; The route from which an expert should start at. If they are not logged in
 ;; they can here. If they are then they are redirected to select.
 (defpage "/expert" []
   (common/layout
     (if (expert-logged-in?)
-      (html
-        [:div.page-header
-         [:h1 "You have two choices"]]
-          [:ol#expert-choices.row-fluid
-           [:li.span6
-            [:div.hero-unit.small.clearfix
-             [:h2 "Select games you know "
-              [:small "and tell us how good of a recommendation they are for
-                      eachother."]]
-             (link-to {:class "btn btn-primary btn-large"}
-                      "/expert/select" [:strong "Do some work!"])]]
-           [:li.span6
-            [:h2 "&hellip;or be boring" [:small " and log out."]]
-            (link-to {:class "btn btn-large"}
-                     "/expert/logout" "Log out")]])
-      (html
-        [:div.page-header
-         [:h1 "Welcome, Board Game Expert!"]]
-        [:p "Since this is not a security required application there is no
-            strong authentication. However, to keep track of your history of
-            recommendations we still need to identify you."]
-        [:p "The resulting system is very simple. As an expert you will use the
-             same identifier each time you use the application. Your identifier
-             can be anything you want including your name or random string of
-             numbers."]
-        [:div.well
-         (form-to {:id "expert-login" :class "form-inline"} [:post "/expert"]
-                  (text-field {:id "identity" :placeholder "Your identifier"}
-                              "identity") " "
-                  (submit-button {:name "action" :class "btn btn-primary"}
-                                 "Log In") " "
-                  (submit-button {:name "action" :class "btn"}
-                                 "Register"))]))))
+      (expert-logged-in)
+      (expert-not-logged-in))))
 
 ;; POST version of the /expert route. This route processes the login/register
 ;; attempt and redirects back to the GET page.
