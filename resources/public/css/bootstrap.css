@@ -10033,7 +10033,7 @@ a.badge:hover {
 }
 
 #expert-select .game {
-  padding: 24px 16px 12px;
+  padding: 24px 16px 2px;
   margin-bottom: 20px;
   text-align: center;
   cursor: pointer;
@@ -10048,9 +10048,7 @@ a.badge:hover {
 }
 
 #expert-select .game img {
-  max-width: 175px;
   padding: 4px;
-  margin: 0 auto;
   background-color: #fff;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
