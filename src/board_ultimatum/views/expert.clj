@@ -97,7 +97,7 @@
          :class (str "game-container span" (/ 12 grid-cols))
          :data-toggle "button"}
    [:div.game
-    [:input {:type "hidden" :name (str "game-field-" game-id) :value "off"}]
+    [:input {:type "hidden" :name (str "games[" game-id "]") :value "false"}]
     [:img.img-rounded {:src imgURL}]
     [:h5 game-name]]])
 
@@ -115,7 +115,7 @@
        (map grid-row retrieved-games)
        [:div.form-actions
         [:div.row-fluid
-         [:button.btn.btn-large.span8
+         [:button#main-button.btn.btn-large.span8
           [:strong "I am unfamiliar with all of these games. Next!"]]
          [:a.btn.btn-large.span4 {:href "/expert"}
           "I'm done with this for today."]]]])))
