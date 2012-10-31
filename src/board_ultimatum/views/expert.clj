@@ -100,8 +100,10 @@
          :data-toggle "button"}
    [:div.game
     [:input {:type "hidden" :name (str "games[" bgg_id "]") :value "false"}]
-    [:img.img-rounded {:src thumbnail}]
-    [:h5 name]]])
+    [:div.image-wrapper
+     [:img.img-rounded {:src thumbnail}]]
+    [:div.title-wrapper
+     [:h5 name]]]])
 
 (defpartial grid-row [coll]
   [:div.row-fluid
