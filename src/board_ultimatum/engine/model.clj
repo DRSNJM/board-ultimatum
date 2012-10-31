@@ -10,8 +10,8 @@
   "Ensures the existence of several indexes to use mongo efficiently."
   []
   (mc/ensure-index "experts" {:identifier 1})
-  (mc/ensure-index "games" {:id 1})
-  (mc/ensure-index "games" {:name 1}))
+  (mc/ensure-index "board_games" {:bgg_id 1})
+  (mc/ensure-index "board_games" {:name 1}))
 
 (defn connect
   "Connect to mongo based on the given connection information."
