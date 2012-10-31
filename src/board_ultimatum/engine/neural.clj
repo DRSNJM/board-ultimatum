@@ -18,7 +18,7 @@
                                          0.0 0.0 0.0 0.0 0.0]]
                                        [[1.0]]))
 
-(def input (data :basic-dataset [[0.0 0.0 0.0 0.0 0.0
+(def dummy-input (data :basic-dataset [[0.0 0.0 0.0 0.0 0.0
                                   0.0 0.0 0.0 0.0 0.0
                                   0.0 0.0 0.0 0.0 0.0
                                   0.0 0.0 0.0 0.0 0.0]
@@ -47,17 +47,37 @@
 (defmacro wcar2 [& body] `(car/with-conn pool (spec-server 2) ~@body))
 
 (pprint (wcar0 (car/ping)))
-(pprint (wcar1 (car/ping)))
 
 ;; for each id, join each id with every other id
 
 (def game-ids (wcar0 (car/keys "*")))
 
+(defn get-vector [game-id] 
+  (into [] 
+    (map 
+      (fn [n] (read-string n)) 
+      (wcar0 (car/lrange game-id 0 10)))))
+
+(defn join-vector [id-A id-B] (into [] (concat (get-vector id-A) (get-vector id-B))))
+
+(defn to-dataset [id-A id-B] (data :basic-dataset [(join-vector id-A id-B) (join-vector id-B id-A)]
+                                [[-1.0] [-1.0]]))
+
+(defn add-result [id-A id-B weight] (wcar2 
+  (car/zadd id-A weight id-B)))
+
+(defn output-pair [id-A id-B] (map 
+  (fn [pair] (. (. net compute (. pair getInput)) getData 0))
+  (to-dataset id-A id-B)))
+
 (doseq [id-A game-ids]
   (doseq [id-B game-ids]
-    (pprint (str id-A " " id-B))))
+    (add-result id-A id-B (nth (output-pair id-A id-B) 0))
+    (add-result id-B id-A (nth (output-pair id-B id-A) 1))))
 
-(doseq [pair input] 
-  (let [output (. net compute (. pair getInput ))] 
-  (println "Output = " (. output getData  0))))
+;(doseq [pair (to-dataset 2955 3685)] 
+;    (. (. net compute (. pair getInput)) getData 0))
 
+;(pprint (map 
+;  (fn [pair] (. (. net compute (. pair getInput)) getData 0))
+;  (to-dataset 2955 3685)))
