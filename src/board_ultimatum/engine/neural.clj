@@ -33,7 +33,10 @@
 
 ;; establish redis connections
 ;; db 0 => list of vector values keyed on game id
-;; db 1 => sorted sets keyed on game id where weight is output and member is second game
+;; db 1 => training data
+;;         sorted sets keyed on game id where weight is output and member is second game
+;; db 2 => output data
+;;         sorted sets keyed on game id where weight is output and member is second game
 
 (def pool (car/make-conn-pool))
 
@@ -41,9 +44,12 @@
 
 (defmacro wcar0 [& body] `(car/with-conn pool (spec-server 0) ~@body))
 (defmacro wcar1 [& body] `(car/with-conn pool (spec-server 1) ~@body))
+(defmacro wcar2 [& body] `(car/with-conn pool (spec-server 2) ~@body))
 
 (pprint (wcar0 (car/ping)))
 (pprint (wcar1 (car/ping)))
+
+(pprint (wcar0 (car/keys "*")))
 
 (doseq [pair input] 
   (let [output (. net compute (. pair getInput ))] 
