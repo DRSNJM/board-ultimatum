@@ -137,5 +137,5 @@
                                     (= selected "true"))
                                   games))]
     (if (empty? selected-ids)
-      (render "/expert/select")
+      (resp/redirect "/expert/select")
       (expert-compare selected-ids))))
