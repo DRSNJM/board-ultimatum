@@ -79,6 +79,9 @@
        [:div.nav-collapse
         [:ul.nav
          [:li.divider-vertical]
+         [:li (link-to "/recommend" "Recommend")]
+         [:li (link-to "/similar" "Similar Games")]
+         [:li (link-to "/expert" "Experts")]
          [:li [:a
                {:href "http://drsnjm.github.com/board-ultimatum"}
                "Documentation"]]
