@@ -107,22 +107,33 @@
   [:div.row-fluid
    (map game-thumb coll)])
 
-;; A page show to the expert
-(defpage "/expert/select" []
+(defpartial expert-page [& body]
   (common/with-javascripts (cons "/js/expert.js" common/*javascripts*)
     (common/layout
-      [:div.page-header
-       [:h1 "Select all of the games you are familiar with"]]
-      [:form#expert-select {:method "post"}
-       (map grid-row retrieved-games)
-       [:div.form-actions
-        [:div.row-fluid
-         [:button#main-button.btn.btn-large.span8
-          [:strong "I am unfamiliar with all of these games. Next!"]]
-         [:a.btn.btn-large.span4 {:href "/expert"}
-          "I'm done with this for today."]]]])))
+      body)))
+
+;; A page show to the expert
+(defpage "/expert/select" []
+  (expert-page
+    [:div.page-header
+     [:h1 "Select all of the games you are familiar with"]]
+    [:form#expert-select {:method "post"}
+     (map grid-row (games-to-grid (expert/games-for (current-expert-id) grid-size)))
+     [:div.form-actions
+      [:div.row-fluid
+       [:button#main-button.btn.btn-large.span8
+        [:strong "I am unfamiliar with all of these games. Next!"]]
+       [:a.btn.btn-large.span4 {:href "/expert"}
+        "I'm done with this for today."]]]]))
+
+(defpartial expert-compare [ids]
+  (expert-page [:p (str (seq ids))]))
 
 (defpage [:post "/expert/select"] {:keys [games]}
-  (let [kgames (keywordize-keys games)]
-    (flash/now! kgames))
-  (render "/expert/select"))
+  (let [selected-ids (map (fn [x] (Integer/parseInt (first x)))
+                          (filter (fn [[_ selected]]
+                                    (= selected "true"))
+                                  games))]
+    (if (empty? selected-ids)
+      (render "/expert/select")
+      (expert-compare selected-ids))))
