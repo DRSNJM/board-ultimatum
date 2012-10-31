@@ -21,13 +21,25 @@
 ;; they can here. If they are then they are redirected to select.
 (defpage "/expert" []
   (common/layout
-    [:h1 "Welcome, Board Game Expert!"]
     (if (expert-logged-in?)
       (html
-        [:h3 "You have two choices"]
-        [:div.span6 (link-to "/expert/logout" "Logout")]
-        [:div.span6 (link-to "/expert/select" "Do some work!")])
+        [:div.page-header
+         [:h1 "You have two choices"]]
+          [:ol#expert-choices.row-fluid
+           [:li.span6
+            [:div.hero-unit.small.clearfix
+             [:h2 "Select games you know "
+              [:small "and tell us how good of a recommendation they are for
+                      eachother."]]
+             (link-to {:class "btn btn-primary btn-large"}
+                      "/expert/select" [:strong "Do some work!"])]]
+           [:li.span6
+            [:h2 "&hellip;or be boring" [:small " and log out."]]
+            (link-to {:class "btn btn-large"}
+                     "/expert/logout" "Log out")]])
       (html
+        [:div.page-header
+         [:h1 "Welcome, Board Game Expert!"]]
         [:p "Since this is not a security required application there is no
             strong authentication. However, to keep track of your history of
             recommendations we still need to identify you."]
@@ -85,7 +97,6 @@
 (defpage "/expert/select" []
   (common/with-javascripts (cons "/js/expert.js" common/*javascripts*)
     (common/layout
-      [:h1 "Welcome, Board Game Expert!"]
       [:h2 "Please select games that you are familiar with:"]
       [:form#expert-select.container-fluid {:method "post"}
        (map grid-row retrieved-games)
