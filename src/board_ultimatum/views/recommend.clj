@@ -5,14 +5,23 @@
         [hiccup.element]
         [hiccup.form]))
 
-;; Build preference selection button
-(defpartial build-tri-state [name form-name]
-  [:div
+;; Build 3-state preference selection buttons
+(defpartial build-tri-state [name attr form-name]
+  [:div {:style "float:left;margin:10px 20px 0px 0px;"}
     [:div {:class "btn-group tri-state"}
       [:button {:type "button" :class "btn btn-danger"} [:i {:class "icon-thumbs-down"}]]
       [:button {:type "button" :class "btn option"} name]
       [:button {:type "button" :class "btn btn-success"} [:i {:class "icon-thumbs-up"}]]]
-   [:input {:type "hidden" :name (str "mechanic[" form-name "]") :value "0"}]])
+    [:input {:type "hidden" :name (str attr "[" form-name "]") :value "0"}]])
+
+;; Build radio preference selection buttons
+(defn build-radio-buttons [name-value form-name]
+  [:div
+    [:div {:class "btn-group radio-buttons" :data-toggle "buttons-radio"}
+      (map 
+        #(identity [:button {:type "button" :value (val %) :class "btn"} (key %)])
+        name-value)]
+    [:input {:type "hidden" :name form-name :value ""}]])
 
 (defn game-length [length]
   (cond
@@ -23,7 +32,7 @@
   [:div.selection
    [:label.checkbox
     [:div.icon.player]
-    (check-box num false num)
+    (check-box "players[]" false num)
     [:div.bottom-label (str num " Players")]]])
 
 (defn time-checkboxes [num]
@@ -66,15 +75,18 @@
               [:input {:type "hidden" :name "mechanics-active" :value "false"}]
               [:h3 "Mechanics"]
               [:p "Select gameplay mechanics that you like or dislike"]
-              (build-tri-state "Hand Management" "hand-management")
-              (build-tri-state "Deck Building" "deck-building")
-              (build-tri-state "Card Drafting" "card-draft")]
+              (build-tri-state "Hand Management" "mechanics" "hand-management")
+              (build-tri-state "Deck Building" "mechanics" "deck-building")
+              (build-tri-state "Card Drafting" "mechanics" "card-draft")]
 
             [:div {:id "input-weight" :class "param well well-small"}
               [:input {:type "hidden" :name "weight-active" :value "false"}]
               [:h3 "Weight"]
               [:p "This is a description of this field"]
-              [:input {:type "text" :name "weight-value"}]]
+              [:div {:class "btn-group" :data-toggle "buttons-radio"}
+              (build-radio-buttons (array-map :Light "1" :Medium-Light "2"
+                                    :Medium "3" :Medium-Heavy "4"
+                                    :Heavy "5") "weight")]]        
             [:button {:type "submit" :class "btn"} "Submit"]]]])))
 
 
@@ -94,7 +106,7 @@
    [:td (:min_age game) "+"]])
 
 (defpage [:post "/recommend"] {:as params}
-;  (println "POST PARAMS: " (params :length))
+  (println "POST PARAMS: " params)
     (common/layout
       [:h1 "Have fun playing!"]
       [:table.games.table.table-striped
@@ -113,5 +125,8 @@
               (model/find-games
                 (map #(Integer/parseInt %)
                   (params :length))
+                (map #(Integer/parseInt %)
+                  (params :length))
+                params
                 ))))]]))
 

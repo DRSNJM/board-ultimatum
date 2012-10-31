@@ -9,7 +9,9 @@ jQuery(document).ready(function ($) {
     active.attr('value', active.attr('value') == 'false' ? 'true' : 'false');
   });
 
-  $('#input-mechanics').on('click', '.tri-state button', function(event) {
+  // Alter tri-state buttons' hidden input based on which button was clicked
+  // and the current state
+  $('.tri-state').on('click', '.tri-state button', function(event) {
     var $btn = $(this);
     // If the clicked button is not the option (center) button then find it.
     var $option = $btn.hasClass('option') ? $btn : $btn.siblings('.option');
@@ -42,5 +44,10 @@ jQuery(document).ready(function ($) {
 
   $('.selection').on('change', 'input[type="checkbox"]', function(e) {
     $(e.target).closest('.selection').find('.icon').toggleClass('active');
+  });
+
+  // Alter radio buttons' hidden input based on which button was clicked
+  $('.radio-buttons').on('click', '.btn', function(event) {
+    $(this).parent().siblings('input[type=hidden]').val($(this).val());
   });
 });
