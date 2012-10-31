@@ -1,9 +1,11 @@
 (ns board-ultimatum.engine.model.expert
   "A namespace for maniuplating the experts as part of the datastore"
+  (:refer-clojure :exclude [sort find])
   (:require [clojure.string :as string]
+            [board-ultimatum.engine.model :as model]
             [monger.core :as mg]
             [monger.collection :as mc])
-  (:use [monger.operators]))
+  (:use [monger operators query]))
 
 (def ^:private coll
   "The name of the collection on mongo containing experts."
@@ -17,7 +19,9 @@
 
 (defn from-id
   "Get an expert from the database by id."
-  ([id fields] (mc/find-one-as-map coll {:identifier (string/lower-case id)} fields))
+  ([id fields] (mc/find-one-as-map coll
+                                   {:identifier (string/lower-case id)}
+                                   fields))
   ([id] (from-id id [])))
 
 (defn name-from-id [id]
@@ -26,6 +30,12 @@
   (let [expert (from-id id [:identifier :pretty-id])]
        (get expert :pretty-id
             (get expert :identifier))))
+
+(defn games-for [id num-games]
+  "Get num-games games for the given expert to compare."
+  (with-collection "board_games"
+    (find {})
+    (limit num-games)))
 
 (defn add
   "Add an expert with the given id to the datastore."
