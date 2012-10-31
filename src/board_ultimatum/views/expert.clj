@@ -9,6 +9,7 @@
   (:use [noir.core :only [defpage defpartial pre-route render]]
         [board-ultimatum.session]
         [hiccup core element]
+        [clojure.walk :only [keywordize-keys]]
         [hiccup.form :only [form-to label text-field submit-button]]))
 
 (pre-route [:any "/expert/*"] {:as req}
@@ -120,5 +121,7 @@
          [:a.btn.btn-large.span4 {:href "/expert"}
           "I'm done with this for today."]]]])))
 
-(defpage [:post "/expert/select"] {:as m}
+(defpage [:post "/expert/select"] {:keys [games]}
+  (let [kgames (keywordize-keys games)]
+    (flash/now! kgames))
   (render "/expert/select"))
