@@ -5,5 +5,6 @@
                  [noir "1.3.0-beta10"]
                  [enclog "0.5.8-SNAPSHOT"]
                  [org.clojure/core.logic "0.7.5"]
+                 [org.clojure/math.combinatorics "0.0.3"]
                  [com.novemberain/monger "1.1.2"]]
   :main board-ultimatum.server)
