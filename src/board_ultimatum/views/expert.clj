@@ -97,7 +97,7 @@
    :post [(= (count %) grid-rows) (= (count (first %)) grid-cols)]}
   (for [y (range grid-rows)]
     (for [x (range grid-cols)]
-      (nth games (+ (* y grid-rows) x)))))
+      (nth games (+ (* y grid-cols) x)))))
 
 (defpartial game-thumb
   "Takes a map representing a game and returns markup for a game including its
