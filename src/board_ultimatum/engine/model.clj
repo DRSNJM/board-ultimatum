@@ -10,7 +10,9 @@
   "Ensures the existence of several indexes to use mongo effectively."
   []
   (mc/ensure-index "games" {:id 1})
-  (mc/ensure-index "games" {:name 1}))
+  (mc/ensure-index "games" {:name 1})
+  (mc/ensure-index "network_data" {:id 1})
+  (mc/ensure-index "network_output" {:game_a 1}))
 
 (defn connect
   "Connect to mongo based on the given connection information."

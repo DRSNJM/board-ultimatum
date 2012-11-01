@@ -229,6 +229,8 @@
 
 ;; add the data to the mongo db
 
+(mc/remove "network_data")
+
 (dorun (map 
     (fn [id data] 
       (mc/insert "network_data" { :id id :data (into [] data) }))
