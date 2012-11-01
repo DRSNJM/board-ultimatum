@@ -21,8 +21,9 @@
                                   functionality.")
              (resp/redirect "/expert")))
 
-;; Partial used by the GET /expert route when there is an expert logged in.
-(defpartial expert-logged-in []
+(defpartial expert-logged-in
+  "Used by the GET /expert route when there is an expert logged in."
+  []
   [:div.page-header
    [:h1 "You have two choices"]]
   [:ol#expert-choices.row-fluid
@@ -38,8 +39,9 @@
     (link-to {:class "btn btn-large"}
              "/expert/logout" "Log out")]])
 
-;; Partial used by the GET /expert route when there is not an expert logged in.
-(defpartial expert-not-logged-in []
+(defpartial expert-not-logged-in
+  "Used by the GET /expert route when there is not an expert logged in."
+  []
   [:div.page-header
    [:h1 "Welcome, Board Game Expert!"]]
   [:p "Since this is not a security required application there is no
@@ -95,7 +97,10 @@
     (for [x (range grid-cols)]
       (nth games (+ (* y grid-rows) x)))))
 
-(defpartial game-thumb [{:keys [bgg_id name thumbnail]}]
+(defpartial game-thumb
+  "Takes a map representing a game and returns markup for a game including its
+  title and thumbnail."
+  [{:keys [bgg_id name thumbnail]}]
   [:div {:id (str "game-" bgg_id)
          :class (str "game-container span" (/ 12 grid-cols))
          :data-toggle "button"}
@@ -106,7 +111,10 @@
     [:div.title-wrapper
      [:h5 name]]]])
 
-(defpartial grid-row [coll]
+(defpartial grid-row
+  "Create a fluid row with the content being game-thumb mapped over the given
+  coll."
+  [coll]
   [:div.row-fluid
    (map game-thumb coll)])
 
