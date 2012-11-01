@@ -1,4 +1,4 @@
-(ns board-ultimatum.script.vector
+(ns board-ultimatum.engine.vector-convert
   (:require [monger.core :as mg]
             [monger.collection :as mc]
             [board-ultimatum.engine.model :as model]
@@ -6,9 +6,6 @@
   (:use clojure.pprint)
   (:use clojure.set)
   (:use incanter.core incanter.stats incanter.charts))
-
-; run this script via:
-; lein exec -p src/board_ultimatum/engine/vector-convert.clj
 
 (let [connection-info (if (nil? (:db-name config/storage))
      (assoc config/storage :db-name "board_ultimatum") config/storage)]
@@ -227,27 +224,23 @@
       (mmult full-data (nth pc i)))
     (range 10))))
 
-;; add the data to the mongo db
-
-(mc/remove "network_data")
-
-(dorun (map 
-    (fn [id data] 
-      (mc/insert "network_data" { :id id :data (into [] data) }))
-    game-ids 
-    (trans (matrix x))))
-
-;; plot the data in 2D
-
-(view (scatter-plot (nth x 0) (nth x 1) 
-                    :x-label "PC1" 
-                    :y-label "PC2" 
-                    :title "Game Data"))
-
-;; view a table of the dataset
-
 (def data-2d (dataset 
   ["id" "x1" "x2"]
   (trans (matrix [game-ids (nth x 0) (nth x 1)]))))
 
-(view ($order [:x1 :x2] :desc data-2d))
+(defn data-convert [] 
+  (dorun 
+    ;; add the data to the mongo db
+    (mc/remove "network_data")
+    (dorun (map 
+        (fn [id data] 
+          (mc/insert "network_data" { :id id :data (into [] data) }))
+        game-ids 
+        (trans (matrix x))))
+    ;; plot the data in 2D
+    (view (scatter-plot (nth x 0) (nth x 1) 
+                        :x-label "PC1" 
+                        :y-label "PC2" 
+                        :title "Game Data"))
+    ;; view a table of the dataset
+    (view ($order [:x1 :x2] :desc data-2d))))

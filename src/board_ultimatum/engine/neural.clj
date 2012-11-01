@@ -7,8 +7,6 @@
   (use [enclog nnets training])
   (:use [monger.operators]))
 
-; lein exec -p src/board_ultimatum/engine/neural.clj
-
 (let [connection-info (if (nil? (:db-name config/storage))
      (assoc config/storage :db-name "board_ultimatum") config/storage)]
 
@@ -70,17 +68,14 @@
 
 ;; iterate and add top 50 games to DB
 
-(pprint (:data (mc/find-one-as-map "network_data" {:id 299})))
-(pprint (get-vector 299))
-
-(mc/remove "network_output")
-
-(doseq [id-A game-ids] 
-  (doseq [game-record (take 50 
-    (sort-by :rating >
-      (map 
-        (fn [id-B] 
-          { :rating (nth (output-pair id-A id-B) 0) :game_a id-A :game_b id-B })
-        game-ids)))]
-    (mc/insert "network_output" game-record)))
+(defn network-eval [] 
+  (dorun 
+    (doseq [id-A game-ids] 
+      (doseq [game-record (take 50 
+        (sort-by :rating >
+          (map 
+            (fn [id-B] 
+              { :rating (nth (output-pair id-A id-B) 0) :game_a id-A :game_b id-B })
+            game-ids)))]
+        (mc/insert "network_output" game-record)))))
 
