@@ -67,5 +67,40 @@
     (let [collection "board_games"]
       (let [games (mc/find-maps collection)]
         (attr_engine/score-games attrs
-          (filter-on-times selected-times attrs 
-            (filter-on-num-players selected-num-players attrs games))))))
+          (filter-on-times selected-times attrs
+                           (filter-on-num-players selected-num-players attrs games))))))
+
+; These suck. Pulls all the data from mongo, and then filters. For
+; each. Every time. Super dumb.
+(defn uniq-tag [subtype]
+  (distinct
+   (map #(:value %)
+        (filter
+         (fn [h] (= (:subtype h) subtype))
+         (flatten
+          (map (fn [g] (:tags g))
+               (mc/find-maps "board_games")))))))
+
+
+(defn all-mechanics []
+  (uniq-tag "mechanic"))
+
+(defn all-categories []
+  (uniq-tag "category"))
+
+(defn all-families []
+  (uniq-tag "family"))
+
+(defn all-publishers []
+  (uniq-tag "publisher"))
+
+(defn all-designers []
+  (uniq-tag "designer"))
+
+
+(def most-popular-categories
+ ["Card Game" "Wargame" "Economic" "Fantasy" "Fighting" "Medieval" "Ancient" "Science Fiction" "World War II" "Adventure" "City Building" "Bluffing" "Exploration" "Political" "Miniatures" "Negotiation" "Civilization" "Abstract Strategy" "Transportation" "Territory Building" "Deduction" "Dice" "Nautical" "Racing" "Trains" "Animals" "Novel-based" "Horror" "Party Game" "Renaissance" "Humor" "Industry / Manufacturing" "Aviation / Flight" "Sports" "Action / Dexterity" "Mythology" "Space Exploration" "Travel" "Farming" "Napoleonic" "Movies / TV / Radio theme" "Real-time" "Murder/Mystery" "Children's Game" "American West" "Collectible Components" "Puzzle"])
+
+
+(def most-popular-mechanics
+  ["Hand Management" "Dice Rolling" "Variable Player Powers" "Area Control / Area Influence" "Set Collection" "Modular Board" "Auction/Bidding" "Tile Placement" "Card Drafting" "Simultaneous Action Selection" "Area Movement" "Action Point Allowance System" "Route/Network Building" "Hex-and-Counter" "Partnerships" "Point to Point Movement" "Simulation" "Campaign / Battle Card Driven" "Worker Placement" "Secret Unit Deployment" "Pick-up and Deliver" "Co-operative Play" "Trading" "Role Playing" "Commodity Speculation" "Variable Phase Order" "Stock Holding" "Voting" "Betting/Wagering" "Grid Movement" "Deck / Pool Building" "Area Enclosure" "Roll / Spin and Move" "Memory" "Pattern Building" "Press Your Luck" "Trick-taking" "Chit-Pull System" "Pattern Recognition" "Storytelling"])

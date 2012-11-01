@@ -9,9 +9,9 @@
 (defpartial build-tri-state [name attr form-name]
   [:div {:style "float:left;margin:10px 20px 0px 0px;"}
     [:div {:class "btn-group tri-state"}
-      [:button {:type "button" :class "btn btn-danger"} [:i {:class "icon-thumbs-down"}]]
-      [:button {:type "button" :class "btn option"} name]
-      [:button {:type "button" :class "btn btn-success"} [:i {:class "icon-thumbs-up"}]]]
+      [:button {:type "button" :class "btn btn-mini btn-danger"} [:i {:class "icon-thumbs-down"}]]
+      [:button {:type "button" :class "btn btn-mini option"} name]
+      [:button {:type "button" :class "btn btn-mini btn-success"} [:i {:class "icon-thumbs-up"}]]]
     [:input {:type "hidden" :name (str attr "[" form-name "]") :value "0"}]])
 
 ;; Build radio preference selection buttons
@@ -54,6 +54,7 @@
             [:li#length [:a "Game Length"]]
             [:li#num-players [:a "Number of Players"]]
             [:li#mechanics [:a "Mechanics"]]
+            [:li#categories [:a "Categories"]]
             [:li#weight [:a "Weight"]]]]
 
          [:div.span9
@@ -75,10 +76,17 @@
               [:input {:type "hidden" :name "mechanics-active" :value "false"}]
               [:h3 "Mechanics"]
               [:p "Select gameplay mechanics that you like or dislike"]
-              (build-tri-state "Hand Management" "mechanics" "Hand Management")
-              (build-tri-state "Deck Building" "mechanics" "Deck Building")
-              (build-tri-state "Card Drafting" "mechanics" "Card Drafting")]
+              (map #(build-tri-state % "mechanics" %)
+                   model/most-popular-mechanics)]
 
+            [:div {:id "input-categories" :class "param well well-small"}
+              [:input {:type "hidden" :name "categories-active" :value "false"}]
+              [:h3 "Categories"]
+              [:p "Select gameplay categories that you like or dislike"]
+              (map #(build-tri-state % "categories" %)
+                   model/most-popular-categories)]
+
+           
             [:div {:id "input-weight" :class "param well well-small"}
               [:input {:type "hidden" :name "weight-active" :value "false"}]
               [:h3 "Weight"]
