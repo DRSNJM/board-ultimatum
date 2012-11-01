@@ -32,11 +32,14 @@ jQuery(document).ready(function ($) {
 
     // Change the submit button to reflect whether the user has made in
     // selections.
-    if (selectedCount > 0) {
+    if (selectedCount > 1) {
       if (!$mainButton.hasClass('btn-primary')) {
         $mainButtonStrong.html("I know these games!");
         $mainButton.addClass('btn-primary');
       }
+    } else if (selectedCount === 1) {
+      $mainButton.removeClass('btn-primary');
+      $mainButtonStrong.html("I know only one of these games!");
     } else {
       $mainButton.removeClass('btn-primary');
       $mainButtonStrong.html(origButtonText);

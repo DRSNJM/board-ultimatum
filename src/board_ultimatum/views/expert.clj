@@ -136,6 +136,6 @@
                           (filter (fn [[_ selected]]
                                     (= selected "true"))
                                   games))]
-    (if (empty? selected-ids)
+    (if (<= (count selected-ids) 1)
       (resp/redirect "/expert/select")
       (expert-compare selected-ids))))
