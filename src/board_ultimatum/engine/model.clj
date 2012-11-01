@@ -52,3 +52,10 @@
     "Queries mongo for games matching any of the selected time ranges."
     (let [collection "board_games"]
       (mc/find-maps collection {:length {$in (times selected-times)}})))
+
+(defn get-game-by-id
+  "Get an expert from the database by id."
+  ([id fields] (mc/find-one-as-map "board_games"
+                                   {:bgg_id id}
+                                   fields))
+  ([id] (get-game-by-id id [])))
