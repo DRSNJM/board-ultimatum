@@ -111,7 +111,8 @@
    [:td (:name game)]
    [:td (game-length (:length game))]
    [:td (num-players (:min_players game) (:max_players game))]
-   [:td (:min_age game) "+"]])
+   [:td (:min_age game) "+"]
+   [:td (:score game) " points"]])
 
 (defpage [:post "/recommend"] {:as params}
   (println "POST PARAMS: " params)
@@ -125,7 +126,8 @@
         [:th "Name"]
         [:th "Length"]
         [:th "Num Players"]
-        [:th "Min Age"]]
+        [:th "Min Age"]
+        [:th "Score"]]
        [:tbody
         (map display-game
           (take 30
