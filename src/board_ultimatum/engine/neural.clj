@@ -70,7 +70,11 @@
 
 ;; for each id, join each id with every other id
 
-(def game-ids (wcar0 (car/keys "*")))
+(def game-ids
+  (into [] 
+    (map 
+      (fn [game] (:bgg_id game))
+      (model/find-all))))
 
 (defn get-vector [game-id] 
   (into [] 

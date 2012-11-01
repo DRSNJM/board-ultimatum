@@ -1,7 +1,8 @@
 (ns board-ultimatum.script.vector
-  (:require [board-ultimatum.engine.model :as model]
-            [board-ultimatum.engine.config :as config]
-            [taoensso.carmine :as car])
+  (:require [monger.core :as mg]
+            [monger.collection :as mc]
+            [board-ultimatum.engine.model :as model]
+            [board-ultimatum.engine.config :as config])
   (:use clojure.pprint)
   (:use clojure.set)
   (:use incanter.core incanter.stats incanter.charts))
@@ -197,14 +198,6 @@
             (has-tag game "mechanic" "Area Enclosure")
           ]})
 
-; establish redis connection
-
-(def pool (car/make-conn-pool))
-(def spec-server1 (car/make-conn-spec :db 0))
-(defmacro wcar [& body] `(car/with-conn pool spec-server1 ~@body))
-
-(wcar (car/ping))
-
 ;; compile full vector data into a matrix
 
 (def game-ids
@@ -234,15 +227,14 @@
       (mmult full-data (nth pc i)))
     (range 10))))
 
-;; add the data to the redis store
+;; add the data to the mongo db
 
-(dorun (map (fn [id data] (wcar 
-    (car/del id)
-    (doseq [n data]
-        (car/lpush id n))))
+(dorun (map 
+    (fn [id data] 
+      (mc/insert "network_data" { :id id :data (into [] data) }))
     game-ids 
-    (trans (matrix x)))) 
-            
+    (trans (matrix x))))
+
 ;; plot the data in 2D
 
 (view (scatter-plot (nth x 0) (nth x 1) 
