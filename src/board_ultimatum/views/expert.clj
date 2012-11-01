@@ -5,6 +5,7 @@
             [board-ultimatum.flash :as flash]
             [board-ultimatum.form-validators :as valid]
             [board-ultimatum.engine.model.expert :as expert]
+            [clojure.math.combinatorics :as combo]
             [noir.session :as sess]
             [noir.validation :as vali]
             [noir.response :as resp])
@@ -129,7 +130,10 @@
         "I'm done with this for today."]]]]))
 
 (defpartial expert-compare [ids]
-  (expert-page [:p (str (seq ids))]))
+  (expert-page
+    [:div.page-header
+     [:h1 "Which of the following pairs are good recommendations?"]
+     (str (combo/combinations ids 2))]))
 
 (defpage [:post "/expert/select"] {:keys [games]}
   (let [selected-ids (map (fn [x] (Integer/parseInt (first x)))
