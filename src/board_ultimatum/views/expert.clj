@@ -5,7 +5,9 @@
             [board-ultimatum.flash :as flash]
             [board-ultimatum.form-validators :as valid]
             [board-ultimatum.engine.model.expert :as expert]
+            [board-ultimatum.engine.model :as model]
             [clojure.math.combinatorics :as combo]
+            [clojure.string :as string]
             [noir.session :as sess]
             [noir.validation :as vali]
             [noir.response :as resp])
@@ -118,31 +120,74 @@
   [:div.row-fluid
    (map game-thumb coll)])
 
-(defpartial expert-page [& body]
-  (common/with-javascripts (cons "/js/expert.js" common/*javascripts*)
-    (common/layout
-      body)))
 
 ;; A page show to the expert
 (defpage "/expert/select" []
-  (expert-page
-    [:div.page-header
-     [:h1 "Select all of the games you are familiar with"]]
-    [:form#expert-select {:method "post"}
-     (map grid-row (games-to-grid (expert/games-for (current-expert-id) grid-size)))
-     [:div.form-actions
-      [:div.row-fluid
-       [:button#main-button.btn.btn-large.span8
-        [:strong "I am unfamiliar with all of these games. Next!"]]
-       [:a.btn.btn-large.span4 {:href "/expert"}
-        "I'm done with this for today."]]]]))
+  (common/with-javascripts (cons "/js/expert.js" common/*javascripts*)
+    (common/layout
+      [:div.page-header
+       [:h1 "Select all of the games you are familiar with"]]
+      [:form#expert-select {:method "post"}
+       (map grid-row (games-to-grid (expert/games-for (current-expert-id)
+                                                      grid-size)))
+       [:div.form-actions
+        [:div.row-fluid
+         [:button#main-button.btn.btn-large.span8
+          [:strong "I am unfamiliar with all of these games. Next!"]]
+         [:a.btn.btn-large.span4 {:href "/expert"}
+          "I'm done with this for today."]]]])))
 
-(defpartial expert-compare [ids]
-  (expert-page
-    [:div.page-header
-     [:h1 "Which of the following pairs are good recommendations?"]
-     (str (combo/combinations ids 2))]))
+(defpartial compare-game
+  "Similar to game-thumb but for the compare page. Taks a bgg_id and returns
+  markup containing a thumbnail and title of the referenced game."
+  [bgg-id]
+  (let [{:keys [name thumbnail]} (model/get-game-by-id bgg-id
+                                                       [:name :thumbnail])]
+    [:div.compare-game.span4
+     [:div.image-wrapper
+      [:img.img-rounded {:src thumbnail}]]
+     [:div.title-wrapper
+      [:h5 name]]]))
 
+(defpartial compare-games
+  "Take an index and pair of games returning markup an expert can use to rate
+  the recommendation quality of the pair."
+  [index [game-a game-b]]
+  [:div.rate-games.row-fluid {:id (str "rate-games" index)}
+   (compare-game game-a)
+   [:div.rating.span4 {:id (str "rating" index)}
+    [:input {:id (str "rating-input" index) :type "hidden"
+             :name (str game-a "-" game-b) :value 500}]
+    [:h4 "Recommendation Quality"]
+    [:div.rating-slider {:id (str "rating-slider" index)}]]
+   (compare-game game-b)])
+
+(defpartial expert-compare
+  "The main body of /expert/compare when ids is greater than 1. Provides an
+  interface for rating the quality of each game pair combination."
+  [ids]
+  (common/with-javascripts (concat common/*javascripts*
+                                   ["/js/jquery-ui-slider.min.js"
+                                    "/js/expert-compare.js"])
+    (common/layout
+      [:div.page-header
+       [:h1 "Rate these recommendations"]
+       [:div.instructions
+        [:p "For each pair below please rate how good of a recommendation each
+            game is given the other."]]
+       [:div#expert-compare
+        (form-to [:post "/expert/compare"]
+          (map-indexed compare-games
+                       (shuffle (map shuffle (combo/combinations ids 2))))
+          [:div.form-actions
+           [:div.row-fluid
+            [:button#main-button.btn.btn-large.span6.btn-primary
+             [:strong "I'm done rating these games."]]
+            [:a.btn.btn-large.span6 {:href "/expert/select"}
+             "I can't rate these games."]]])]])))
+
+;; Take selected games from an expert and if they selected 2 or more render an
+;; interface for comparing them.
 (defpage [:post "/expert/select"] {:keys [games]}
   (let [selected-ids (map (fn [x] (Integer/parseInt (first x)))
                           (filter (fn [[_ selected]]
@@ -151,3 +196,16 @@
     (if (<= (count selected-ids) 1)
       (resp/redirect "/expert/select")
       (expert-compare selected-ids))))
+
+;; This route specifies how to take the results of recommendation quality
+;; ratings provided by an expert.
+(defpage [:post "/expert/compare"] {:as relationships}
+  (when-not (empty? relationships)
+    (model/add-relationships
+      (into {} (map (fn [[pair-str value]]
+                      [(map #(Integer/parseInt %)
+                            (string/split pair-str (re-pattern "-")))
+                       (Integer/parseInt value)])
+                    relationships))
+      (current-expert-id)))
+  (resp/redirect "/expert/select"))
