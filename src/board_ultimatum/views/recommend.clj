@@ -1,6 +1,7 @@
 (ns board-ultimatum.views.recommend
   (:require [board-ultimatum.views.common :as common]
-            [board-ultimatum.engine.model :as model])
+            [board-ultimatum.engine.model :as model]
+            [clojure.string :as string])
   (:use [noir.core :only [defpage defpartial]]
         [hiccup.element]
         [hiccup.form]
@@ -113,13 +114,14 @@
                         (format-score (:score %)))
                   (:factors game))))
 
-(defn display-game [game]
+(defn display-game [i game]
   [:tr.game
-   [:td (:rank game) ". "]
+   [:td (+ 1 i) "."]
    [:td (image (:thumbnail game))]
-   [:td (:bgg_id game) ". "]
-   [:td
-    [:h3 (:name game)]
+   [:td (link-to (str "http://boardgamegeek.com/boardgame/" (:bgg_id game) "/")
+             (:rank game) ". ")]
+   [:td.name
+    [:div.game-name (:name game)]
     [:ul
      (map (fn [e] [:li e])
           (concat (model/mechanics game)
@@ -128,7 +130,7 @@
    [:td (num-players (:min_players game) (:max_players game))]
    [:td (:min_age game) "+"]
    [:td (format-score (:score game)) " points"]
-   [:td (pp-factors game)]])
+   [:td.why (pp-factors game)]])
 
 ;; Should probaby do this filtering in js
 (defn sanitize-query-params [attrs]
@@ -163,38 +165,37 @@
 
 ;; messy, but just debug info, so who cares?
 (defn display-query-params [[attr-type values]]
-  (println "attr-type: " attr-type " is " values)
   [:li attr-type ": "
-   [:ul
-    (map (fn [v]
-           (if (seq? v)
-             [:li
-              (first v)
-              ": "
-              (second v)]
-             [:li v]))
-         values)]])
+   (if (vector? (first values))
+     [:ul
+      (map (fn [[k v]]
+             (if (= 1 v)
+               [:li.positive k]
+               [:li.negative k]))
+           values)]
+     (string/join ", " values))])
 
 (defpage [:post "/recommend"] {:as params}
   (common/layout
    [:h1 "Have fun playing!"]
    [:h3 "Query Params"]
-   [:ul (map
-         display-query-params
-         (sanitize-query-params params))]
+   [:div.well
+    [:ul.query-params (map
+          display-query-params
+          (sanitize-query-params params))]]
    [:table.games.table.table-striped
     [:thead
-     [:th "Rank"]
+     [:th "#"]
      [:th "Thumb"]
-     [:th "BGG ID"]
+     [:th "BGG Rank"]
      [:th "Name"]
      [:th "Length"]
      [:th "Num Players"]
      [:th "Min Age"]
      [:th "Score"]
-     [:th "Explanations"]]
+     [:th "Why?"]]
     [:tbody
-     (map display-game
+     (map-indexed display-game
           (model/find-games
            (sanitize-query-params params)))]]))
 

@@ -120,7 +120,6 @@
     "category"))
 
 (defn score-attr [score-data [attr-name attr-value]]
-  (println "scoring " attr-name " of " attr-value)
   (let [new-score (* (:score (score-data attr-name))
                      attr-value)]
     (assoc (score-data attr-name) :score new-score)))
@@ -128,6 +127,66 @@
 (defn rank-score [game]
   {:reason "BGG Rank"
    :score (- basic-score-weight (/ (float (:rank game)) 10))})
+
+;; player num
+
+(defn convert-player-num [num-key]
+  (if (< (.indexOf (name num-key) "+") 0)
+    (Integer/parseInt (name num-key))
+    100))
+
+(defn recommended-num-player-votes [hsh [player-num poll-result]]
+  (assoc hsh (convert-player-num player-num)
+    (+
+     (* 2 (poll-result :Best))
+     (* 1 (poll-result :Recommended))
+     (* -1 (poll-result (keyword "Not Recommended"))))))
+
+(defn tally-player-poll [game]
+  (reduce #(recommended-num-player-votes %1 %2) {}
+          (game :suggested_players)))
+
+(defn max-kv-by-value [hsh]
+  (reduce (fn [[maxk maxv] [k v]]
+            (if (> v maxv)
+              [k v]
+              [maxk maxv]))
+          [-1 -100]
+          hsh))
+
+(defn normalize-votes [optimal-num votes]
+  (reduce (fn [hsh [p v]]
+            (assoc hsh p (/ (float v) (get votes optimal-num))))
+          {}
+          votes))
+
+(defn optimal-player-num [game]
+  (let [player-votes (tally-player-poll game)]
+    (first (max-kv-by-value player-votes))))
+
+(defn num-players-score [players game]
+  (let [min-pl (apply min players)
+        max-pl (apply max players)
+        player-votes (tally-player-poll game)
+        optimal-num (first (max-kv-by-value player-votes))
+        norm-votes (normalize-votes optimal-num player-votes)]
+    (cond
+     (contains? (set players) optimal-num) basic-score-weight
+     (> optimal-num max-pl) (if (contains? (set (keys norm-votes)) max-pl)
+                              (* (get norm-votes max-pl) basic-score-weight)
+                              (* -1 basic-score-weight))
+     (< optimal-num min-pl) (if (contains? (set (keys norm-votes)) min-pl)
+                              (* (get norm-votes min-pl) basic-score-weight)
+                              (* -1 basic-score-weight))
+     :else 0)))
+
+(defn num-players-factors [attrs game]
+  (let [players (:num-players attrs)]
+    (if (> (count players) 0)
+      {:reason "Optimal Player Number"
+       :score (num-players-score players game)})))
+
+;; player num
 
 ;; returns [ [attr-name value] ]
 (defn score-factor [attr-type game query-attrs]
@@ -140,23 +199,28 @@
                  relevant-attrs))))
 
 (defn collect-score-factors [game query-attrs]
-  (remove empty?
-          (conj
-           (mapcat #(score-factor % game query-attrs)
-                   (list "mechanics" "categories"))
-           (rank-score game))))
+  (flatten
+   (list
+    (score-factor "mechanics" game query-attrs)
+    (score-factor "categories" game query-attrs)
+    (rank-score game)
+    (num-players-factors query-attrs game))))
 
-(defn sum-score [game]
-  (apply + (map :score (:factors game))))
+(defn sum-score [factors]
+  (apply + (map :score factors)))
+
+(defn total-score [game]
+  (sum-score (:factors game)))
 
 (defn sorted-ranked-games [games query-attrs]
-  (take 50
+  (take 30
         (sort-by
          #(* -1 (:score %))
-         (map #(let [facs (collect-score-factors % query-attrs)]
-                 (assoc % :factors facs
-                        :score (apply + (map :score facs))))
-              games))))
+         (filter #(> (:score %) 0)
+                 (map #(let [factors (collect-score-factors % query-attrs)]
+                         (assoc % :factors factors
+                                :score (sum-score factors)))
+                      games)))))
 
 
 (defn filter-on-times [attrs games]
@@ -181,6 +245,6 @@
           games (mc/find-maps collection)]
       (sorted-ranked-games
        (->> games
-            (filter-on-times query-attrs) 
+            (filter-on-times query-attrs)
             (filter-on-num-players query-attrs))
        query-attrs)))
