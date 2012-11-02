@@ -3,7 +3,8 @@
             [board-ultimatum.engine.model :as model])
   (:use [noir.core :only [defpage defpartial]]
         [hiccup.element]
-        [hiccup.form]))
+        [hiccup.form]
+        [clojure.pprint]))
 
 ;; Build 3-state preference selection buttons
 (defpartial build-tri-state [name attr form-name]
@@ -103,40 +104,97 @@
    (= min-players max-players) (str max-players " Player")
    :else (str min-players "-" max-players " Players")))
 
+(defn format-score [score]
+  (format "%+.1f" (float score)))
+
+(defn pp-factors [game]
+  (interpose "<br/>"
+             (map #(str (:reason %) ": "
+                        (format-score (:score %)))
+                  (:factors game))))
+
 (defn display-game [game]
   [:tr.game
    [:td (:rank game) ". "]
    [:td (image (:thumbnail game))]
    [:td (:bgg_id game) ". "]
-   [:td (:name game)]
+   [:td
+    [:h3 (:name game)]
+    [:ul
+     (map (fn [e] [:li e])
+          (concat (model/mechanics game)
+                  (model/categories game)))]]
    [:td (game-length (:length game))]
    [:td (num-players (:min_players game) (:max_players game))]
    [:td (:min_age game) "+"]
-   [:td (:score game) " points"]])
+   [:td (format-score (:score game)) " points"]
+   [:td (pp-factors game)]])
+
+;; Should probaby do this filtering in js
+(defn sanitize-query-params [attrs]
+  (->> {}
+       ((fn [hsh]
+          (if (Boolean/valueOf (:mechanics-active attrs))
+            (assoc hsh :mechanics
+                   (map #(vector (name (first %)) (Integer/parseInt (second %)))
+                        (filter #(not= "0" (second %)) (:mechanics attrs))))
+            hsh)))
+       ((fn [hsh]
+          (if (Boolean/valueOf (:categories-active attrs))
+            (assoc hsh :categories
+                   (map #(vector (name (first %)) (Integer/parseInt (second %)))
+                        (filter #(not= "0" (second %)) (:categories attrs))))
+            hsh)))
+       ((fn [hsh]
+           (if (Boolean/valueOf (:num-players-active attrs))
+             (assoc hsh :num-players
+                    (map #(Integer/parseInt %) (:num-players attrs)))
+           hsh)))
+       ((fn [hsh]
+           (if (Boolean/valueOf (:length-active attrs))
+             (assoc hsh :length
+                    (map #(Integer/parseInt %) (:length attrs)))
+           hsh)))
+       ((fn [hsh]
+           (if (Boolean/valueOf (:weight-active attrs))
+             (assoc hsh :weight (:weight attrs))
+             hsh)))))
+
+
+;; messy, but just debug info, so who cares?
+(defn display-query-params [[attr-type values]]
+  (println "attr-type: " attr-type " is " values)
+  [:li attr-type ": "
+   [:ul
+    (map (fn [v]
+           (if (seq? v)
+             [:li
+              (first v)
+              ": "
+              (second v)]
+             [:li v]))
+         values)]])
 
 (defpage [:post "/recommend"] {:as params}
-  (println "POST PARAMS: " params)
-    (common/layout
-      [:h1 "Have fun playing!"]
-      [:table.games.table.table-striped
-       [:thead
-        [:th "Rank"]
-        [:th "Thumb"]
-        [:th "BGG ID"]
-        [:th "Name"]
-        [:th "Length"]
-        [:th "Num Players"]
-        [:th "Min Age"]
-        [:th "Score"]]
-       [:tbody
-        (map display-game
-          (take 30
-            (sort-by (juxt :score :rank)
-              (model/find-games
-                (map #(Integer/parseInt %)
-                  (:length params))
-                (map #(Integer/parseInt %)
-                  (:num-players params))
-                params
-                ))))]]))
+  (common/layout
+   [:h1 "Have fun playing!"]
+   [:h3 "Query Params"]
+   [:ul (map
+         display-query-params
+         (sanitize-query-params params))]
+   [:table.games.table.table-striped
+    [:thead
+     [:th "Rank"]
+     [:th "Thumb"]
+     [:th "BGG ID"]
+     [:th "Name"]
+     [:th "Length"]
+     [:th "Num Players"]
+     [:th "Min Age"]
+     [:th "Score"]
+     [:th "Explanations"]]
+    [:tbody
+     (map display-game
+          (model/find-games
+           (sanitize-query-params params)))]]))
 
