@@ -22,6 +22,11 @@
   ([games fields] (mc/find-one-as-map coll {:games {$all games}} fields))
   ([games] (from-games games [])))
 
+(defn average-ratings
+  "Run aggregate to calculate the average rating for each relationship."
+  []
+  (mc/aggregate coll [{$group {:_id "$games" :rating {$avg "$rating"}}}]))
+
 (defn convert-to-object
   "Convert the given relationship to an object to be stored in the datastore.
   The first argument must be an expert map contain an object id."
