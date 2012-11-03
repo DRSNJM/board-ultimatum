@@ -4,7 +4,8 @@
   (:require [board-ultimatum.views.common :as common]
             [board-ultimatum.flash :as flash]
             [board-ultimatum.form-validators :as valid]
-            [board-ultimatum.engine.model.expert :as expert]
+            (board-ultimatum.engine.model [relationship :as relationship]
+                                          [expert :as expert])
             [board-ultimatum.engine.model :as model]
             [clojure.math.combinatorics :as combo]
             [clojure.string :as string]
@@ -201,7 +202,7 @@
 ;; ratings provided by an expert.
 (defpage [:post "/expert/compare"] {:as relationships}
   (when-not (empty? relationships)
-    (model/add-relationships
+    (relationship/add-many
       (into {} (map (fn [[pair-str value]]
                       [(map #(Integer/parseInt %)
                             (string/split pair-str (re-pattern "-")))

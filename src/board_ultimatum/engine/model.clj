@@ -59,8 +59,3 @@
                                    {:bgg_id id}
                                    fields))
   ([id] (get-game-by-id id [])))
-
-(defn add-relationships
-  "Add the given relationships into the datastore."
-  [relationships expert]
-  (println (str relationships)))
