@@ -4,7 +4,7 @@
             [monger.collection :as mc])
   (:use [monger.operators]))
 
-(def ^:private coll
+(def coll
   "The name of the collection on mongo containing relationships."
   "relationships")
 
