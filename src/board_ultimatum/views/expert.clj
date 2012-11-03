@@ -187,13 +187,36 @@
             [:a.btn.btn-large.span6 {:href "/expert/select"}
              "I can't rate these games."]]])]])))
 
+(defn- input-game-filter
+  "For a given map entry return whether the value is the string \"true\"."
+  {:test (fn []
+           (assert (input-game-filter ["123" "true"]))
+           (assert (not (input-game-filter ["123" "false"]))))}
+  [[_ selected?]]
+  (= selected? "true"))
+
+(defn- input-game-mapper
+  "For a given two element return the first element parsed as an integer."
+  {:test (fn []
+           (assert (= 123 (input-game-mapper ["123" "true"]))))}
+  [[bgg-id _]]
+  (Integer/parseInt bgg-id))
+
+(defn- convert-input-games
+  "Convert input from the from to an easy to handle two element vector where the
+  first element is a vector of selected ids and the second is a vector of."
+  {:test (fn [] (assert (= (convert-input-games
+                             {"123" "true" "234" "false" "567" "true"})
+                           [[123 567] [234]])))}
+  [games]
+  [(map input-game-mapper (filter input-game-filter games))
+   (map input-game-mapper (filter (complement input-game-filter) games))])
+
 ;; Take selected games from an expert and if they selected 2 or more render an
 ;; interface for comparing them.
 (defpage [:post "/expert/select"] {:keys [games]}
-  (let [selected-ids (map (fn [x] (Integer/parseInt (first x)))
-                          (filter (fn [[_ selected]]
-                                    (= selected "true"))
-                                  games))]
+  (let [[selected-ids unfamiliar-ids] (convert-input-games games)]
+    (expert/add-unfamiliar-games (current-expert-id) unfamiliar-ids)
     (if (<= (count selected-ids) 1)
       (resp/redirect "/expert/select")
       (expert-compare selected-ids))))
