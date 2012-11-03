@@ -15,7 +15,7 @@
 (defn from-games
   "Get an expert from the database by id."
   ([games fields] (mc/find-one-as-map coll {:games {$all games}} fields))
-  ([games] (from-id id [])))
+  ([games] (from-games games [])))
 
 (defn- relationship-to-object
   "Converts the given relationship to an object which can be stored in mongo."
