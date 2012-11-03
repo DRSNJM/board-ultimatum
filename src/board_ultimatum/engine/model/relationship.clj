@@ -8,6 +8,10 @@
   "The name of the collection on mongo containing relationships."
   "relationships")
 
+(def rating-increment-count
+  "The number of increments the rating slider uses."
+  1000)
+
 (defn exists?
   "An relationship between the two games exists in the database."
   [games] (boolean (mc/find-one coll {:games {$all games}} [:_id])))
