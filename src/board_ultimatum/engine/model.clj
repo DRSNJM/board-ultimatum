@@ -60,3 +60,15 @@
                                    {:bgg_id id}
                                    fields))
   ([id] (get-game-by-id id [])))
+
+(defn add-random-field-to-games
+  "This function should only be run as a cron task. It adds/update a random
+  field on each game in the board-games collection.
+
+  NOTE: This may be improved by using mongo's built-in map-reduce functionality.
+  Also, there is a race condition between when each game document is fetched and
+  updates start."
+  []
+  (map (fn [{obj-id :_id}]
+         (mc/update-by-id "board_games" obj-id {$set {:random [(rand) 0]}}))
+       (mc/find-maps "board_games" {} [:_id])))
