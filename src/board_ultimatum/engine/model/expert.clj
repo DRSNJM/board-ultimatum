@@ -41,9 +41,4 @@
   "Add an expert with the given id to the datastore."
   [id]
   (mc/insert coll {:pretty-id id
-                   :identifier (string/lower-case id)
-                   :sessions-count 0
-                   :relations-count 0
-                   :not-seen []
-                   :seen []
-                   :relations []}))
+                   :identifier (string/lower-case id)}))
