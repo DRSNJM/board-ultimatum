@@ -1,7 +1,8 @@
 (ns board-ultimatum.engine.model.relationship
   "A namespace for maniuplating the experts as part of the datastore"
   (:require [monger.core :as mg]
-            [monger.collection :as mc])
+            [monger.collection :as mc]
+            [board-ultimatum.engine.model.expert :as expert])
   (:use [monger.operators]))
 
 (def coll
@@ -21,12 +22,18 @@
   ([games fields] (mc/find-one-as-map coll {:games {$all games}} fields))
   ([games] (from-games games [])))
 
-(defn- relationship-to-object
-  "Converts the given relationship to an object which can be stored in mongo."
-  [relationship]
-  relationship)
+(defn convert-to-object
+  "Convert the given relationship to an object to be stored in the datastore.
+  The first argument must be an expert map contain an object id."
+  [{expert-obj-id :_id} [games rating]]
+  {:expert expert-obj-id
+   ;; Always sort games on insert so we do not have [a b] and [b a] entries.
+   :games (sort games)
+   :rating (float (/ rating rating-increment-count))})
 
 (defn add-many
-  "Add an expert with the given id to the datastore."
-  [game-relationships]
-  (mc/insert-batch coll (map relationship-to-object game-relationships)))
+  "Add the given relationships to the datastore and keep track for the expert."
+  [game-relationships expert-id]
+  (mc/insert-batch coll (map (partial convert-to-object
+                                      (expert/from-id expert-id [:_id]))
+                             game-relationships)))
