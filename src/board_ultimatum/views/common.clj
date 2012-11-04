@@ -72,6 +72,9 @@
        [:div.nav-collapse
         [:ul.nav
          [:li.divider-vertical]
+         [:li (link-to "/recommend" "New Search")]]
+        [:ul.nav.pull-right
+         [:li.divider-vertical]
          [:li [:a
                {:href "http://drsnjm.github.com/board-ultimatum"}
                "Documentation"]]
