@@ -200,11 +200,12 @@
 
 (defn collect-score-factors [game query-attrs]
   (flatten
-   (list
-    (score-factor "mechanics" game query-attrs)
-    (score-factor "categories" game query-attrs)
-    (rank-score game)
-    (num-players-factors query-attrs game))))
+   (remove empty?
+           (list
+            (score-factor "mechanics" game query-attrs)
+            (score-factor "categories" game query-attrs)
+            (rank-score game)
+            (num-players-factors query-attrs game)))))
 
 (defn sum-score [factors]
   (apply + (map :score factors)))
