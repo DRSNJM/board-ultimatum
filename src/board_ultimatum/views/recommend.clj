@@ -51,8 +51,8 @@
         [:h1 "Want a game recommendation?"]
         [:h2 "Fill in the inputs below with your preferences"]
         [:div#recommend.row-fluid
-         [:div#sidebar.span3
-          [:ul#select.span3.nav.nav-pills.nav-stacked.affix
+         [:div#sidebar.span2
+          [:ul#select.nav.nav-pills.nav-stacked.affix
             [:li#length [:a "Game Length"]]
             [:li#num-players [:a "Number of Players"]]
             [:li#mechanics [:a "Mechanics"]]
