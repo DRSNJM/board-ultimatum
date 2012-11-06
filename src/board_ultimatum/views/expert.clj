@@ -94,8 +94,6 @@
 (defn games-to-grid
   "Takes a collection of games and returns a grid-cols by grid-rows 2-D vector."
   [games]
-  {:pre [(= (count games) grid-size)]
-   :post [(= (count %) grid-rows) (= (count (first %)) grid-cols)]}
   (for [y (range grid-rows)]
     (for [x (range grid-cols)]
       (nth games (+ (* y grid-cols) x)))))
