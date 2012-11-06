@@ -3031,7 +3031,34 @@ net.brehaut.ClojureTools = (function (SH) {
 })(SyntaxHighlighter);
 </script><title>board-ultimatum -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">board-ultimatum</h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>Noir front-end to the board-ultimatum board game recomendation
                engine.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0-beta10</td></tr><tr><td class="dep-name">enclog</td><td class="dotted"><hr /></td><td class="dep-version">0.5.8-SNAPSHOT</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.7.5</td></tr><tr><td class="dep-name">com.novemberain/monger</td><td class="dotted"><hr /></td><td class="dep-version">1.1.2</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#board-ultimatum.engine">board-ultimatum.engine</a></li><li><a href="#board-ultimatum.engine.config">board-ultimatum.engine.config</a></li><li><a href="#board-ultimatum.engine.model">board-ultimatum.engine.model</a></li><li><a href="#board-ultimatum.engine.model.expert">board-ultimatum.engine.model.expert</a></li><li><a href="#board-ultimatum.engine.neural">board-ultimatum.engine.neural</a></li><li><a href="#board-ultimatum.flash">board-ultimatum.flash</a></li><li><a href="#board-ultimatum.form-validators">board-ultimatum.form-validators</a></li><li><a href="#board-ultimatum.server">board-ultimatum.server</a></li><li><a href="#board-ultimatum.views.common">board-ultimatum.views.common</a></li><li><a href="#board-ultimatum.views.expert">board-ultimatum.views.expert</a></li><li><a href="#board-ultimatum.views.index">board-ultimatum.views.index</a></li><li><a href="#board-ultimatum.views.recommend">board-ultimatum.views.recommend</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine" name="board-ultimatum.engine"><h1 class="project-name">board-ultimatum.engine</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0-beta10</td></tr><tr><td class="dep-name">enclog</td><td class="dotted"><hr /></td><td class="dep-version">0.5.8-SNAPSHOT</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.7.5</td></tr><tr><td class="dep-name">org.clojure/math.combinatorics</td><td class="dotted"><hr /></td><td class="dep-version">0.0.3</td></tr><tr><td class="dep-name">com.novemberain/monger</td><td class="dotted"><hr /></td><td class="dep-version">1.1.2</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#board-ultimatum.attr_engine">board-ultimatum.attr_engine</a></li><li><a href="#board-ultimatum.engine">board-ultimatum.engine</a></li><li><a href="#board-ultimatum.engine.config">board-ultimatum.engine.config</a></li><li><a href="#board-ultimatum.engine.model">board-ultimatum.engine.model</a></li><li><a href="#board-ultimatum.engine.model.expert">board-ultimatum.engine.model.expert</a></li><li><a href="#board-ultimatum.engine.model.relationship">board-ultimatum.engine.model.relationship</a></li><li><a href="#board-ultimatum.engine.neural">board-ultimatum.engine.neural</a></li><li><a href="#board-ultimatum.flash">board-ultimatum.flash</a></li><li><a href="#board-ultimatum.form-validators">board-ultimatum.form-validators</a></li><li><a href="#board-ultimatum.server">board-ultimatum.server</a></li><li><a href="#board-ultimatum.session">board-ultimatum.session</a></li><li><a href="#board-ultimatum.views.common">board-ultimatum.views.common</a></li><li><a href="#board-ultimatum.views.expert">board-ultimatum.views.expert</a></li><li><a href="#board-ultimatum.views.index">board-ultimatum.views.index</a></li><li><a href="#board-ultimatum.views.recommend">board-ultimatum.views.recommend</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.attr_engine" name="board-ultimatum.attr_engine"><h1 class="project-name">board-ultimatum.attr_engine</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.attr_engine
+	(:require [clojure.set :as set])
+	(:use [clojure.set]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn sort-tags [game]
+	(apply merge-with union
+		(map 
+			#(identity 
+				{(keyword (:subtype %)) #{(keyword (:value %))}})
+			(:tags game))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn num-players-score [attrs game])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn mechanics-score [attrs tags]
+	; TODO Check mechanics was active
+	(apply + 
+		(map 
+			#(if (contains? (:mechanic tags) (keyword (key %)))
+				(* (Integer/parseInt (val %)) 20)
+				0)
+			(:mechanics attrs))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn weight-score [attrs game])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn score-game [attrs game]
+	(let [tags (sort-tags game)]
+		(merge 
+			game
+			{:score (+
+				(mechanics-score attrs tags))})))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn score-games [attrs games]
+	(map #(score-game attrs %) games))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine" name="board-ultimatum.engine"><h1 class="project-name">board-ultimatum.engine</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine
     (:refer-clojure :exclude [==])
     (:use [clojure.core.logic]))</pre></td></tr><tr><td class="docs"><p>I don't do a whole lot.</p>
@@ -3102,15 +3129,18 @@ net.brehaut.ClojureTools = (function (SH) {
               :password (read-config &quot;MONGO_PASSWORD&quot;)})</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.model" name="board-ultimatum.engine.model"><h1 class="project-name">board-ultimatum.engine.model</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.model
   (:require [monger.core :as mg]
-            [monger.collection :as mc])
-  (:use [monger.operators]))</pre></td></tr><tr><td class="docs"><p>This namespace contains all functions related to manipulating the
+            [monger.collection :as mc]
+            [board-ultimatum.attr_engine :as attr_engine])
+  (:use [monger.operators]
+        [clojure.pprint]))</pre></td></tr><tr><td class="docs"><p>This namespace contains all functions related to manipulating the
 applications "model" (which is mostly mongo).</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Ensures the existence of several indexes to use mongo efficiently.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn ensure-indexes
   []
   (mc/ensure-index &quot;experts&quot; {:identifier 1})
-  (mc/ensure-index &quot;games&quot; {:id 1})
-  (mc/ensure-index &quot;games&quot; {:name 1}))</pre></td></tr><tr><td class="docs"><p>Connect to mongo based on the given connection information.</p>
+  (mc/ensure-index &quot;board_games&quot; {:bgg_id 1} {:unique 1 :dropDups 1})
+  (mc/ensure-index &quot;board_games&quot; {:name 1})
+  (mc/ensure-index &quot;board_games&quot; {:bgg_id 1, :random &quot;2d&quot;}))</pre></td></tr><tr><td class="docs"><p>Connect to mongo based on the given connection information.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn connect
   [connection-info]
   (if (:uri connection-info)
@@ -3141,47 +3171,244 @@ applications "model" (which is mostly mongo).</p>
   actual game lengths in the database.
   Usage: (times [30 45]) =&gt; (25 30 35 40 45 50)&quot;
   (mapcat #(time-map %) selected))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn find-by-length [&amp; selected-times]
-    &quot;Queries mongo for games matching any of the selected time ranges.&quot;
-    (let [collection &quot;board_games&quot;]
-      (mc/find-maps collection {:length {$in (times selected-times)}})))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.model.expert" name="board-ultimatum.engine.model.expert"><h1 class="project-name">board-ultimatum.engine.model.expert</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>A namespace for maniuplating the experts as part of the datastore</p>
+</td><td class="codes"><pre class="brush: clojure">(defn uniq-tag [subtype]
+  (distinct
+   (map #(:value %)
+        (filter
+         (fn [h] (= (:subtype h) subtype))
+         (flatten
+          (map (fn [g] (:tags g))
+               (mc/find-maps &quot;board_games&quot;)))))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn all-mechanics []
+  (uniq-tag &quot;mechanic&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn all-categories []
+  (uniq-tag &quot;category&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn all-families []
+  (uniq-tag &quot;family&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn all-publishers []
+  (uniq-tag &quot;publisher&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn all-designers []
+  (uniq-tag &quot;designer&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn tag-values-by-subtype [game subtype]
+  (set (map :value (filter #(= subtype (:subtype %)) (:tags game)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn mechanics [game]
+  (tag-values-by-subtype game &quot;mechanic&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn categories [game]
+  (tag-values-by-subtype game &quot;category&quot;))</pre></td></tr><tr><td class="docs"><p>extract all this nonsense and store it in the databse</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def most-popular-categories
+ (list &quot;Card Game&quot; &quot;Wargame&quot; &quot;Economic&quot; &quot;Fantasy&quot; &quot;Fighting&quot; &quot;Medieval&quot; &quot;Ancient&quot; &quot;Science Fiction&quot; &quot;World War II&quot; &quot;Adventure&quot; &quot;City Building&quot; &quot;Bluffing&quot; &quot;Exploration&quot; &quot;Political&quot; &quot;Miniatures&quot; &quot;Negotiation&quot; &quot;Civilization&quot; &quot;Abstract Strategy&quot; &quot;Transportation&quot; &quot;Territory Building&quot; &quot;Deduction&quot; &quot;Dice&quot; &quot;Nautical&quot; &quot;Racing&quot; &quot;Trains&quot; &quot;Animals&quot; &quot;Novel-based&quot; &quot;Horror&quot; &quot;Party Game&quot; &quot;Renaissance&quot; &quot;Humor&quot; &quot;Industry / Manufacturing&quot; &quot;Aviation / Flight&quot; &quot;Sports&quot; &quot;Action / Dexterity&quot; &quot;Mythology&quot; &quot;Space Exploration&quot; &quot;Travel&quot; &quot;Farming&quot; &quot;Napoleonic&quot; &quot;Movies / TV / Radio theme&quot; &quot;Real-time&quot; &quot;Murder/Mystery&quot; &quot;Children's Game&quot; &quot;American West&quot; &quot;Collectible Components&quot; &quot;Puzzle&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def most-popular-mechanics
+  (list &quot;Hand Management&quot; &quot;Dice Rolling&quot; &quot;Variable Player Powers&quot; &quot;Area Control / Area Influence&quot; &quot;Set Collection&quot; &quot;Modular Board&quot; &quot;Auction/Bidding&quot; &quot;Tile Placement&quot; &quot;Card Drafting&quot; &quot;Simultaneous Action Selection&quot; &quot;Area Movement&quot; &quot;Action Point Allowance System&quot; &quot;Route/Network Building&quot; &quot;Hex-and-Counter&quot; &quot;Partnerships&quot; &quot;Point to Point Movement&quot; &quot;Simulation&quot; &quot;Campaign / Battle Card Driven&quot; &quot;Worker Placement&quot; &quot;Secret Unit Deployment&quot; &quot;Pick-up and Deliver&quot; &quot;Co-operative Play&quot; &quot;Trading&quot; &quot;Role Playing&quot; &quot;Commodity Speculation&quot; &quot;Variable Phase Order&quot; &quot;Stock Holding&quot; &quot;Voting&quot; &quot;Betting/Wagering&quot; &quot;Grid Movement&quot; &quot;Deck / Pool Building&quot; &quot;Area Enclosure&quot; &quot;Roll / Spin and Move&quot; &quot;Memory&quot; &quot;Pattern Building&quot; &quot;Press Your Luck&quot; &quot;Trick-taking&quot; &quot;Chit-Pull System&quot; &quot;Pattern Recognition&quot; &quot;Storytelling&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def basic-score-weight 100)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn simple-score-data [data]
+  (reduce #(assoc %1 %2 {:score basic-score-weight :reason %2}) {} data))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def simple-mechanics-score-data
+  (simple-score-data most-popular-mechanics))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def simple-category-score-data
+  (simple-score-data most-popular-categories))</pre></td></tr><tr><td class="docs"><p>silly, quick hack</p>
+</td><td class="codes"><pre class="brush: clojure">(defn simple-data [attr-type]
+  (cond
+   (= &quot;mechanics&quot; attr-type) simple-mechanics-score-data
+   (= &quot;categories&quot; attr-type) simple-category-score-data))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn singular-attr [attr]
+  (if (= attr &quot;mechanics&quot;)
+    &quot;mechanic&quot;
+    &quot;category&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn score-attr [score-data [attr-name attr-value]]
+  (let [new-score (* (:score (score-data attr-name))
+                     attr-value)]
+    (assoc (score-data attr-name) :score new-score)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn rank-score [game]
+  {:reason &quot;BGG Rank&quot;
+   :score (- basic-score-weight (/ (float (:rank game)) 10))})</pre></td></tr><tr><td class="docs"><p>player num</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn convert-player-num [num-key]
+  (if (&lt; (.indexOf (name num-key) &quot;+&quot;) 0)
+    (Integer/parseInt (name num-key))
+    100))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn recommended-num-player-votes [hsh [player-num poll-result]]
+  (assoc hsh (convert-player-num player-num)
+    (+
+     (* 2 (poll-result :Best))
+     (* 1 (poll-result :Recommended))
+     (* -1 (poll-result (keyword &quot;Not Recommended&quot;))))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn tally-player-poll [game]
+  (reduce #(recommended-num-player-votes %1 %2) {}
+          (game :suggested_players)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn max-kv-by-value [hsh]
+  (reduce (fn [[maxk maxv] [k v]]
+            (if (&gt; v maxv)
+              [k v]
+              [maxk maxv]))
+          [-1 -100]
+          hsh))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn normalize-votes [optimal-num votes]
+  (reduce (fn [hsh [p v]]
+            (assoc hsh p (/ (float v) (get votes optimal-num))))
+          {}
+          votes))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn optimal-player-num [game]
+  (let [player-votes (tally-player-poll game)]
+    (first (max-kv-by-value player-votes))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn num-players-score [players game]
+  (let [min-pl (apply min players)
+        max-pl (apply max players)
+        player-votes (tally-player-poll game)
+        optimal-num (first (max-kv-by-value player-votes))
+        norm-votes (normalize-votes optimal-num player-votes)]
+    (cond
+     (contains? (set players) optimal-num) basic-score-weight
+     (&gt; optimal-num max-pl) (if (contains? (set (keys norm-votes)) max-pl)
+                              (* (get norm-votes max-pl) basic-score-weight)
+                              (* -1 basic-score-weight))
+     (&lt; optimal-num min-pl) (if (contains? (set (keys norm-votes)) min-pl)
+                              (* (get norm-votes min-pl) basic-score-weight)
+                              (* -1 basic-score-weight))
+     :else 0)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn num-players-factors [attrs game]
+  (let [players (:num-players attrs)]
+    (if (&gt; (count players) 0)
+      {:reason &quot;Optimal Player Number&quot;
+       :score (num-players-score players game)})))</pre></td></tr><tr><td class="docs"><p>player num</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>returns [ [attr-name value] ]</p>
+</td><td class="codes"><pre class="brush: clojure">(defn score-factor [attr-type game query-attrs]
+  (let [relevant-attrs (query-attrs (keyword attr-type))
+        game-attrs (tag-values-by-subtype game (singular-attr attr-type))
+        score-data (simple-data attr-type)]
+    (remove nil?
+            (map #(if (contains? game-attrs (str (first %)))
+                     (score-attr score-data %))
+                 relevant-attrs))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn collect-score-factors [game query-attrs]
+  (flatten
+   (remove empty?
+           (list
+            (score-factor &quot;mechanics&quot; game query-attrs)
+            (score-factor &quot;categories&quot; game query-attrs)
+            (rank-score game)
+            (num-players-factors query-attrs game)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn sum-score [factors]
+  (apply + (map :score factors)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn total-score [game]
+  (sum-score (:factors game)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn sorted-ranked-games [games query-attrs]
+  (take 30
+        (sort-by
+         #(* -1 (:score %))
+         (filter #(&gt; (:score %) 0)
+                 (map #(let [factors (collect-score-factors % query-attrs)]
+                         (assoc % :factors factors
+                                :score (sum-score factors)))
+                      games)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn filter-on-times [attrs games]
+  (let [selected-times (:length attrs)]
+    (if (&gt; (count selected-times) 0)
+      (filter #(boolean (some #{(:length %)} (times selected-times))) games)
+      games)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn filter-on-num-players [attrs games]
+  (let [selected-num-players (:num-players attrs)]
+    (if (&gt; (count selected-num-players) 0)
+      (let [min-pl (apply min selected-num-players)
+            max-pl (apply max selected-num-players)]
+        (filter #(not (or (&gt; min-pl (:max_players %))
+                          (&lt; max-pl (:min_players %)))) games))
+      games)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn find-games [query-attrs]
+    &quot;Queries mongo for games matching selected inputs.&quot;
+    (let [collection &quot;board_games&quot;
+          games (mc/find-maps collection)]
+      (sorted-ranked-games
+       (-&gt;&gt; games
+            (filter-on-times query-attrs)
+            (filter-on-num-players query-attrs))
+       query-attrs)))</pre></td></tr><tr><td class="docs"><p>Get an expert from the database by id.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-game-by-id
+  ([id fields] (mc/find-one-as-map &quot;board_games&quot;
+                                   {:bgg_id id}
+                                   fields))
+  ([id] (get-game-by-id id [])))</pre></td></tr><tr><td class="docs"><p>This function should only be run as a cron task. It adds/update a random
+  field on each game in the board-games collection.</p>
+
+<p>  NOTE: This may be improved by using mongo's built-in map-reduce functionality.
+  Also, there is a race condition between when each game document is fetched and
+  updates start.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn add-random-field-to-games
+  []
+  (map (fn [{obj-id :_id}]
+         (mc/update-by-id &quot;board_games&quot; obj-id {$set {:random [(rand) 0]}}))
+       (mc/find-maps &quot;board_games&quot; {} [:_id])))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.model.expert" name="board-ultimatum.engine.model.expert"><h1 class="project-name">board-ultimatum.engine.model.expert</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>A namespace for maniuplating the experts as part of the datastore</p>
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.model.expert
-  (:require [board-ultimatum.views.common :as common]
-            [noir.session :as sess]
-            [noir.validation :as vali]
+  (:refer-clojure :exclude [sort find])
+  (:require [clojure.string :as string]
+            [board-ultimatum.engine.model :as model]
             [monger.core :as mg]
             [monger.collection :as mc])
-  (:use [monger.operators]))</pre></td></tr><tr><td class="docs"><p>The name of the collection on mongo containing experts.</p>
-</td><td class="codes"><pre class="brush: clojure">(def ^:private coll
+  (:use [monger operators query]))</pre></td></tr><tr><td class="docs"><p>The name of the collection on mongo containing experts.</p>
+</td><td class="codes"><pre class="brush: clojure">(def coll
   &quot;experts&quot;)</pre></td></tr><tr><td class="docs"><p>An expert with the given id exists in the database.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn exists?
-  [id] (boolean (mc/find-one coll {:identifier id} [:identifier])))</pre></td></tr><tr><td class="docs"><p>Get an expert from the database by id.</p>
+  [id] (boolean (mc/find-one coll
+                             {:identifier (string/lower-case id)}
+                             [:identifier])))</pre></td></tr><tr><td class="docs"><p>Get an expert from the database by id.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn from-id
-  [id]
-  (mc/find-one-as-map coll {:identifier id}))</pre></td></tr><tr><td class="docs"><p>Add an expert with the given id to the datastore.</p>
+  ([id fields] (mc/find-one-as-map coll
+                                   {:identifier (string/lower-case id)}
+                                   fields))
+  ([id] (from-id id [])))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn name-from-id [id]
+  &quot;Get the name of the expert with the given id in its pretty form if it
+  exists.&quot;
+  (let [expert (from-id id [:identifier :pretty-id])]
+       (get expert :pretty-id
+            (get expert :identifier))))</pre></td></tr><tr><td class="docs"><p>For the given expert specify</p>
+</td><td class="codes"><pre class="brush: clojure">(defn add-unfamiliar-games
+  [id games]
+  (mc/update coll {:identifier (string/lower-case id)} {$pushAll {:unfamiliar-games games}}))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn games-for [id num-games]
+  &quot;Get num-games games for the given expert to compare.&quot;
+  (let [unfamiliar-games (get (mc/find-one-as-map
+                                coll
+                                {:identifier (string/lower-case id)}
+                                [:unfamiliar-games])
+                              :unfamiliar-games [])]
+    (with-collection &quot;board_games&quot;
+      (find {:bgg_id {$nin unfamiliar-games}
+             :random {&quot;$near&quot; [(rand) 0]}})
+      (limit num-games))))</pre></td></tr><tr><td class="docs"><p>Add an expert with the given id to the datastore.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn add
   [id]
-  (if (exists? id)
-    (vali/set-error :identity &quot;Another expert is already using that identity.&quot;)
-    (mc/insert coll {:identifier id})))</pre></td></tr><tr><td class="docs"><p>Get the logged in expert's id from the session.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn current-id
-  [] (sess/get :expert-id))</pre></td></tr><tr><td class="docs"><p>Determine if there is an expert logged in right now.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn logged-in?
-  [] (boolean (current-id)))</pre></td></tr><tr><td class="docs"><p>Logout the currently logged in expert.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn logout
-  [] (sess/remove! :expert-id))</pre></td></tr><tr><td class="docs"><p>Login the given expert.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn login
-  [id]
-  (if (exists? id)
-    (sess/put! :expert-id id)
-    (vali/set-error :identity &quot;No user with that identity exists. Try
-                         registering.&quot;)))</pre></td></tr><tr><td class="docs"><p>A mapping of attempt actions to functions. The sign up action maps to adding
-  an expert to the database and the Log In action simply logs in the given id.</p>
-</td><td class="codes"><pre class="brush: clojure">(def ^:private attempt-action-to-function
-  {&quot;Register&quot; add &quot;Log In&quot; login})</pre></td></tr><tr><td class="docs"><p>Process the given attempt by either creating a new user or logging them in.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn process-attempt
-  [{:keys [action identity]}]
-  ((get attempt-action-to-function action) identity))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.neural" name="board-ultimatum.engine.neural"><h1 class="project-name">board-ultimatum.engine.neural</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+  (mc/insert coll {:pretty-id id
+                   :identifier (string/lower-case id)}))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.model.relationship" name="board-ultimatum.engine.model.relationship"><h1 class="project-name">board-ultimatum.engine.model.relationship</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>A namespace for maniuplating the experts as part of the datastore</p>
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.model.relationship
+  (:require [monger.core :as mg]
+            [monger.collection :as mc]
+            [board-ultimatum.engine.model.expert :as expert])
+  (:use [monger.operators]))</pre></td></tr><tr><td class="docs"><p>The name of the collection on mongo containing relationships.</p>
+</td><td class="codes"><pre class="brush: clojure">(def coll
+  &quot;relationships&quot;)</pre></td></tr><tr><td class="docs"><p>The number of increments the rating slider uses.</p>
+</td><td class="codes"><pre class="brush: clojure">(def rating-increment-count
+  1000)</pre></td></tr><tr><td class="docs"><p>An relationship between the two games exists in the database.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn exists?
+  [games] (boolean (mc/find-one coll {:games {$all games}} [:_id])))</pre></td></tr><tr><td class="docs"><p>Get an expert from the database by id.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn from-games
+  ([games fields] (mc/find-one-as-map coll {:games {$all games}} fields))
+  ([games] (from-games games [])))</pre></td></tr><tr><td class="docs"><p>Run aggregate to calculate the average rating for each relationship.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn average-ratings
+  []
+  (mc/aggregate coll [{$group {:_id &quot;$games&quot; :rating {$avg &quot;$rating&quot;}}}]))</pre></td></tr><tr><td class="docs"><p>Convert the given relationship to an object to be stored in the datastore.
+  The first argument must be an expert map contain an object id.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn convert-to-object
+  [{expert-obj-id :_id} [games rating]]
+  {:expert expert-obj-id
+   ;; Always sort games on insert so we do not have [a b] and [b a] entries.
+   :games (sort games)
+   :rating (float (/ rating rating-increment-count))})</pre></td></tr><tr><td class="docs"><p>Add the given relationships to the datastore and keep track for the expert.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn add-many
+  [game-relationships expert-id]
+  (mc/insert-batch coll (map (partial convert-to-object
+                                      (expert/from-id expert-id [:_id]))
+                             game-relationships)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.neural" name="board-ultimatum.engine.neural"><h1 class="project-name">board-ultimatum.engine.neural</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.neural
     (use [enclog nnets training]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def net
@@ -3193,17 +3420,24 @@ applications "model" (which is mostly mongo).</p>
   default use case of an alert flash.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.flash
   (:refer-clojure :exclude [get])
-  (:require [noir.session :as sess]))</pre></td></tr><tr><td class="docs"><p>Helper method to public put!. Wraps around flash-put!.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn- a-put!
-  [t m] (sess/flash-put! :alert {:type t :message (apply str m)}))</pre></td></tr><tr><td class="docs"><p>A simple wrapper around noir's built-in flash put. Takes a variable number of
-  aguments. If the first argument is a keyword then it is assumed to be the type
-  of alert.  Otherwise the type is set to :info.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn put!
-  [flash-type &amp; message]
-  (println message)
-  (if (keyword? flash-type)
-    (a-put! flash-type message)
-    (a-put! :info (cons flash-type message))))</pre></td></tr><tr><td class="docs"><p>Alias this namespace's get to noir's flash-get.</p>
+  (:require [noir.session :as sess]))</pre></td></tr><tr><td class="docs"><p>Store a flash value that will persist for this request only.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- flash-now!
+  [k v]
+  (swap! sess/*noir-flash* assoc-in [:incoming k] v))</pre></td></tr><tr><td class="docs"><p>Most basic flash put the can either do an immediate or slow push using a
+  custom format on the :alert key.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- base-put!
+  [flasher t m] (flasher :alert {:type t :message (apply str m)}))</pre></td></tr><tr><td class="docs"><p>A wrapper around base-put! that allows it to be used with a variable number
+  of arguments. The second argument is treated specially if it is a keyword.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- put-partial
+  [flasher]
+  (fn [flash-type &amp; message]
+    (if (keyword? flash-type)
+      (base-put! flasher flash-type message)
+      (base-put! flasher :info (cons flash-type message)))))</pre></td></tr><tr><td class="docs"><p>Does an immediate flash.</p>
+</td><td class="codes"><pre class="brush: clojure">(def now!
+  (put-partial flash-now!))</pre></td></tr><tr><td class="docs"><p>Does a slow flash.</p>
+</td><td class="codes"><pre class="brush: clojure">(def put!
+  (put-partial sess/flash-put!))</pre></td></tr><tr><td class="docs"><p>Alias this namespace's get to noir's flash-get.</p>
 </td><td class="codes"><pre class="brush: clojure">(def get (partial sess/flash-get :alert))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.form-validators" name="board-ultimatum.form-validators"><h1 class="project-name">board-ultimatum.form-validators</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.form-validators
   (:require [noir.session :as sess])
@@ -3240,7 +3474,39 @@ applications "model" (which is mostly mongo).</p>
         (println &quot;ERROR: Could not connect to MongoDB.&quot;))
       (catch java.lang.NullPointerException e
         (println &quot;ERROR: Could not authenticate with Mongo. See config: \n\t&quot;
-                 (str (assoc connection-info :password &quot;********&quot;)))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.common" name="board-ultimatum.views.common"><h1 class="project-name">board-ultimatum.views.common</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+                 (str (assoc connection-info :password &quot;********&quot;)))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.session" name="board-ultimatum.session"><h1 class="project-name">board-ultimatum.session</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Functions for manipulating the session.  Specifally, login and logout.</p>
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.session
+  (:require [noir.session :as sess]
+            [noir.validation :as vali]
+            [board-ultimatum.engine.model.expert :as expert]
+            [board-ultimatum.flash :as flash]))</pre></td></tr><tr><td class="docs"><p>Get the logged in expert's id from the session.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn current-expert-id
+  [] (sess/get :expert-id))</pre></td></tr><tr><td class="docs"><p>Determine if there is an expert logged in right now.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn expert-logged-in?
+  [] (boolean (current-expert-id)))</pre></td></tr><tr><td class="docs"><p>Logout the currently logged in expert.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn expert-logout
+  [] (sess/remove! :expert-id))</pre></td></tr><tr><td class="docs"><p>Login the given expert.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- expert-login
+  [id]
+  (if (expert/exists? id)
+    (let [pretty-id (expert/name-from-id id)]
+      (sess/put! :expert-id pretty-id)
+      (flash/put! :success &quot;Hello, &quot; pretty-id &quot;. You have logged in successfully!&quot;))
+    (vali/set-error :identity &quot;No user with that identity exists. Try
+                         registering.&quot;)))</pre></td></tr><tr><td class="docs"><p>Attempt to add the expert to the datastore if it does not already exist.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- expert-register
+  [id]
+  (if (expert/exists? id)
+    (vali/set-error :identity &quot;Another expert is already using that identity.&quot;)
+    (do
+      (expert/add id)
+      (flash/put! :success &quot;Thanks for registering &quot; id &quot;. Try logging in.&quot; ))))</pre></td></tr><tr><td class="docs"><p>A mapping of attempt actions to functions. The sign up action maps to adding
+  an expert to the database and the Log In action simply logs in the given id.</p>
+</td><td class="codes"><pre class="brush: clojure">(def ^:private attempt-action-to-function
+  {&quot;Register&quot; expert-register &quot;Log In&quot; expert-login})</pre></td></tr><tr><td class="docs"><p>Process the given attempt by either creating a new user or logging them in.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn process-login-attempt
+  [{:keys [action identity]}]
+  ((get attempt-action-to-function action) identity))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.common" name="board-ultimatum.views.common"><h1 class="project-name">board-ultimatum.views.common</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.common
   (:require [clojure.string :as string]
             [board-ultimatum.flash :as flash])
@@ -3303,6 +3569,9 @@ applications "model" (which is mostly mongo).</p>
        [:div.nav-collapse
         [:ul.nav
          [:li.divider-vertical]
+         [:li (link-to &quot;/recommend&quot; &quot;Recommend&quot;)]
+         [:li (link-to &quot;/similar&quot; &quot;Similar Games&quot;)]
+         [:li (link-to &quot;/expert&quot; &quot;Experts&quot;)]
          [:li [:a
                {:href &quot;http://drsnjm.github.com/board-ultimatum&quot;}
                &quot;Documentation&quot;]]
@@ -3322,83 +3591,197 @@ applications "model" (which is mostly mongo).</p>
   (:require [board-ultimatum.views.common :as common]
             [board-ultimatum.flash :as flash]
             [board-ultimatum.form-validators :as valid]
-            [board-ultimatum.engine.model.expert :as expert]
+            (board-ultimatum.engine.model [relationship :as relationship]
+                                          [expert :as expert])
+            [board-ultimatum.engine.model :as model]
+            [clojure.math.combinatorics :as combo]
+            [clojure.string :as string]
             [noir.session :as sess]
             [noir.validation :as vali]
             [noir.response :as resp])
   (:use [noir.core :only [defpage defpartial pre-route render]]
+        [board-ultimatum.session]
         [hiccup core element]
+        [clojure.walk :only [keywordize-keys]]
         [hiccup.form :only [form-to label text-field submit-button]]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(pre-route [:any &quot;/expert/*&quot;] {:as req}
-           (when-not (expert/logged-in?)
+           (when-not (expert-logged-in?)
              (flash/put! :warning &quot;You must log in before accessing this
                                   functionality.&quot;)
-             (resp/redirect &quot;/expert&quot;)))</pre></td></tr><tr><td class="docs"><p>The route from which an expert should start at. If they are not logged in
+             (resp/redirect &quot;/expert&quot;)))</pre></td></tr><tr><td class="docs"><p>Used by the GET /expert route when there is an expert logged in.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial expert-logged-in
+  []
+  [:div.page-header
+   [:h1 &quot;You have two choices&quot;]]
+  [:ol#expert-choices.row-fluid
+   [:li.span6
+    [:div.hero-unit.small
+     [:h2 &quot;Select games you know &quot;
+      [:small &quot;and tell us how good of a recommendation they are for
+              eachother.&quot;]]
+     (link-to {:class &quot;btn btn-primary btn-large&quot;}
+              &quot;/expert/select&quot; [:strong &quot;Do some work!&quot;])]]
+   [:li.span6
+    [:h2 &quot;&amp;hellip;or be boring&quot; [:small &quot; and log out.&quot;]]
+    (link-to {:class &quot;btn btn-large&quot;}
+             &quot;/expert/logout&quot; &quot;Log out&quot;)]])</pre></td></tr><tr><td class="docs"><p>Used by the GET /expert route when there is not an expert logged in.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial expert-not-logged-in
+  []
+  [:div.page-header
+   [:h1 &quot;Welcome, Board Game Expert!&quot;]]
+  [:p &quot;Since this is not a security required application there is no
+      strong authentication. However, to keep track of your history of
+      recommendations we still need to identify you.&quot;]
+  [:p &quot;The resulting system is very simple. As an expert you will use the
+      same identifier each time you use the application. Your identifier
+      can be anything you want including your name or random string of
+      numbers.&quot;]
+  [:div.well
+   (form-to {:id &quot;expert-login&quot; :class &quot;form-inline&quot;} [:post &quot;/expert&quot;]
+            (text-field {:id &quot;identity&quot; :placeholder &quot;Your identifier&quot;}
+                        &quot;identity&quot;) &quot; &quot;
+            (submit-button {:name &quot;action&quot; :class &quot;btn btn-primary&quot;}
+                           &quot;Log In&quot;) &quot; &quot;
+            (submit-button {:name &quot;action&quot; :class &quot;btn&quot;}
+                           &quot;Register&quot;))])</pre></td></tr><tr><td class="docs"><p>The route from which an expert should start at. If they are not logged in
 they can here. If they are then they are redirected to select.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage &quot;/expert&quot; []
   (common/layout
-    [:h1 &quot;Welcome, Board Game Expert!&quot;]
-    (if (expert/logged-in?)
-      (html
-        [:h3 &quot;You have two choices&quot;]
-        [:div.span6 (link-to &quot;/expert/logout&quot; &quot;Logout&quot;)]
-        [:div.span6 (link-to &quot;/expert/select&quot; &quot;Do some work!&quot;)])
-      (html
-        [:p &quot;Since this is not a security required application there is no
-            strong authentication. However, to keep track of your history of
-            recommendations we still need to identify you.&quot;]
-        [:p &quot;The resulting system is very simple. As an expert you will use the
-             same identifier each time you use the application. Your identifier
-             can be anything you want including your name or random string of
-             numbers.&quot;]
-        [:div.well
-         (form-to {:id &quot;expert-login&quot; :class &quot;form-inline&quot;} [:post &quot;/expert&quot;]
-                  (text-field {:id &quot;identity&quot; :placeholder &quot;Your identifier&quot;}
-                              &quot;identity&quot;) &quot; &quot;
-                  (submit-button {:name &quot;action&quot; :class &quot;btn btn-primary&quot;}
-                                 &quot;Log In&quot;) &quot; &quot;
-                  (submit-button {:name &quot;action&quot; :class &quot;btn&quot;}
-                                 &quot;Register&quot;))]))))</pre></td></tr><tr><td class="docs"><p>POST version of the /expert route. This route processes the login/register
+    (if (expert-logged-in?)
+      (expert-logged-in)
+      (expert-not-logged-in))))</pre></td></tr><tr><td class="docs"><p>POST version of the /expert route. This route processes the login/register
 attempt and redirects back to the GET page.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/expert&quot;] {:as attempt}
-  (when-not (expert/logged-in?)
+  (when-not (expert-logged-in?)
     (when (valid/attempt? attempt)
-      (expert/process-attempt attempt))
+      (process-login-attempt attempt))
     (if-let [errors (vali/get-errors :identity)]
       (flash/put! :error (common/format-errors errors))))
   (resp/redirect &quot;/expert&quot;))</pre></td></tr><tr><td class="docs"><p>Logout the currently logged in expert.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage &quot;/expert/logout&quot; []
-  (expert/logout)
+  (expert-logout)
   (resp/redirect &quot;/expert&quot;))</pre></td></tr><tr><td class="docs"><p>grid-cols must divide 12 for use with CSS grid system.</p>
-</td><td class="codes"><pre class="brush: clojure">(def grid-cols 3)
+</td><td class="codes"><pre class="brush: clojure">(def grid-cols 4)
 (def grid-rows 3)
-(def grid-size (* grid-cols grid-rows))</pre></td></tr><tr><td class="docs"><p>Construct a list of game titles and cover images</p>
-</td><td class="codes"><pre class="brush: clojure">(def retrieved-games
-  ; Currently produces dummy values, will eventually retrieve random games from database
-  (for [x (range grid-cols)]
-    (for [y (range grid-rows)]
-      [(+ (* x grid-cols) y) &quot;Game Title: Might Be a Bit Long&quot; &quot;http://lorempixel.com/150/100/&quot;])))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defpartial game-thumb [[game-id game-name imgURL]]
-  [:div.span4.game {:id (str &quot;game-&quot; game-id)}
-   [:button.btn.btn-info.btn-input {:data-toggle &quot;button&quot;}
-    [:input {:type &quot;hidden&quot; :name (str &quot;game-field-&quot; game-id) :value &quot;off&quot;}]
-    [:img.img-rounded {:src imgURL}]
-    [:h4 game-name]]])</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defpartial grid-row [coll]
+(def grid-size (* grid-cols grid-rows))</pre></td></tr><tr><td class="docs"><p>Takes a collection of games and returns a grid-cols by grid-rows 2-D vector.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn games-to-grid
+  [games]
+  {:pre [(= (count games) grid-size)]
+   :post [(= (count %) grid-rows) (= (count (first %)) grid-cols)]}
+  (for [y (range grid-rows)]
+    (for [x (range grid-cols)]
+      (nth games (+ (* y grid-cols) x)))))</pre></td></tr><tr><td class="docs"><p>Takes a map representing a game and returns markup for a game including its
+  title and thumbnail.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial game-thumb
+  [{:keys [bgg_id name thumbnail]}]
+  [:div {:id (str &quot;game-&quot; bgg_id)
+         :class (str &quot;game-container span&quot; (/ 12 grid-cols))
+         :data-toggle &quot;button&quot;}
+   [:div.game
+    [:input {:type &quot;hidden&quot; :name (str &quot;games[&quot; bgg_id &quot;]&quot;) :value &quot;false&quot;}]
+    [:div.image-wrapper
+     [:img.img-rounded {:src thumbnail}]]
+    [:div.title-wrapper
+     [:h5 name]]]])</pre></td></tr><tr><td class="docs"><p>Create a fluid row with the content being game-thumb mapped over the given
+  coll.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial grid-row
+  [coll]
   [:div.row-fluid
-   (map game-thumb coll)])</pre></td></tr><tr><td class="docs">
+   (map game-thumb coll)])</pre></td></tr><tr><td class="docs"><p>A page show to the expert</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage &quot;/expert/select&quot; []
   (common/with-javascripts (cons &quot;/js/expert.js&quot; common/*javascripts*)
     (common/layout
-      [:h1 &quot;Welcome, Board Game Expert!&quot;]
-      [:h2 &quot;Please select games that you are familiar with:&quot;]
-      [:form#expert-select.container-fluid {:method &quot;post&quot;}
-       (map grid-row retrieved-games)
-       [:div.row-fluid
-        [:button.btn.btn-large.btn-primary.span6 &quot;I know these games!&quot;]
-        [:a.btn.btn-large.span6 {:href &quot;/expert-select&quot;} &quot;Try the next set&quot;]]])))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/expert/select&quot;] {:as m}
-  (str &quot;parameters: &quot; m))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.index" name="board-ultimatum.views.index"><h1 class="project-name">board-ultimatum.views.index</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+      [:div.page-header
+       [:h1 &quot;Select all of the games you are familiar with&quot;]]
+      [:form#expert-select {:method &quot;post&quot;}
+       (map grid-row (games-to-grid (expert/games-for (current-expert-id)
+                                                      grid-size)))
+       [:div.form-actions
+        [:div.row-fluid
+         [:button#main-button.btn.btn-large.span8
+          [:strong &quot;I am unfamiliar with all of these games. Next!&quot;]]
+         [:a.btn.btn-large.span4 {:href &quot;/expert&quot;}
+          &quot;I'm done with this for today.&quot;]]]])))</pre></td></tr><tr><td class="docs"><p>Similar to game-thumb but for the compare page. Taks a bgg_id and returns
+  markup containing a thumbnail and title of the referenced game.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial compare-game
+  [bgg-id]
+  (let [{:keys [name thumbnail]} (model/get-game-by-id bgg-id
+                                                       [:name :thumbnail])]
+    [:div.compare-game.span4
+     [:div.image-wrapper
+      [:img.img-rounded {:src thumbnail}]]
+     [:div.title-wrapper
+      [:h5 name]]]))</pre></td></tr><tr><td class="docs"><p>Take an index and pair of games returning markup an expert can use to rate
+  the recommendation quality of the pair.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial compare-games
+  [index [game-a game-b]]
+  [:div.rate-games.row-fluid {:id (str &quot;rate-games&quot; index)}
+   (compare-game game-a)
+   [:div.rating.span4 {:id (str &quot;rating&quot; index)}
+    [:input {:id (str &quot;rating-input&quot; index) :type &quot;hidden&quot;
+             :name (str game-a &quot;-&quot; game-b) :value 500}]
+    [:h4 &quot;Recommendation Quality&quot;]
+    [:div.rating-slider {:id (str &quot;rating-slider&quot; index)}]]
+   (compare-game game-b)])</pre></td></tr><tr><td class="docs"><p>The main body of /expert/compare when ids is greater than 1. Provides an
+  interface for rating the quality of each game pair combination.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial expert-compare
+  [ids]
+  (common/with-javascripts (concat common/*javascripts*
+                                   [&quot;/js/jquery-ui-slider.min.js&quot;
+                                    &quot;/js/expert-compare.js&quot;])
+    (common/layout
+      [:div.page-header
+       [:h1 &quot;Rate these recommendations&quot;]
+       [:div.instructions
+        [:p &quot;For each pair below please rate how good of a recommendation each
+            game is given the other.&quot;]]
+       [:div#expert-compare
+        (form-to [:post &quot;/expert/compare&quot;]
+          (map-indexed compare-games
+                       (shuffle (map shuffle (combo/combinations ids 2))))
+          [:div.form-actions
+           [:div.row-fluid
+            [:button#main-button.btn.btn-large.span6.btn-primary
+             [:strong &quot;I'm done rating these games.&quot;]]
+            [:a.btn.btn-large.span6 {:href &quot;/expert/select&quot;}
+             &quot;I can't rate these games.&quot;]]])]])))</pre></td></tr><tr><td class="docs"><p>For a given map entry return whether the value is the string "true".</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- input-game-filter
+  {:test (fn []
+           (assert (input-game-filter [&quot;123&quot; &quot;true&quot;]))
+           (assert (not (input-game-filter [&quot;123&quot; &quot;false&quot;]))))}
+  [[_ selected?]]
+  (= selected? &quot;true&quot;))</pre></td></tr><tr><td class="docs"><p>For a given two element return the first element parsed as an integer.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- input-game-mapper
+  {:test (fn []
+           (assert (= 123 (input-game-mapper [&quot;123&quot; &quot;true&quot;]))))}
+  [[bgg-id _]]
+  (Integer/parseInt bgg-id))</pre></td></tr><tr><td class="docs"><p>Convert input from the from to an easy to handle two element vector where the
+  first element is a vector of selected ids and the second is a vector of.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- convert-input-games
+  {:test (fn [] (assert (= (convert-input-games
+                             {&quot;123&quot; &quot;true&quot; &quot;234&quot; &quot;false&quot; &quot;567&quot; &quot;true&quot;})
+                           [[123 567] [234]])))}
+  [games]
+  [(map input-game-mapper (filter input-game-filter games))
+   (map input-game-mapper (filter (complement input-game-filter) games))])</pre></td></tr><tr><td class="docs"><p>Take selected games from an expert and if they selected 2 or more render an
+interface for comparing them.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/expert/select&quot;] {:keys [games]}
+  (let [[selected-ids unfamiliar-ids] (convert-input-games games)]
+    (expert/add-unfamiliar-games (current-expert-id) unfamiliar-ids)
+    (if (&lt;= (count selected-ids) 1)
+      (resp/redirect &quot;/expert/select&quot;)
+      (expert-compare selected-ids))))</pre></td></tr><tr><td class="docs"><p>This route specifies how to take the results of recommendation quality
+ratings provided by an expert.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/expert/compare&quot;] {:as relationships}
+  (when-not (empty? relationships)
+    (relationship/add-many
+      (into {} (map (fn [[pair-str value]]
+                      [(map #(Integer/parseInt %)
+                            (string/split pair-str (re-pattern &quot;-&quot;)))
+                       (Integer/parseInt value)])
+                    relationships))
+      (current-expert-id)))
+  (resp/redirect &quot;/expert/select&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.index" name="board-ultimatum.views.index"><h1 class="project-name">board-ultimatum.views.index</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.index
   (:require [board-ultimatum.views.common :as common])
   (:use [noir.core :only [defpage]]
@@ -3416,40 +3799,54 @@ attempt and redirects back to the GET page.</p>
            [:p (link-to &quot;/expert&quot; &quot;Expert Interface&quot;)]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.recommend" name="board-ultimatum.views.recommend"><h1 class="project-name">board-ultimatum.views.recommend</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.recommend
   (:require [board-ultimatum.views.common :as common]
-            [board-ultimatum.engine.model :as model])
+            [board-ultimatum.engine.model :as model]
+            [clojure.string :as string])
   (:use [noir.core :only [defpage defpartial]]
         [hiccup.element]
-        [hiccup.form]))</pre></td></tr><tr><td class="docs"><p>Build preference selection button</p>
-</td><td class="codes"><pre class="brush: clojure">(defpartial build-tri-state [name form-name]
-  [:div
+        [hiccup.form]
+        [clojure.pprint]))</pre></td></tr><tr><td class="docs"><p>Build 3-state preference selection buttons</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial build-tri-state [name attr form-name]
+  [:div {:style &quot;float:left;margin:10px 20px 0px 0px;&quot;}
     [:div {:class &quot;btn-group tri-state&quot;}
-      [:button {:type &quot;button&quot; :class &quot;btn btn-danger&quot;} [:i {:class &quot;icon-thumbs-down&quot;}]]
-      [:button {:type &quot;button&quot; :class &quot;btn option&quot;} name]
-      [:button {:type &quot;button&quot; :class &quot;btn btn-success&quot;} [:i {:class &quot;icon-thumbs-up&quot;}]]]
-   [:input {:type &quot;hidden&quot; :name (str &quot;mechanic[&quot; form-name &quot;]&quot;) :value &quot;0&quot;}]])</pre></td></tr><tr><td class="docs">
+      [:button {:type &quot;button&quot; :class &quot;btn btn-mini btn-danger&quot;} [:i {:class &quot;icon-thumbs-down&quot;}]]
+      [:button {:type &quot;button&quot; :class &quot;btn btn-mini option&quot;} name]
+      [:button {:type &quot;button&quot; :class &quot;btn btn-mini btn-success&quot;} [:i {:class &quot;icon-thumbs-up&quot;}]]]
+    [:input {:type &quot;hidden&quot; :name (str attr &quot;[&quot; form-name &quot;]&quot;) :value &quot;0&quot;}]])</pre></td></tr><tr><td class="docs"><p>Build radio preference selection buttons</p>
+</td><td class="codes"><pre class="brush: clojure">(defn build-radio-buttons [name-value form-name]
+  [:div
+    [:div {:class &quot;btn-group radio-buttons&quot; :data-toggle &quot;buttons-radio&quot;}
+      (map 
+        #(identity [:button {:type &quot;button&quot; :value (val %) :class &quot;btn&quot;} (key %)])
+        name-value)]
+    [:input {:type &quot;hidden&quot; :name form-name :value }]])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn game-length [length]
+  (cond
+   (&gt;= length 120) (str (/ length 60) &quot; hours&quot;)
+   :else (str length &quot; minutes&quot;)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn player-checkboxes [num]
   [:div.selection
    [:label.checkbox
     [:div.icon.player]
-    (check-box num false num)
+    (check-box &quot;num-players[]&quot; false num)
     [:div.bottom-label (str num &quot; Players&quot;)]]])</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn time-checkboxes [num]
   [:div.selection
    [:label.checkbox
     [:div.icon.time]
-    (check-box num false num)
-    [:div.bottom-label num]]])</pre></td></tr><tr><td class="docs"><p>Page for querying the logic based recommendation engine.</p>
+    (check-box &quot;length[]&quot; false num)
+    [:div.bottom-label (game-length num)]]])</pre></td></tr><tr><td class="docs"><p>Page for querying the logic based recommendation engine.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage &quot;/recommend&quot; []
     (common/with-javascripts (cons &quot;/js/recommend.js&quot; common/*javascripts*)
       (common/layout
         [:h1 &quot;Want a game recommendation?&quot;]
         [:h2 &quot;Fill in the inputs below with your preferences&quot;]
         [:div#recommend.row-fluid
-         [:div#sidebar.span3
-          [:ul#select.span3.nav.nav-pills.nav-stacked.affix
+         [:div#sidebar.span2
+          [:ul#select.nav.nav-pills.nav-stacked.affix
             [:li#length [:a &quot;Game Length&quot;]]
             [:li#num-players [:a &quot;Number of Players&quot;]]
             [:li#mechanics [:a &quot;Mechanics&quot;]]
+            [:li#categories [:a &quot;Categories&quot;]]
             [:li#weight [:a &quot;Weight&quot;]]]]
 
          [:div.span9
@@ -3459,7 +3856,7 @@ attempt and redirects back to the GET page.</p>
               [:input {:type &quot;hidden&quot; :name &quot;length-active&quot; :value &quot;false&quot;}]
               [:h3 &quot;Game Length&quot;]
               [:p &quot;This is a description of this field&quot;]
-              (map time-checkboxes [&quot;&lt;20 minutes&quot; &quot;~30 minutes&quot; &quot;~45 minutes&quot; &quot;~1 hour&quot; &quot;~2 hours&quot; &quot;~3 hours&quot; &quot;~4 hours&quot; &quot;5+ hours&quot;])]
+              (map time-checkboxes [20 30 45 60 90 120 180 240 300])]
 
             [:div {:id &quot;input-num-players&quot; :class &quot;param well well-small&quot;}
               [:input {:type &quot;hidden&quot; :name &quot;num-players-active&quot; :value &quot;false&quot;}]
@@ -3471,40 +3868,113 @@ attempt and redirects back to the GET page.</p>
               [:input {:type &quot;hidden&quot; :name &quot;mechanics-active&quot; :value &quot;false&quot;}]
               [:h3 &quot;Mechanics&quot;]
               [:p &quot;Select gameplay mechanics that you like or dislike&quot;]
-              (build-tri-state &quot;Hand Management&quot; &quot;hand-management&quot;)
-              (build-tri-state &quot;Deck Building&quot; &quot;deck-building&quot;)
-              (build-tri-state &quot;Card Drafting&quot; &quot;card-draft&quot;)]
+              (map #(build-tri-state % &quot;mechanics&quot; %)
+                   model/most-popular-mechanics)]
 
+            [:div {:id &quot;input-categories&quot; :class &quot;param well well-small&quot;}
+              [:input {:type &quot;hidden&quot; :name &quot;categories-active&quot; :value &quot;false&quot;}]
+              [:h3 &quot;Categories&quot;]
+              [:p &quot;Select gameplay categories that you like or dislike&quot;]
+              (map #(build-tri-state % &quot;categories&quot; %)
+                   model/most-popular-categories)]
+
+           
             [:div {:id &quot;input-weight&quot; :class &quot;param well well-small&quot;}
               [:input {:type &quot;hidden&quot; :name &quot;weight-active&quot; :value &quot;false&quot;}]
               [:h3 &quot;Weight&quot;]
               [:p &quot;This is a description of this field&quot;]
-              [:input {:type &quot;text&quot; :name &quot;weight-value&quot;}]]
-
-            [:button {:type &quot;submit&quot; :class &quot;btn&quot;} &quot;Submit&quot;]]]])))
-(defn display-game [game]
+              [:div {:class &quot;btn-group&quot; :data-toggle &quot;buttons-radio&quot;}
+              (build-radio-buttons (array-map :Light &quot;1&quot; :Medium-Light &quot;2&quot;
+                                    :Medium &quot;3&quot; :Medium-Heavy &quot;4&quot;
+                                    :Heavy &quot;5&quot;) &quot;weight&quot;)]]        
+            [:button {:type &quot;submit&quot; :class &quot;btn&quot;} &quot;Submit&quot;]]]])))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn num-players [min-players max-players]
+  (cond
+   (= min-players max-players) (str max-players &quot; Player&quot;)
+   :else (str min-players &quot;-&quot; max-players &quot; Players&quot;)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn format-score [score]
+  (format &quot;%+.1f&quot; (float score)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn pp-factors [game]
+  (interpose &quot;&lt;br/&gt;&quot;
+             (map #(str (:reason %) &quot;: &quot;
+                        (format-score (:score %)))
+                  (:factors game))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn display-game [i game]
   [:tr.game
-   [:td (:rank game) &quot;. &quot;]
+   [:td (+ 1 i) &quot;.&quot;]
    [:td (image (:thumbnail game))]
-   [:td (:bgg_id game) &quot;. &quot;]
-   [:td (:name game)]
-   [:td (:length game) &quot; minutes&quot;]
-   [:td (:min_players game) &quot;-&quot; (:max_players game) &quot; Players&quot;]
-   [:td (:min_age game)]])</pre></td></tr><tr><td class="docs"><p>Process queries received from the interface</p>
+   [:td (link-to (str &quot;http://boardgamegeek.com/boardgame/&quot; (:bgg_id game) &quot;/&quot;)
+             (:rank game) &quot;. &quot;)]
+   [:td.name
+    [:div.game-name (:name game)]
+    [:ul
+     (map (fn [e] [:li e])
+          (concat (model/mechanics game)
+                  (model/categories game)))]]
+   [:td (game-length (:length game))]
+   [:td (num-players (:min_players game) (:max_players game))]
+   [:td (:min_age game) &quot;+&quot;]
+   [:td (format-score (:score game)) &quot; points&quot;]
+   [:td.why (pp-factors game)]])</pre></td></tr><tr><td class="docs"><p>Should probaby do this filtering in js</p>
+</td><td class="codes"><pre class="brush: clojure">(defn sanitize-query-params [attrs]
+  (-&gt;&gt; {}
+       ((fn [hsh]
+          (if (Boolean/valueOf (:mechanics-active attrs))
+            (assoc hsh :mechanics
+                   (map #(vector (name (first %)) (Integer/parseInt (second %)))
+                        (filter #(not= &quot;0&quot; (second %)) (:mechanics attrs))))
+            hsh)))
+       ((fn [hsh]
+          (if (Boolean/valueOf (:categories-active attrs))
+            (assoc hsh :categories
+                   (map #(vector (name (first %)) (Integer/parseInt (second %)))
+                        (filter #(not= &quot;0&quot; (second %)) (:categories attrs))))
+            hsh)))
+       ((fn [hsh]
+           (if (Boolean/valueOf (:num-players-active attrs))
+             (assoc hsh :num-players
+                    (map #(Integer/parseInt %) (:num-players attrs)))
+           hsh)))
+       ((fn [hsh]
+           (if (Boolean/valueOf (:length-active attrs))
+             (assoc hsh :length
+                    (map #(Integer/parseInt %) (:length attrs)))
+           hsh)))
+       ((fn [hsh]
+           (if (Boolean/valueOf (:weight-active attrs))
+             (assoc hsh :weight (:weight attrs))
+             hsh)))))</pre></td></tr><tr><td class="docs"><p>messy, but just debug info, so who cares?</p>
+</td><td class="codes"><pre class="brush: clojure">(defn display-query-params [[attr-type values]]
+  [:li attr-type &quot;: &quot;
+   (if (vector? (first values))
+     [:ul
+      (map (fn [[k v]]
+             (if (= 1 v)
+               [:li.positive k]
+               [:li.negative k]))
+           values)]
+     (string/join &quot;, &quot; values))])</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/recommend&quot;] {:as params}
-    (common/layout
-        [:h1 &quot;Have fun playing!&quot;]
-        [:table.games.table.table-striped
-         [:thead
-          [:th &quot;Rank&quot;]
-          [:th &quot;Thumb&quot;]
-          [:th &quot;BGG ID&quot;]
-          [:th &quot;Name&quot;]
-          [:th &quot;Length&quot;]
-          [:th &quot;Num Players&quot;]
-          [:th &quot;Min Age&quot;]]
-         [:tbody
-          (map display-game
-               (sort #(compare (:rank %1) (:rank %2))
-                     (model/find-by-length 20 30)))]]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+  (common/layout
+   [:h1 &quot;Have fun playing!&quot;]
+   [:h3 &quot;Query Params&quot;]
+   [:div.well
+    [:ul.query-params (map
+          display-query-params
+          (sanitize-query-params params))]]
+   [:table.games.table.table-striped
+    [:thead
+     [:th &quot;#&quot;]
+     [:th &quot;Thumb&quot;]
+     [:th &quot;BGG Rank&quot;]
+     [:th &quot;Name&quot;]
+     [:th &quot;Length&quot;]
+     [:th &quot;Num Players&quot;]
+     [:th &quot;Min Age&quot;]
+     [:th &quot;Score&quot;]
+     [:th &quot;Why?&quot;]]
+    [:tbody
+     (map-indexed display-game
+          (model/find-games
+           (sanitize-query-params params)))]]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
        SyntaxHighlighter.all()</script></body></html>
