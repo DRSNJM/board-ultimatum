@@ -92,11 +92,16 @@
 (def grid-size (* grid-cols grid-rows))
 
 (defn games-to-grid
-  "Takes a collection of games and returns a grid-cols by grid-rows 2-D vector."
+  "Takes a collection of games and returns a 2-D vector vector of games where
+  each row is of length grid-cols."
   [games]
-  (for [y (range grid-rows)]
-    (for [x (range grid-cols)]
-      (nth games (+ (* y grid-cols) x)))))
+  (let [num-games (count games)
+        num-rows (int (Math/ceil (/ num-games grid-cols)))
+        remainder (mod num-games grid-cols)
+        last-row-size (if (= remainder 0) grid-cols remainder)]
+    (for [y (range num-rows)]
+      (for [x (range (if (= (dec num-rows) y) last-row-size grid-cols))]
+        (nth games (+ (* y grid-cols) x))))))
 
 (defpartial game-thumb
   "Takes a map representing a game and returns markup for a game including its
