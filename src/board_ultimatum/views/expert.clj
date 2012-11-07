@@ -92,8 +92,8 @@
 (def grid-size (* grid-cols grid-rows))
 
 (defn games-to-grid
-  "Takes a collection of games and returns a 2-D vector vector of games where
-  each row is of length grid-cols."
+  "Takes a collection of games and returns a 2-D vector of games where each row
+  is of length grid-cols."
   [games]
   (let [num-games (count games)
         num-rows (int (Math/ceil (/ num-games grid-cols)))
