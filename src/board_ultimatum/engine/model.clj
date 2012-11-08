@@ -15,6 +15,9 @@
   (mc/ensure-index "board_games" {:bgg_id 1} {:unique 1 :dropDups 1})
   (mc/ensure-index "board_games" {:name 1})
   (mc/ensure-index "board_games" {:bgg_id 1, :random "2d"}))
+  (mc/ensure-index "network_data" {:id 1})
+  (mc/ensure-index "network_output" {:game_a 1}))
+
 
 (defn connect
   "Connect to mongo based on the given connection information."
@@ -50,6 +53,11 @@
 
   Usage: (times [30 45]) => (25 30 35 40 45 50)"
   (mapcat #(time-map %) selected))
+  
+(defn find-all []
+  "Queries mongo for all games."
+  (let [collection "board_games"]
+    (mc/find-maps collection {})))
 
 ; These suck. Pulls all the data from mongo, and then filters. For
 ; each. Every time. Super dumb.
