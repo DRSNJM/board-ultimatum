@@ -7,6 +7,7 @@
                  [org.clojure/core.logic "0.7.5"]
                  [com.novemberain/monger "1.1.2"]
                  [org.clojure/math.combinatorics "0.0.3"]
-                 [incanter "1.2.4"]]
+                 [incanter "1.2.4"]
+                 [org.clojure/data.json "0.2.0"]]
   :plugins [[lein-exec "0.2.1"]]
   :main board-ultimatum.server)
