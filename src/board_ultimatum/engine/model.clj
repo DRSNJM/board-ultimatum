@@ -14,7 +14,7 @@
   (mc/ensure-index "experts" {:identifier 1})
   (mc/ensure-index "board_games" {:bgg_id 1} {:unique 1 :dropDups 1})
   (mc/ensure-index "board_games" {:name 1})
-  (mc/ensure-index "board_games" {:bgg_id 1, :random "2d"}))
+  (mc/ensure-index "board_games" {:bgg_id 1, :random "2d"})
   (mc/ensure-index "network_data" {:id 1})
   (mc/ensure-index "network_output" {:game_a 1}))
 
