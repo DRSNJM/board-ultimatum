@@ -34,6 +34,12 @@ jQuery(document).ready(function ($) {
   $('input:checked').each(function() {
     $(this).siblings('.icon').addClass('active');
   });
+  $('.radio-buttons').each(function() {
+    var radioValue = $(this).siblings(':input').val();
+    if (radioValue != '') {
+      $(this).children('button[value|="' + radioValue + '"]').addClass('active');
+    }
+  });
 
 
   // Toggle what form elements are available
