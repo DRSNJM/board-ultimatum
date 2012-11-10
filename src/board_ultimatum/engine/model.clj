@@ -1,7 +1,6 @@
 (ns board-ultimatum.engine.model
   (:require [monger.core :as mg]
-            [monger.collection :as mc]
-            [board-ultimatum.attr_engine :as attr_engine])
+            [monger.collection :as mc])
   (:use [monger.operators]
         [clojure.pprint]))
 
