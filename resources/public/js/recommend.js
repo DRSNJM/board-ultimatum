@@ -31,6 +31,9 @@ jQuery(document).ready(function ($) {
   $('.option').each(function() {
     updateTriStateDisplay($(this));
   });
+  $('input:checked').each(function() {
+    $(this).siblings('.icon').addClass('active');
+  });
 
 
   // Toggle what form elements are available
