@@ -179,7 +179,7 @@
   (common/layout
    [:h1 "Have fun playing!"]
    [:h3 "Query Params"]
-   [:div.well
+   [:div.well {:style "overflow:hidden;"}
     [:ul.query-params (map
           display-query-params
           (sanitize-query-params params))]]
@@ -195,7 +195,7 @@
      [:th "Score"]
      [:th "Why?"]]
     [:tbody
-     (map-indexed display-game
-          (model/find-games
-           (sanitize-query-params params)))]]))
+      (map-indexed display-game
+        (model/find-games
+          (sanitize-query-params params)))]]))
 
