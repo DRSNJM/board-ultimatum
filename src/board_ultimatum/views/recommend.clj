@@ -97,7 +97,7 @@
               (build-radio-buttons (array-map :Light "1" :Medium-Light "2"
                                     :Medium "3" :Medium-Heavy "4"
                                     :Heavy "5") "weight")]]        
-            [:button {:type "submit" :class "btn"} "Submit"]]]])))
+            [:button {:type "submit" :class "btn btn-submit"} "Submit"]]]])))
 
 
 (defn num-players [min-players max-players]
