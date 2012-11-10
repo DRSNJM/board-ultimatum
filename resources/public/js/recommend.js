@@ -1,19 +1,3 @@
-var displayedAttrCount = 0;
-
-function incrementDisplayedCount() {
-  displayedAttrCount += 1;
-  $('.btn-submit').show();
-}
-
-function decrementDisplayedCount() {
-  if (displayedAttrCount > 0) {
-    displayedAttrCount -= 1;
-  }
-  if (displayedAttrCount == 0) {
-    $('.btn-submit').hide();
-  }
-}
-
 function updateActiveDisplay(listElem, speed, input) {
   if (arguments.length == 2) {
     input = $('input[name=' + listElem.attr('id') + '-active]');
@@ -21,11 +5,9 @@ function updateActiveDisplay(listElem, speed, input) {
   if (input.val() == 'true') {
     listElem.addClass('active');
     $('#input-' + listElem.attr('id')).show(speed);
-    incrementDisplayedCount();
   } else {
     listElem.removeClass('active');
     $('#input-' + listElem.attr('id')).hide(speed);
-    decrementDisplayedCount();
   }
 }
 
@@ -42,8 +24,6 @@ function updateTriStateDisplay(button, formInput) {
 }
 
 jQuery(document).ready(function ($) {
-  $('.btn-submit').hide();
-
   // If any inputs are set (e.g. from back button), alter interface to show
   $('#select li').each(function() {
     updateActiveDisplay($(this), 0);
