@@ -31,6 +31,14 @@
    (>= length 120) (str (/ length 60) " hours")
    :else (str length " minutes")))
 
+(defn num-players [min-players max-players]
+  (cond
+   (= min-players max-players) (str max-players " Player")
+   :else (str min-players "-" max-players " Players")))
+
+(defn format-score [score]
+  (format "%+.1f" (float score)))
+
 (defn player-checkboxes [num]
   [:div.selection
    [:label.checkbox
@@ -100,14 +108,6 @@
                                     :Heavy "5") "weight")]]        
             [:button {:type "submit" :class "btn btn-submit"} "Submit"]]]])))
 
-
-(defn num-players [min-players max-players]
-  (cond
-   (= min-players max-players) (str max-players " Player")
-   :else (str min-players "-" max-players " Players")))
-
-(defn format-score [score]
-  (format "%+.1f" (float score)))
 
 ;; Should probaby do this filtering in js
 (defn sanitize-query-params [attrs]
