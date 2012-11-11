@@ -1,13 +1,14 @@
 (ns board-ultimatum.views.results
   (:require [board-ultimatum.engine.model :as model]
-            [board-ultimatum.views.recommend :as recommend])
-  (:use [hiccup.element]))
+            [board-ultimatum.views.attr-display :as attr-display])
+  (:use [hiccup.element]
+        [noir.core]))
 
 (defn pp-factors [game]
   (interpose "<br/>"
     (map 
       #(str (:reason %) ": "
-        (format-score (:score %)))
+        (attr-display/format-score (:score %)))
       (:factors game))))
 
 (defn display-game [i game]
@@ -22,13 +23,13 @@
      (map (fn [e] [:li e])
        (concat (model/mechanics game)
          (model/categories game)))]]
-   [:td (recommend/game-length (:length game))]
-   [:td (recommend/num-players (:min_players game) (:max_players game))]
+   [:td (attr-display/game-length (:length game))]
+   [:td (attr-display/num-players (:min_players game) (:max_players game))]
    [:td (:min_age game) "+"]
-   [:td (recommend/format-score (:score game)) " points"]
+   [:td (attr-display/format-score (:score game)) " points"]
    [:td.why (pp-factors game)]])
 
-(defn build-results-list [games disp-recom disp-explanation]
+(defpartial build-results-list [games disp-recom disp-explanation]
 
     [:table.games.table.table-striped
     [:thead
