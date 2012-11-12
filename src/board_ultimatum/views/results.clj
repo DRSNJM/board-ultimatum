@@ -32,6 +32,11 @@
 
 (defpartial display-game2 [i game disp-recom disp-explanation]
   [:div.well {:style "height:150px;"}
+    [:i {:class "icon-question-sign"
+         :style "position:relative;right:15px;bottom:15px;float:left;"
+         :rel "popover" :data-placement "left" :data-trigger "hover"
+         :data-title "How did this game match up to your preferences?"}]
+    [:div.pop-content {:style "display:none;"} (pp-factors game)]
     [:div {:style "width:200px;float:left;"}
       [:img {:src (:thumbnail game) :style "margin: 0px auto;display: block;"}]]
     [:table {:border "1" :style "float:left;margin-left:20px;width:75%;line-height:normal;"}

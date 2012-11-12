@@ -107,15 +107,17 @@
      (string/join ", " values))])
 
 (defpage [:post "/recommend"] {:as params}
-  (common/layout
-   [:h1 "Have fun playing!"]
-   [:h3 "Query Params"]
-   [:div.well {:style "overflow:hidden;"}
-    [:ul.query-params (map
-          display-query-params
-          (sanitize-query-params params))]]
-    (results/build-results-list
-      (model/find-games
-        (sanitize-query-params params))
-      true
-      true)))
+  (common/with-javascripts
+    (concat common/*javascripts* ["/js/bootstrap.js" "/js/results.js"])
+    (common/layout
+     [:h1 "Have fun playing!"]
+     [:h3 "Query Params"]
+     [:div.well {:style "overflow:hidden;"}
+      [:ul.query-params (map
+            display-query-params
+            (sanitize-query-params params))]]
+      (results/build-results-list
+        (model/find-games
+          (sanitize-query-params params))
+        true
+        true))))
