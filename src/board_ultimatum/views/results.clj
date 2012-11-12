@@ -46,7 +46,9 @@
               [:i {:class "icon-share"}])]]]
       [:tr {:style "height:80px;"}
         [:td {:style "width:55%;"}
-          "HEY"]
+          (map #(identity [:span {:style "width:50%;float:left;margin-bottom:2px;"} "&#149; " %])
+            (concat (model/mechanics game)
+              (model/categories game)))]
         [:td {:style "width:15%;"}
           (let [length-disp
             (string/split
