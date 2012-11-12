@@ -19,11 +19,13 @@
 
 (defpartial display-game [i game disp-recom disp-explanation]
   [:div.well.game {:style "height:150px;position:relative;"}
-    [:div.pop-trigger {:style "position:absolute;left:-5px;top:2px;float:left;display:none;"
-         :rel "popover" :data-placement "left" :data-trigger "hover"
-         :data-title "How did this game match up to your preferences?"}
-      [:i.icon-question-sign {:style "margin-left:10px;"}]]
-    [:div.pop-content {:style "display:none;"} (pp-factors game)]
+    (if (and disp-explanation (not= (.size (:factors game)) 0))
+      [:div
+        [:div.pop-trigger {:style "position:absolute;left:-5px;top:2px;float:left;display:none;"
+             :rel "popover" :data-placement "left" :data-trigger "hover"
+             :data-title "How did this game match up to your preferences?"}
+          [:i.icon-question-sign {:style "margin-left:10px;"}]]
+        [:div.pop-content {:style "display:none;"} (pp-factors game)]])
     [:div {:style "width:200px;float:left;"}
       [:img {:src (:thumbnail game) :style "margin: 0px auto;display: block;"}]]
     [:table {:style "float:left;margin-left:20px;width:75%;line-height:normal;"}
