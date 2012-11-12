@@ -19,10 +19,10 @@
 
 (defpartial display-game [i game disp-recom disp-explanation]
   [:div.well.game {:style "height:150px;position:relative;"}
-    [:div.pop-trigger {:style "position:absolute;left:-5px;top:2px;float:left;"
+    [:div.pop-trigger {:style "position:absolute;left:-5px;top:2px;float:left;display:none;"
          :rel "popover" :data-placement "left" :data-trigger "hover"
          :data-title "How did this game match up to your preferences?"}
-      [:i {:class "icon-question-sign" :style "margin-left:10px;"}]]
+      [:i.icon-question-sign {:style "margin-left:10px;"}]]
     [:div.pop-content {:style "display:none;"} (pp-factors game)]
     [:div {:style "width:200px;float:left;"}
       [:img {:src (:thumbnail game) :style "margin: 0px auto;display: block;"}]]
@@ -61,7 +61,9 @@
         [:td {:style "width:15%;"}
           [:div {:style "text-align:center;border-left:1px solid black;"}
             [:div {:style "font-size:30px;"} (:min_age game) "+"]
-            [:div "years old"]]]]]])
+            [:div "years old"]]]]]
+    [:div.open-recom {:style "height:150px;width:20px;float:right;display:none;"}
+      [:i.icon-chevron-right {:style "position:absolute;top:45%;"}]]])
 
 
 (defpartial build-results-list [games disp-recom disp-explanation]
