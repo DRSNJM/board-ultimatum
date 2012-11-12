@@ -5,12 +5,17 @@
   (:use [hiccup.element]
         [noir.core]))
 
-(defn pp-factors [game]
-  (interpose "<br/>"
-    (map 
-      #(str (:reason %) ": "
-        (attr-display/format-score (:score %)))
-      (:factors game))))
+(defpartial pp-factor [factor]
+  [:div {:style "clear:left;"}
+    [:div {:style "float:left;"} (:reason factor)]
+    [:div {:style "float:right;"} (attr-display/format-score (:score factor))]])
+
+(defpartial pp-factors [game]
+  (map pp-factor (:factors game))
+  [:div {:style "clear:left;border-top: 1px solid #666666;padding: 5px 0px;margin: 7px 0px;"}
+    [:b
+      [:div {:style "float:left;"} "Total score"]
+      [:div {:style "float:right;"} (:score game)]]])
 
 (defn display-game [i game]
   [:tr.game
