@@ -15,24 +15,24 @@
   [:div {:style "clear:left;border-top: 1px solid #666666;padding: 5px 0px;"}
     [:b
       [:div {:style "float:left;"} "Total score"]
-      [:div {:style "float:right;"} (:score game)]]])
+      [:div {:style "float:right;"} (attr-display/format-score (:score game))]]])
 
 (defpartial display-game [i game disp-recom disp-explanation]
-  [:div.well {:style "height:150px;"}
-    [:i {:class "icon-question-sign"
-         :style "position:relative;right:15px;bottom:15px;float:left;"
+  [:div.well.game {:style "height:150px;position:relative;"}
+    [:div.pop-trigger {:style "position:absolute;left:-5px;top:2px;float:left;"
          :rel "popover" :data-placement "left" :data-trigger "hover"
-         :data-title "How did this game match up to your preferences?"}]
+         :data-title "How did this game match up to your preferences?"}
+      [:i {:class "icon-question-sign" :style "margin-left:10px;"}]]
     [:div.pop-content {:style "display:none;"} (pp-factors game)]
     [:div {:style "width:200px;float:left;"}
       [:img {:src (:thumbnail game) :style "margin: 0px auto;display: block;"}]]
     [:table {:style "float:left;margin-left:20px;width:75%;line-height:normal;"}
       [:tr {:style "height:50px;border-bottom:1px solid black;"}
-        [:td {:colspan "4"} 
+        [:td {:colspan "4"}
           [:div {:style "font-size:34px;float:left;"}
             (:name game)]
           [:div {:style "float:right;"} 
-            (link-to 
+            (link-to
               (str "http://boardgamegeek.com/boardgame/" (:bgg_id game) "/")
               "BGG Rank: " (:rank game) " "
               [:i {:class "icon-share"}])]]]

@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-	$('.icon-question-sign').popover({
+	$('.pop-trigger').popover({
 		html: true,
 		content: function() {
 			return $(this).siblings('.pop-content').html();
