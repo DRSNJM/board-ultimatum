@@ -10,8 +10,8 @@
 
 (defn num-players [min-players max-players]
   (cond
-   (= min-players max-players) (str max-players " Player")
-   :else (str min-players "-" max-players " Players")))
+   (= min-players max-players) (str max-players " player")
+   :else (str min-players "-" max-players " players")))
 
 (defn format-score [score]
   (format "%+.1f" (float score)))

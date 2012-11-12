@@ -1,6 +1,7 @@
 (ns board-ultimatum.views.results
   (:require [board-ultimatum.engine.model :as model]
-            [board-ultimatum.views.attr-display :as attr-display])
+            [board-ultimatum.views.attr-display :as attr-display]
+            [clojure.string :as string])
   (:use [hiccup.element]
         [noir.core]))
 
@@ -33,19 +34,33 @@
   [:div.well {:style "height:150px;"}
     [:div {:style "width:200px;float:left;"}
       [:img {:src (:thumbnail game) :style "margin: 0px auto;display: block;"}]]
-    [:table {:border "1" :style "float:left;margin-left:20px;width:75%;"}
-      [:tr {:style "line-height:50px;"}
+    [:table {:border "1" :style "float:left;margin-left:20px;width:75%;line-height:normal;"}
+      [:tr {:style "height:50px;"}
         [:td {:colspan "4" :style "font-size:34px;"}
           (:name game)]]
-      [:tr {:style "height:80px;line-height:50px;"}
+      [:tr {:style "height:80px;"}
         [:td {:style "width:55%;"}
           "HEY"]
         [:td {:style "width:15%;"}
-          (attr-display/game-length (:length game))]
+          (let [length-disp
+            (string/split
+              (attr-display/game-length (:length game))
+              #"\s+")]
+            [:div {:style "text-align:center;"}
+              [:div {:style "font-size:30px;"} (first length-disp)]
+              [:div (second length-disp)]])]
         [:td {:style "width:15%;"}
-          (attr-display/num-players (:min_players game) (:max_players game))]
-        [:td {:style "width:15%;"}
-          (:min_age game) "+"]]]])
+          (let [num-pl-disp
+            (string/split 
+              (attr-display/num-players (:min_players game) (:max_players game))
+              #"\s+")]
+            [:div {:style "text-align:center;"}
+              [:div {:style "font-size:30px;"} (first num-pl-disp)]
+              [:div (second num-pl-disp)]])
+          ]
+        [:td {:style "width:15%;text-align:center;"}
+          [:div {:style "font-size:30px;"} (:min_age game) "+"]
+          [:div "years old"]]]]])
 
 (defpartial build-results-list [games disp-recom disp-explanation]
 
