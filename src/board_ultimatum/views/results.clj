@@ -36,8 +36,14 @@
       [:img {:src (:thumbnail game) :style "margin: 0px auto;display: block;"}]]
     [:table {:border "1" :style "float:left;margin-left:20px;width:75%;line-height:normal;"}
       [:tr {:style "height:50px;"}
-        [:td {:colspan "4" :style "font-size:34px;"}
-          (:name game)]]
+        [:td {:colspan "4"} 
+          [:div {:style "font-size:34px;float:left;"}
+            (:name game)]
+          [:div {:style "float:right;"} 
+            (link-to 
+              (str "http://boardgamegeek.com/boardgame/" (:bgg_id game) "/")
+              "BGG Rank: " (:rank game) " "
+              [:i {:class "icon-share"}])]]]
       [:tr {:style "height:80px;"}
         [:td {:style "width:55%;"}
           "HEY"]
