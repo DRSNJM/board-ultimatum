@@ -40,7 +40,7 @@
   "For the given expert get the games that they are unfamiliar with."
   [id]
   (:unfamiliar-games (mc/find-one-as-map coll
-                                         {:identifier (string/lower-case) id}
+                                         {:identifier (string/lower-case id)}
                                          [:unfamiliar-games])
                      []))
 
