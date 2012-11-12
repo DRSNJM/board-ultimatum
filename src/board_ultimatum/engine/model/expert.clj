@@ -36,17 +36,21 @@
   [id games]
   (mc/update coll {:identifier (string/lower-case id)} {$pushAll {:unfamiliar-games games}}))
 
-(defn games-for [id num-games]
+(defn unfamiliar-games-for
+  "For the given expert get the games that they are unfamiliar with."
+  [id]
+  (:unfamiliar-games (mc/find-one-as-map coll
+                                         {:identifier (string/lower-case) id}
+                                         [:unfamiliar-games])
+                     []))
+
+(defn games-for
   "Get num-games games for the given expert to compare."
-  (let [unfamiliar-games (get (mc/find-one-as-map
-                                coll
-                                {:identifier (string/lower-case id)}
-                                [:unfamiliar-games])
-                              :unfamiliar-games [])]
-    (with-collection "board_games"
-      (find {:bgg_id {$nin unfamiliar-games}
-             :random {"$near" [(rand) 0]}})
-      (limit num-games))))
+  [id num-games]
+  (with-collection "board_games"
+    (find {:bgg_id {$nin (unfamiliar-games-for id)}
+           :random {"$near" [(rand) 0]}})
+    (limit num-games)))
 
 (defn add
   "Add an expert with the given id to the datastore."
