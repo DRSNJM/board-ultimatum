@@ -68,6 +68,11 @@ something like this:
 5.  Commit everything in the main project (e.g. the updated submodule commit and
     the updated compiled resources).
 
+## Code Quality
+
+This project uses [kibit](https://github.com/jonase/kibit) for code quality
+static analysis.
+
 ## License
 
 Copyright (C) 2012 DRSNJM
