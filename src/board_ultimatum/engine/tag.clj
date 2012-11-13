@@ -70,10 +70,10 @@
   (mc/find-maps "tags" {}))
 
 (defn most-popular-categories []
-  (map :value (raw-freq-tags-by-subtype "category")))
+  (sort (map :value (raw-freq-tags-by-subtype "category"))))
 
 (defn most-popular-mechanics []
-  (map :value (raw-freq-tags-by-subtype "mechanic")))
+  (sort (map :value (raw-freq-tags-by-subtype "mechanic"))))
 
 (defn update [subtype bgg-id new-data]
   (mc/update "tags" {:subtype subtype :bgg_id bgg-id} {$set new-data}))

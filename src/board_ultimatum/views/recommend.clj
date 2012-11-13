@@ -118,12 +118,11 @@
      [:h1 "Have fun playing!"]
      [:h3 "Query Params"]
      [:div.well {:style "overflow:hidden;"}
-      [:ul.query-params (map
-            display-query-params
-            (sanitize-query-params params))]]
-      (results/build-results-list
-        (model/find-games
-          (sanitize-query-params params))
-        true
-        true
-        false))))
+      [:ul.query-params
+       (map display-query-params (sanitize-query-params params))]]
+     (results/build-results-list
+      (take 30 (model/find-games
+                (sanitize-query-params params)))
+      true
+      true
+      false))))

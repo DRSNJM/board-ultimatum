@@ -178,14 +178,13 @@
   (sum-score (:factors game)))
 
 (defn sorted-ranked-games [games query-attrs]
-  (take 30
-        (sort-by
-         #(* -1 (:score %))
-         (filter #(> (:score %) 0)
-                 (map #(let [factors (collect-score-factors % query-attrs)]
-                         (assoc % :factors factors
-                                :score (sum-score factors)))
-                      games)))))
+  (sort-by
+   #(* -1 (:score %))
+   (filter #(> (:score %) 0)
+           (map #(let [factors (collect-score-factors % query-attrs)]
+                   (assoc % :factors factors
+                          :score (sum-score factors)))
+                games))))
 
 
 (defn filter-on-times [attrs games]
