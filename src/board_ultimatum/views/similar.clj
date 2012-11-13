@@ -26,25 +26,26 @@
             [:div.input-append
               [:input#game-name {:type "text" :data-provide "typeahead" :name "game-name"}]
               [:button {:type "submit" :class "btn"} "Search"]]]])))
-           
-(defn similar-results [rel]
-  (results/display-game 0 (model/get-game-by-id (:game_b rel)) false false (:rating rel)))
 
 (defpage [:post "/similar"] {:as params}
-    (cond
-      (nil? (model/get-id-by-name (:game-name params))) 
+    (if
+      (nil? (model/get-id-by-name (:game-name params)))
         (do (flash/put! :error (str (:game-name params) " not found in database")) 
             (redirect "/similar"))
-      :else (common/with-javascripts (cons "/js/similar.js" common/*javascripts*)
+      (common/with-javascripts (cons "/js/similar.js" common/*javascripts*)
         (common/layout      
           [:h1 "Game Results"]
           [:h2 "Based on \"" (:game-name params) "\""]
-          (map 
-            (fn [rel] (similar-results rel))
+          (let [game-ids
             (sort-by :rating >
               (model/get-similar 
                 (model/get-id-by-name 
-                  (:game-name params)))))
+                  (:game-name params))))]
+            (results/build-results-list
+              (map #(model/get-game-by-id (:game_b %)) game-ids)
+              false
+              false
+              (map :rating game-ids)))
           [:h4 [:a {:href "/similar"} "Search again"]]))))
 
 
