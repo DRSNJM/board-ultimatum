@@ -55,7 +55,7 @@
       (model/find-all))))
 
 (defn get-vector [game-id] 
-  (:data (mc/find-one-as-map "network_data" {:id 299})))
+  (:data (mc/find-one-as-map "network_data" {:id game-id})))
 
 (defn join-vector [id-A id-B] (into [] (concat (get-vector id-A) (get-vector id-B))))
 
@@ -70,6 +70,7 @@
 
 (defn network-eval [] 
   (dorun 
+    (mc/remove "network_output")
     (doseq [id-A game-ids] 
       (doseq [game-record (take 50 
         (sort-by :rating >
