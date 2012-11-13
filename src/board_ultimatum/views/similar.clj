@@ -2,9 +2,11 @@
   (:require [board-ultimatum.views.common :as common]
             [board-ultimatum.engine.model :as model]
             [board-ultimatum.views.results :as results]
+            [board-ultimatum.flash :as flash]
             [clojure.string :as string]
             [clojure.data.json :as json])
   (:use [noir.core :only [defpage defpartial]]
+        [noir.response :only [redirect]]
         [hiccup.element]
         [hiccup.form]
         [clojure.pprint]))
@@ -29,12 +31,16 @@
   (results/display-similar (model/get-game-by-id (:game_b rel)) (:rating rel)))
 
 (defpage [:post "/similar"] {:as params}
-    (common/with-javascripts (cons "/js/similar.js" common/*javascripts*)
-      (common/layout      
-        [:h1 "Game results"]
-        [:h2 "Listed below are 50 games you might enjoy!"]
-        (map 
-          (fn [rel] (similar-results rel))
-          (model/get-similar (model/get-id-by-name (:game-name params)))))))
+    (cond
+      (nil? (model/get-id-by-name (:game-name params))) 
+        (do (flash/put! :error (str (:game-name params) " not found in database")) 
+            (redirect "/similar"))
+      :else (common/with-javascripts (cons "/js/similar.js" common/*javascripts*)
+        (common/layout      
+          [:h1 "Game Results"]
+          [:h2 "Based on \"" (:game-name params) "\""]
+          (map 
+            (fn [rel] (similar-results rel))
+            (model/get-similar (model/get-id-by-name (:game-name params))))))))
 
 
