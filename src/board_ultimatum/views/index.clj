@@ -12,5 +12,5 @@
 
            [:h3 "Pages"]
            [:p (link-to "/recommend" "Recommend V1")]
-           [:p (link-to "/recommend_alt" "Recommend Alt")]
+           [:p (link-to "/tags" "Tag Administration")]
            [:p (link-to "/expert" "Expert Interface")]))

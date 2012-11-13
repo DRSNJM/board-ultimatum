@@ -93,4 +93,6 @@
       games
       (iterate identity disp-recom)
       (iterate identity disp-explanation)
-      (if (nil? ratings) (cycle [nil]) ratings)))
+      (if ratings
+        ratings
+        (cycle [nil]))))

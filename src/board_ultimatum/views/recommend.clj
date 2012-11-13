@@ -1,6 +1,7 @@
 (ns board-ultimatum.views.recommend
   (:require [board-ultimatum.views.common :as common]
             [board-ultimatum.engine.model :as model]
+            [board-ultimatum.engine.tag :as tag]
             [board-ultimatum.views.attr-display :as attr-display]
             [board-ultimatum.views.results :as results]
             [clojure.string :as string])
@@ -42,14 +43,14 @@
               [:h3 "Mechanics"]
               [:p "Select gameplay mechanics that you like or dislike"]
               (map #(attr-display/build-tri-state % "mechanics" %)
-                   model/most-popular-mechanics)]
+                   (tag/most-popular-mechanics))]
 
             [:div {:id "input-categories" :class "param well well-small"}
               [:input {:type "hidden" :name "categories-active" :value "false"}]
               [:h3 "Categories"]
               [:p "Select gameplay categories that you like or dislike"]
               (map #(attr-display/build-tri-state % "categories" %)
-                   model/most-popular-categories)]
+                   (tag/most-popular-categories))]
 
            
             [:div {:id "input-weight" :class "param well well-small"}
@@ -121,4 +122,4 @@
           (sanitize-query-params params))
         true
         true
-        nil))))
+        false))))

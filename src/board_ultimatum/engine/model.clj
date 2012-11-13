@@ -1,6 +1,7 @@
 (ns board-ultimatum.engine.model
   (:require [monger.core :as mg]
-            [monger.collection :as mc])
+            [monger.collection :as mc]
+            [board-ultimatum.engine.tag :as tag])
   (:use [monger.operators]
         [clojure.pprint]
         [clojure.string :only [blank?]]))
@@ -58,34 +59,6 @@
   "Queries mongo for all games."
   (mc/find-maps "board_games"))
 
-; These suck. Pulls all the data from mongo, and then filters. For
-; each. Every time. Super dumb.
-(defn uniq-tag [subtype]
-  (distinct
-   (map #(:value %)
-        (filter
-         (fn [h] (= (:subtype h) subtype))
-         (flatten
-          (map (fn [g] (:tags g))
-               (mc/find-maps "board_games")))))))
-
-(defn all-mechanics []
-  (uniq-tag "mechanic"))
-
-(defn all-categories []
-  (uniq-tag "category"))
-
-(defn all-families []
-  (uniq-tag "family"))
-
-(defn all-publishers []
-  (uniq-tag "publisher"))
-
-(defn all-designers []
-  (uniq-tag "designer"))
-
-
-
 (defn tag-values-by-subtype [game subtype]
   (set (map :value (filter #(= subtype (:subtype %)) (:tags game)))))
 
@@ -96,41 +69,13 @@
   (tag-values-by-subtype game "category"))
 
 
-
-;; extract all this nonsense and store it in the databse
-
-(def most-popular-categories
- (list "Card Game" "Wargame" "Economic" "Fantasy" "Fighting" "Medieval" "Ancient" "Science Fiction" "World War II" "Adventure" "City Building" "Bluffing" "Exploration" "Political" "Miniatures" "Negotiation" "Civilization" "Abstract Strategy" "Transportation" "Territory Building" "Deduction" "Dice" "Nautical" "Racing" "Trains" "Animals" "Novel-based" "Horror" "Party Game" "Renaissance" "Humor" "Industry / Manufacturing" "Aviation / Flight" "Sports" "Action / Dexterity" "Mythology" "Space Exploration" "Travel" "Farming" "Napoleonic" "Movies / TV / Radio theme" "Real-time" "Murder/Mystery" "Children's Game" "American West" "Collectible Components" "Puzzle"))
-
-(def most-popular-mechanics
-  (list "Hand Management" "Dice Rolling" "Variable Player Powers" "Area Control / Area Influence" "Set Collection" "Modular Board" "Auction/Bidding" "Tile Placement" "Card Drafting" "Simultaneous Action Selection" "Area Movement" "Action Point Allowance System" "Route/Network Building" "Hex-and-Counter" "Partnerships" "Point to Point Movement" "Simulation" "Campaign / Battle Card Driven" "Worker Placement" "Secret Unit Deployment" "Pick-up and Deliver" "Co-operative Play" "Trading" "Role Playing" "Commodity Speculation" "Variable Phase Order" "Stock Holding" "Voting" "Betting/Wagering" "Grid Movement" "Deck / Pool Building" "Area Enclosure" "Roll / Spin and Move" "Memory" "Pattern Building" "Press Your Luck" "Trick-taking" "Chit-Pull System" "Pattern Recognition" "Storytelling"))
-
 (def basic-score-weight 100)
 
-(defn simple-score-data [data]
-  (reduce #(assoc %1 %2 {:score basic-score-weight :reason %2}) {} data))
-
-(def simple-mechanics-score-data
-  (simple-score-data most-popular-mechanics))
-
-(def simple-category-score-data
-  (simple-score-data most-popular-categories))
-
-;; silly, quick hack
-(defn simple-data [attr-type]
-  (cond
-   (= "mechanics" attr-type) simple-mechanics-score-data
-   (= "categories" attr-type) simple-category-score-data))
-
-(defn singular-attr [attr]
-  (if (= attr "mechanics")
-    "mechanic"
-    "category"))
-
-(defn score-attr [score-data [attr-name attr-value]]
-  (let [new-score (* (:score (score-data attr-name))
-                     attr-value)]
-    (assoc (score-data attr-name) :score new-score)))
+(defn score-attr [subtype [attr-name influence-sign]]
+  (let [tag (mc/find-one-as-map "tags" {:subtype (tag/singular-subtype subtype) :value attr-name})]
+    (if (pos? influence-sign)
+      {:score (Integer/parseInt (:pos-influence tag)) :reason (:value tag)}
+      {:score (Integer/parseInt (:neg-influence tag)) :reason (:value tag)})))
 
 (defn rank-score [game]
   {:reason "BGG Rank"
@@ -195,7 +140,7 @@
        :score (num-players-score players game)})))
 
 (defn weight-factor [game attrs]
-  (if (not (blank? (:weight attrs)))
+  (if (not (clojure.string/blank? (:weight attrs)))
     (let [w (:weight_average game)
           x (. Float parseFloat (:weight attrs))
           d (- x w)
@@ -209,21 +154,19 @@
        :score score})))
 
 ;; returns [ [attr-name value] ]
-(defn score-factor [attr-type game query-attrs]
-  (let [relevant-attrs (query-attrs (keyword attr-type))
-        game-attrs (tag-values-by-subtype game (singular-attr attr-type))
-        score-data (simple-data attr-type)]
+(defn score-factor [attr-type game relevant-attrs]
+  (let [game-attrs (tag-values-by-subtype game (tag/singular-subtype attr-type))]
     (remove nil?
             (map #(if (contains? game-attrs (str (first %)))
-                     (score-attr score-data %))
+                    (score-attr attr-type %))
                  relevant-attrs))))
 
 (defn collect-score-factors [game query-attrs]
   (flatten
    (remove empty?
            (list
-            (score-factor "mechanics" game query-attrs)
-            (score-factor "categories" game query-attrs)
+            (score-factor "mechanics" game (:mechanics query-attrs))
+            (score-factor "categories" game (:categories query-attrs))
             (rank-score game)
             (num-players-factors game query-attrs)
             (weight-factor game query-attrs)))))
