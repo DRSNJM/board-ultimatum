@@ -78,10 +78,12 @@
        [:a.brand.dropdown-toggle {:href "/"} site-title]
        [:div.nav-collapse
         [:ul.nav
-         [:li.divider-vertical]
          [:li (link-to "/recommend" "Recommend")]
-         [:li (link-to "/similar" "Similar Games")]
+         [:li (link-to "/similar" "Similar Games")]]
+        [:ul.nav.pull-right
          [:li (link-to "/expert" "Experts")]
+         [:li (link-to "/tags" "Edit Tags")]
+         [:li.divider-vertical]
          [:li [:a
                {:href "http://drsnjm.github.com/board-ultimatum"}
                "Documentation"]]
