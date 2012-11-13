@@ -5,7 +5,7 @@
                  [noir "1.3.0-beta10"]
                  [enclog "0.5.8-SNAPSHOT"]
                  [org.clojure/core.logic "0.7.5"]
-                 [com.novemberain/monger "1.1.2"]
+                 [com.novemberain/monger "1.3.4"]
                  [org.clojure/math.combinatorics "0.0.3"]
                  [incanter "1.2.4"]]
   :plugins [[lein-exec "0.2.1"]]
