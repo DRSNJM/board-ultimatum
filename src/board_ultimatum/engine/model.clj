@@ -3,7 +3,7 @@
             [monger.collection :as mc])
   (:use [monger.operators]
         [clojure.pprint]
-        [clojure.string]))
+        [clojure.string :only [blank?]]))
 
 ;; This namespace contains all functions related to manipulating the
 ;; applications "model" (which is mostly mongo).
@@ -53,7 +53,7 @@
 
   Usage: (times [30 45]) => (25 30 35 40 45 50)"
   (mapcat #(time-map %) selected))
-  
+
 (defn find-all []
   "Queries mongo for all games."
   (let [collection "board_games"]
