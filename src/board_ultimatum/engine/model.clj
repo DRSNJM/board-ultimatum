@@ -2,7 +2,8 @@
   (:require [monger.core :as mg]
             [monger.collection :as mc])
   (:use [monger.operators]
-        [clojure.pprint]))
+        [clojure.pprint]
+        [clojure.string]))
 
 ;; This namespace contains all functions related to manipulating the
 ;; applications "model" (which is mostly mongo).
@@ -195,19 +196,20 @@
        :score (num-players-score players game)})))
 
 (defn weight-factor [game attrs]
-  (let [w (:weight_average game)
-        x (. Float parseFloat (:weight attrs))
-        d (- x w)
-        score (- 100 (* 16 d d))]
-    {:reason
-      (if (> score 80.0)
-        "Close Weight"
-        (if (> score 0.0)
-          "Acceptable Weight"
-          (if (> w x)
-            "Weight Too High"
-            "Weight Too Low")))
-     :score score}))
+  (if (not (blank? (:weight attrs)))
+    (let [w (:weight_average game)
+          x (. Float parseFloat (:weight attrs))
+          d (- x w)
+          score (- 100 (* 16 d d))]
+      {:reason
+        (if (> score 80.0)
+          "Close Weight"
+          (if (> score 0.0)
+            "Acceptable Weight"
+            (if (> w x)
+              "Weight Too High"
+              "Weight Too Low")))
+       :score score})))
 
 ;; returns [ [attr-name value] ]
 (defn score-factor [attr-type game query-attrs]
