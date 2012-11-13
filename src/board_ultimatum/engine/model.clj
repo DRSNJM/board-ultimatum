@@ -201,13 +201,11 @@
           d (- x w)
           score (- 100 (* 16 d d))]
       {:reason
-        (if (> score 80.0)
-          "Close Weight"
-          (if (> score 0.0)
-            "Acceptable Weight"
-            (if (> w x)
-              "Weight Too High"
-              "Weight Too Low")))
+        (cond
+          (> score 80.0) "Close Weight"
+          (> score 0.0) "Acceptable Weight"
+          (> w x) "Weight Too High"
+          :else "Weight Too Low")
        :score score})))
 
 ;; returns [ [attr-name value] ]
