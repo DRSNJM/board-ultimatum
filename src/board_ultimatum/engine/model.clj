@@ -188,13 +188,26 @@
                               (* -1 basic-score-weight))
      :else 0)))
 
-(defn num-players-factors [attrs game]
+(defn num-players-factors [game attrs]
   (let [players (:num-players attrs)]
     (if (> (count players) 0)
       {:reason "Optimal Player Number"
        :score (num-players-score players game)})))
 
-;; player num
+(defn weight-factor [game attrs]
+  (let [w (:weight_average game)
+        x (. Float parseFloat (:weight attrs))
+        d (- x w)
+        score (- 100 (* 16 d d))]
+    {:reason
+      (if (> score 80.0)
+        "Close Weight"
+        (if (> score 0.0)
+          "Acceptable Weight"
+          (if (> w x)
+            "Weight Too High"
+            "Weight Too Low")))
+     :score score}))
 
 ;; returns [ [attr-name value] ]
 (defn score-factor [attr-type game query-attrs]
@@ -213,7 +226,8 @@
             (score-factor "mechanics" game query-attrs)
             (score-factor "categories" game query-attrs)
             (rank-score game)
-            (num-players-factors query-attrs game)))))
+            (num-players-factors game query-attrs)
+            (weight-factor game query-attrs)))))
 
 (defn sum-score [factors]
   (apply + (map :score factors)))
