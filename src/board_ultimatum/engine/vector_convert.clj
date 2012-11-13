@@ -238,9 +238,10 @@
         game-ids 
         (trans (matrix x))))
     ;; plot the data in 2D
-    (view (scatter-plot (nth x 0) (nth x 1) 
-                        :x-label "PC1" 
-                        :y-label "PC2" 
-                        :title "Game Data"))
+    ;(view (scatter-plot (nth x 0) (nth x 1) 
+    ;                    :x-label "PC1" 
+    ;                    :y-label "PC2" 
+    ;                    :title "Game Data"))
     ;; view a table of the dataset
-    (view ($order [:x1 :x2] :desc data-2d))))
+    ;(view ($order [:x1 :x2] :desc data-2d))
+    ))
