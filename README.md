@@ -73,6 +73,16 @@ something like this:
 This project uses [kibit](https://github.com/jonase/kibit) for code quality
 static analysis.
 
+## Testing
+
+Use the following command to run tests:
+
+```bash
+lein midje
+```
+
+Test coverage is a work in progress.
+
 ## License
 
 Copyright (C) 2012 DRSNJM
