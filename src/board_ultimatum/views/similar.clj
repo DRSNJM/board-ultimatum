@@ -28,7 +28,7 @@
               [:button {:type "submit" :class "btn"} "Search"]]]])))
            
 (defn similar-results [rel]
-  (results/display-game 0 (model/get-game-by-id (:game_b rel)) false false))
+  (results/display-game 0 (model/get-game-by-id (:game_b rel)) false false (:rating rel)))
 
 (defpage [:post "/similar"] {:as params}
     (cond
@@ -41,6 +41,10 @@
           [:h2 "Based on \"" (:game-name params) "\""]
           (map 
             (fn [rel] (similar-results rel))
-            (model/get-similar (model/get-id-by-name (:game-name params))))))))
+            (sort-by :rating >
+              (model/get-similar 
+                (model/get-id-by-name 
+                  (:game-name params)))))
+          [:h4 [:a {:href "/similar"} "Search again"]]))))
 
 
