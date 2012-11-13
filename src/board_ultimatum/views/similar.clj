@@ -28,7 +28,7 @@
               [:button {:type "submit" :class "btn"} "Search"]]]])))
            
 (defn similar-results [rel]
-  (results/display-similar (model/get-game-by-id (:game_b rel)) (:rating rel)))
+  (results/display-game 0 (model/get-game-by-id (:game_b rel)) false false))
 
 (defpage [:post "/similar"] {:as params}
     (cond
