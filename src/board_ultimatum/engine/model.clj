@@ -55,8 +55,7 @@
   
 (defn find-all []
   "Queries mongo for all games."
-  (let [collection "board_games"]
-    (mc/find-maps collection {})))
+  (mc/find-maps "board_games"))
 
 ; These suck. Pulls all the data from mongo, and then filters. For
 ; each. Every time. Super dumb.

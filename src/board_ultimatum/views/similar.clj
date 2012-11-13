@@ -8,11 +8,14 @@
         [hiccup.form]
         [clojure.pprint]))
 
+(defn names-to-json []
+  (json/write-str (map (fn [game] (:name game)) (model/find-all))))
+
 ;; Page for searching for "similar" games
 (defpage "/similar" []
     (common/with-javascripts (cons "/js/similar.js" common/*javascripts*)
       (common/layout
-        [:script {:type "text/javascript"} "var taValues = ['foo', 'bar'];"]
+        [:script {:type "text/javascript"} (str "var taValues = " (names-to-json) ";")]
         [:h1 "Liked a game?"]
         [:h2 "Enter the name below to find more that you will enjoy!"]
         [:div#recommend.row-fluid
