@@ -120,4 +120,5 @@
         (model/find-games
           (sanitize-query-params params))
         true
-        true))))
+        true
+        nil))))
