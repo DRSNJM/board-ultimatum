@@ -8,5 +8,8 @@
                  [com.novemberain/monger "1.1.2"]
                  [org.clojure/math.combinatorics "0.0.3"]
                  [incanter "1.2.4"]]
-  :plugins [[lein-exec "0.2.1"]]
+  :profiles {:dev {:dependencies [[midje "1.4.0"]]
+                   :plugins [[lein-exec "0.2.1"]
+                             [lein-kibit "0.0.7"]
+                             [lein-midje/lein-midje "2.0.1"]]}}
   :main board-ultimatum.server)
