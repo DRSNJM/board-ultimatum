@@ -6,7 +6,7 @@
         [noir.core]))
 
 (defpartial pp-factor [factor]
-  [:div {:style "clear:left;"}
+  [:div {:style "clear:both;"}
     [:div {:style "float:left;"} (:reason factor)]
     [:div {:style "float:right;"} (attr-display/format-score (:score factor))]])
 
@@ -21,7 +21,7 @@
   [:div.well.game {:style "height:150px;position:relative;"}
     (if (and disp-explanation (not= (.size (:factors game)) 0))
       [:div
-        [:div.pop-trigger {:style "position:absolute;left:-5px;top:2px;float:left;display:none;"
+        [:div.pop-trigger {:style "position:absolute;right:5px;top:2px;float:left;display:none;"
              :rel "popover" :data-placement "left" :data-trigger "hover"
              :data-title "How did this game match up to your preferences?"}
           [:i.icon-question-sign {:style "margin-left:10px;"}]]
