@@ -3,9 +3,15 @@
         [hiccup.form]
         [noir.core]))
 
+(defn pretty-hours [length]
+  (let [hours (/ (float length) 60)]
+    (if (== hours (int hours))
+      (str (int hours) " hours")
+      (str hours " hours"))))
+
 (defn game-length [length]
   (cond
-   (>= length 120) (str (/ length 60) " hours")
+   (>= length 120) (pretty-hours length)
    :else (str length " minutes")))
 
 (defn num-players [min-players max-players]
