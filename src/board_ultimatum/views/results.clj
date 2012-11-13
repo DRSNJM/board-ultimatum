@@ -7,6 +7,14 @@
   (:use [hiccup.element]
         [noir.core]))
 
+(defn game-weight-text [weight]
+  (cond
+    (< weight 1.5) "Light"
+    (< weight 2.5) "Medium Light"
+    (< weight 3.5) "Medium"
+    (< weight 4.5) "Medium Heavy"
+    :else "Heavy"))
+
 (defpartial pp-factor [factor]
   [:div {:style "clear:both;"}
     [:div {:style "float:left;"} (:reason factor)]
@@ -32,7 +40,7 @@
       [:img {:src (:thumbnail game) :style "margin: 0px auto;display: block;"}]]
     [:table {:style "float:left;margin-left:20px;width:75%;line-height:normal;"}
       [:tr {:style "height:50px;border-bottom:1px solid black;"}
-        [:td {:colspan "4"}
+        [:td {:colspan "5"}
           [:div {:style "font-size:34px;float:left;"}
             (:name game)
             (when-not (nil? rating) (str " - " (format "%.1f" (* 100 rating)) "% Match"))]
@@ -42,11 +50,11 @@
               "BGG Rank: " (:rank game) " "
               [:i {:class "icon-share"}])]]]
       [:tr {:style "height:80px;"}
-        [:td {:style "width:55%;"}
+        [:td {:style "width:50%;"}
           (map #(identity [:span {:style "width:50%;float:left;margin-bottom:2px;"} "&#149; " %])
             (concat (model/mechanics game)
               (model/categories game)))]
-        [:td {:style "width:15%;"}
+        [:td {:style "width:12%;"}
           (let [length-disp
             (string/split
               (attr-display/game-length (:length game))
@@ -54,19 +62,26 @@
             [:div {:style "text-align:center;border-left:1px solid black;"}
               [:div {:style "font-size:30px;"} (first length-disp)]
               [:div (second length-disp)]])]
-        [:td {:style "width:15%;"}
+        [:td {:style "width:12%;"}
           (let [num-pl-disp
             (string/split 
               (attr-display/num-players (:min_players game) (:max_players game))
               #"\s+")]
             [:div {:style "text-align:center;border-left:1px solid black;"}
               [:div {:style "font-size:30px;"} (first num-pl-disp)]
-              [:div (second num-pl-disp)]])
-          ]
-        [:td {:style "width:15%;"}
+              [:div (second num-pl-disp)]])]
+        [:td {:style "width:12%;"}
           [:div {:style "text-align:center;border-left:1px solid black;"}
             [:div {:style "font-size:30px;"} (:min_age game) "+"]
-            [:div "years old"]]]]]
+            [:div "years old"]]]
+        [:td {:style "width:14%;"}
+          [:div {:style "text-align:center;border-left:1px solid black;"}
+            (let [text (string/split (game-weight-text (:weight_average game)) #"\s+")]
+              (if
+                (< 1 (.size text))
+                (map #(identity [:div {:style "font-size:16px;"} %]) text)
+                (identity [:div {:style "font-size:30px;"} (first text)])))
+            [:div "weight"]]]]]
     [:div.open-recom {:style "height:150px;width:20px;float:right;display:none;"}
       [:i.icon-chevron-right {:style "position:absolute;top:45%;"}]]])
 
