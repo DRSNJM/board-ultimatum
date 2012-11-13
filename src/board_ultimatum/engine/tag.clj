@@ -31,7 +31,7 @@
 
 (defn create-tags-db-by-subtype [subtype]
   (mc/insert-batch "tags"
-                   (map #(assoc % :pos-influence 50 :neg-influence -100 :group "Uncategorized")
+                   (map #(assoc % :pos-influence 100 :neg-influence -200 :group "Uncategorized")
                         (raw-freq-tags-by-subtype subtype))))
 
 (defn reset-tags-table! []

@@ -74,8 +74,8 @@
 (defn score-attr [subtype [attr-name influence-sign]]
   (let [tag (mc/find-one-as-map "tags" {:subtype (tag/singular-subtype subtype) :value attr-name})]
     (if (pos? influence-sign)
-      {:score (Integer/parseInt (:pos-influence tag)) :reason (:value tag)}
-      {:score (Integer/parseInt (:neg-influence tag)) :reason (:value tag)})))
+      {:score (:pos-influence tag) :reason (:value tag)}
+      {:score (:neg-influence tag) :reason (:value tag)})))
 
 (defn rank-score [game]
   {:reason "BGG Rank"
@@ -144,7 +144,7 @@
     (let [w (:weight_average game)
           x (. Float parseFloat (:weight attrs))
           d (- x w)
-          score (- 100 (* 16 d d))]
+          score (- basic-score-weight (* 16 d d))]
       {:reason
         (cond
           (> score 80.0) "Close Weight"
