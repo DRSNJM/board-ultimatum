@@ -9,6 +9,12 @@ function updateActiveDisplay(listElem, speed, input) {
     listElem.removeClass('active');
     $('#input-' + listElem.attr('id')).hide(speed);
   }
+  // Show submit button contextually
+  if ($('input[name$="active"][value="true"]').length > 0) {
+    $('.btn-submit').show();
+  } else {
+    $('.btn-submit').hide();
+  }
 }
 
 function updateTriStateDisplay(button, formInput) {
@@ -30,6 +36,15 @@ jQuery(document).ready(function ($) {
   });
   $('.option').each(function() {
     updateTriStateDisplay($(this));
+  });
+  $('input:checked').each(function() {
+    $(this).siblings('.icon').addClass('active');
+  });
+  $('.radio-buttons').each(function() {
+    var radioValue = $(this).siblings(':input').val();
+    if (radioValue != '') {
+      $(this).children('button[value="' + radioValue + '"]').addClass('active');
+    }
   });
 
 

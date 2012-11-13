@@ -1,48 +1,11 @@
 (ns board-ultimatum.views.recommend
   (:require [board-ultimatum.views.common :as common]
             [board-ultimatum.engine.model :as model]
+            [board-ultimatum.views.attr-display :as attr-display]
+            [board-ultimatum.views.results :as results]
             [clojure.string :as string])
   (:use [noir.core :only [defpage defpartial]]
-        [hiccup.element]
-        [hiccup.form]
         [clojure.pprint]))
-
-;; Build 3-state preference selection buttons
-(defpartial build-tri-state [name attr form-name]
-  [:div {:style "float:left;margin:10px 20px 0px 0px;"}
-    [:div {:class "btn-group tri-state"}
-      [:button {:type "button" :class "btn btn-mini btn-danger"} [:i {:class "icon-thumbs-down"}]]
-      [:button {:type "button" :class "btn btn-mini option"} name]
-      [:button {:type "button" :class "btn btn-mini btn-success"} [:i {:class "icon-thumbs-up"}]]]
-    [:input {:type "hidden" :name (str attr "[" form-name "]") :value "0"}]])
-
-;; Build radio preference selection buttons
-(defn build-radio-buttons [name-value form-name]
-  [:div
-    [:div {:class "btn-group radio-buttons" :data-toggle "buttons-radio"}
-      (map 
-        #(identity [:button {:type "button" :value (val %) :class "btn"} (key %)])
-        name-value)]
-    [:input {:type "hidden" :name form-name :value ""}]])
-
-(defn game-length [length]
-  (cond
-   (>= length 120) (str (/ length 60) " hours")
-   :else (str length " minutes")))
-
-(defn player-checkboxes [num]
-  [:div.selection
-   [:label.checkbox
-    [:div.icon.player]
-    (check-box "num-players[]" false num)
-    [:div.bottom-label (str num " Players")]]])
-
-(defn time-checkboxes [num]
-  [:div.selection
-   [:label.checkbox
-    [:div.icon.time]
-    (check-box "length[]" false num)
-    [:div.bottom-label (game-length num)]]])
 
 ;; Page for querying the logic based recommendation engine.
 (defpage "/recommend" []
@@ -66,26 +29,26 @@
               [:input {:type "hidden" :name "length-active" :value "false"}]
               [:h3 "Game Length"]
               [:p "This is a description of this field"]
-              (map time-checkboxes [20 30 45 60 90 120 180 240 300])]
+              (map attr-display/time-checkboxes [20 30 45 60 90 120 180 240 300])]
 
             [:div {:id "input-num-players" :class "param well well-small"}
               [:input {:type "hidden" :name "num-players-active" :value "false"}]
               [:h3 "Number of Players"]
               [:p "This is a description of this field"]
-              (map player-checkboxes ["1" "2" "3" "4" "5" "6" "7+"])]
+              (map attr-display/player-checkboxes ["1" "2" "3" "4" "5" "6" "7+"])]
 
             [:div {:id "input-mechanics" :class "param well well-small"}
               [:input {:type "hidden" :name "mechanics-active" :value "false"}]
               [:h3 "Mechanics"]
               [:p "Select gameplay mechanics that you like or dislike"]
-              (map #(build-tri-state % "mechanics" %)
+              (map #(attr-display/build-tri-state % "mechanics" %)
                    model/most-popular-mechanics)]
 
             [:div {:id "input-categories" :class "param well well-small"}
               [:input {:type "hidden" :name "categories-active" :value "false"}]
               [:h3 "Categories"]
               [:p "Select gameplay categories that you like or dislike"]
-              (map #(build-tri-state % "categories" %)
+              (map #(attr-display/build-tri-state % "categories" %)
                    model/most-popular-categories)]
 
            
@@ -94,43 +57,12 @@
               [:h3 "Weight"]
               [:p "This is a description of this field"]
               [:div {:class "btn-group" :data-toggle "buttons-radio"}
-              (build-radio-buttons (array-map :Light "1" :Medium-Light "2"
-                                    :Medium "3" :Medium-Heavy "4"
-                                    :Heavy "5") "weight")]]        
-            [:button {:type "submit" :class "btn"} "Submit"]]]])))
-
-
-(defn num-players [min-players max-players]
-  (cond
-   (= min-players max-players) (str max-players " Player")
-   :else (str min-players "-" max-players " Players")))
-
-(defn format-score [score]
-  (format "%+.1f" (float score)))
-
-(defn pp-factors [game]
-  (interpose "<br/>"
-             (map #(str (:reason %) ": "
-                        (format-score (:score %)))
-                  (:factors game))))
-
-(defn display-game [i game]
-  [:tr.game
-   [:td (+ 1 i) "."]
-   [:td (image (:thumbnail game))]
-   [:td (link-to (str "http://boardgamegeek.com/boardgame/" (:bgg_id game) "/")
-             (:rank game) ". ")]
-   [:td.name
-    [:div.game-name (:name game)]
-    [:ul
-     (map (fn [e] [:li e])
-          (concat (model/mechanics game)
-                  (model/categories game)))]]
-   [:td (game-length (:length game))]
-   [:td (num-players (:min_players game) (:max_players game))]
-   [:td (:min_age game) "+"]
-   [:td (format-score (:score game)) " points"]
-   [:td.why (pp-factors game)]])
+              (attr-display/build-radio-buttons 
+                (array-map :Light "1" :Medium-Light "2"
+                           :Medium "3" :Medium-Heavy "4"
+                           :Heavy "5") 
+                "weight")]]    
+            [:button {:type "submit" :class "btn btn-submit"} "Submit"]]]])))
 
 ;; Should probaby do this filtering in js
 (defn sanitize-query-params [attrs]
@@ -162,9 +94,8 @@
              (assoc hsh :weight (:weight attrs))
              hsh)))))
 
-
 ;; messy, but just debug info, so who cares?
-(defn display-query-params [[attr-type values]]
+(defpartial display-query-params [[attr-type values]]
   [:li attr-type ": "
    (if (vector? (first values))
      [:ul
@@ -176,26 +107,17 @@
      (string/join ", " values))])
 
 (defpage [:post "/recommend"] {:as params}
-  (common/layout
-   [:h1 "Have fun playing!"]
-   [:h3 "Query Params"]
-   [:div.well
-    [:ul.query-params (map
-          display-query-params
-          (sanitize-query-params params))]]
-   [:table.games.table.table-striped
-    [:thead
-     [:th "#"]
-     [:th "Thumb"]
-     [:th "BGG Rank"]
-     [:th "Name"]
-     [:th "Length"]
-     [:th "Num Players"]
-     [:th "Min Age"]
-     [:th "Score"]
-     [:th "Why?"]]
-    [:tbody
-     (map-indexed display-game
-          (model/find-games
-           (sanitize-query-params params)))]]))
-
+  (common/with-javascripts
+    (concat common/*javascripts* ["/js/bootstrap.js" "/js/results.js"])
+    (common/layout
+     [:h1 "Have fun playing!"]
+     [:h3 "Query Params"]
+     [:div.well {:style "overflow:hidden;"}
+      [:ul.query-params (map
+            display-query-params
+            (sanitize-query-params params))]]
+      (results/build-results-list
+        (model/find-games
+          (sanitize-query-params params))
+        true
+        true))))

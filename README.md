@@ -68,22 +68,10 @@ something like this:
 5.  Commit everything in the main project (e.g. the updated submodule commit and
     the updated compiled resources).
 
-### Using a local version of board-ultimatum.engine
+## Code Quality
 
-Let's suppose you have the following directory structure:
-
-*   `~/repo/`
-    *   `board-ultimatum/` (this repository)
-    *   `board-ultimatum-engine/` a dependency of this webapp
-
-To use your local version instead of the one in clojars simply use leiningen's
-checkouts feature like so:
-
-```bash
-# Inside of ~/repo/board-ultimatum/
-mkdir -p checkouts
-ln -s ../../board-ultimatum-engine checkouts/
-```
+This project uses [kibit](https://github.com/jonase/kibit) for code quality
+static analysis.
 
 ## License
 
