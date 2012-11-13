@@ -79,7 +79,7 @@
             (let [text (string/split (game-weight-text (:weight_average game)) #"\s+")]
               (if
                 (< 1 (.size text))
-                (map #(identity [:div {:style "font-size:16px;"} %]) text)
+                [:b (map #(identity [:div {:style "font-size:16px;"} %]) text)]
                 (identity [:div {:style "font-size:30px;"} (first text)])))
             [:div "weight"]]]]]
     [:div.open-recom {:style "height:150px;width:20px;float:right;display:none;"}
