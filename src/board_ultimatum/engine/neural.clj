@@ -2,6 +2,7 @@
   (:require [monger.core :as mg]
             [monger.collection :as mc]
             [board-ultimatum.engine.model :as model]
+            [board-ultimatum.engine.model.relationship :as relationship]
             [board-ultimatum.engine.config :as config])
   (:use clojure.pprint)
   (use [enclog nnets training])
@@ -27,25 +28,6 @@
     :output  1
     :hidden [20 10]))
 
-(def training-set (data :basic-dataset [[0.0 0.0 0.0 0.0 0.0
-                                         0.0 0.0 0.0 0.0 0.0
-                                         0.0 0.0 0.0 0.0 0.0
-                                         0.0 0.0 0.0 0.0 0.0]]
-                                       [[1.0]]))
-
-(def dummy-input (data :basic-dataset [[0.0 0.0 0.0 0.0 0.0
-                                       0.0 0.0 0.0 0.0 0.0
-                                       0.0 0.0 0.0 0.0 0.0
-                                       0.0 0.0 0.0 0.0 0.0]
-                                      [1.0 1.0 1.0 1.0 1.0
-                                       1.0 1.0 1.0 1.0 1.0
-                                       1.0 1.0 1.0 1.0 1.0
-                                       1.0 1.0 1.0 1.0 1.0]]
-                                      [[-1.0]
-                                       [-1.0]]))
-
-(def prop-train (trainer :resilient-prop :network net :training-set training-set)) 
-
 ;; for each id, join each id with every other id and calculate output
 
 (def game-ids
@@ -65,6 +47,28 @@
 (defn output-pair [id-A id-B] (map 
   (fn [pair] (. (. net compute (. pair getInput)) getData 0))
   (to-dataset id-A id-B)))
+
+;; set up the training data
+
+(def training-set 
+  (data :basic-dataset 
+    (into [] 
+      (map 
+        (fn [rel] 
+          (join-vector (nth (:_id rel) 0) (nth (:_id rel) 1)))
+        (relationship/average-ratings)))
+    (into [] 
+      (map 
+        (fn [rel] 
+          [(:rating rel)])
+        (relationship/average-ratings)))))
+
+(def prop-train (trainer :resilient-prop :network net :training-set training-set)) 
+
+;; use this function to train the network
+
+(defn train-network []
+  (train prop-train 0.01 500 []))
 
 ;; iterate and add top 50 games to DB
 
