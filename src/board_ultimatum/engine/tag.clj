@@ -75,5 +75,14 @@
 (defn most-popular-mechanics []
   (sort (map :value (raw-freq-tags-by-subtype "mechanic"))))
 
+(defn to-i [in]
+  (cond
+   (integer? in) in
+   (string? in) (Integer/parseInt in)
+   :else (int in)))
+
 (defn update [subtype bgg-id new-data]
-  (mc/update "tags" {:subtype subtype :bgg_id bgg-id} {$set new-data}))
+  (let [data (reduce #(update-in %1 [%2] to-i)
+                     new-data
+                     [:pos-influence :neg-influence])]
+    (mc/update "tags" {:subtype subtype :bgg_id bgg-id} {$set data})))
