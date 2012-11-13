@@ -1,6 +1,7 @@
 (ns board-ultimatum.views.similar
   (:require [board-ultimatum.views.common :as common]
             [board-ultimatum.engine.model :as model]
+            [board-ultimatum.views.results :as results]
             [clojure.string :as string]
             [clojure.data.json :as json])
   (:use [noir.core :only [defpage defpartial]]
@@ -21,7 +22,19 @@
         [:div#recommend.row-fluid
           [:form#game-params {:action "/similar" :method "post"}
             [:div.input-append
-              [:input#game-name {:type "text" :data-provide "typeahead"}]
+              [:input#game-name {:type "text" :data-provide "typeahead" :name "game-name"}]
               [:button {:type "submit" :class "btn"} "Search"]]]])))
            
+(defn similar-results [rel]
+  (results/display-similar (model/get-game-by-id (:game_b rel)) (:rating rel)))
+
+(defpage [:post "/similar"] {:as params}
+    (common/with-javascripts (cons "/js/similar.js" common/*javascripts*)
+      (common/layout      
+        [:h1 "Game results"]
+        [:h2 "Listed below are 50 games you might enjoy!"]
+        (map 
+          (fn [rel] (similar-results rel))
+          (model/get-similar (model/get-id-by-name (:game-name params)))))))
+
 

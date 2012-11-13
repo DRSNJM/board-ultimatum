@@ -275,3 +275,17 @@
   (map (fn [{obj-id :_id}]
          (mc/update-by-id "board_games" obj-id {$set {:random [(rand) 0]}}))
        (mc/find-maps "board_games" {} [:_id])))
+
+;; functions for getting similar game results
+
+(defn get-game-by-name [name]
+  "Get a game from the db by name"
+  (mc/find-one-as-map "board_games" {:name name}))
+
+(defn get-id-by-name [name]
+  "Returns the id of the game with the provided name"
+  (:bgg_id (get-game-by-name name)))
+                                   
+(defn get-similar [id]
+  "Get the ids of all games similar to that provided"
+  (mc/find-maps "network_output" {:game_a id}))
