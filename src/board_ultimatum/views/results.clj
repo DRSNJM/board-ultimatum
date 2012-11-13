@@ -1,4 +1,6 @@
 (ns board-ultimatum.views.results
+  "Namespace of html generating code for displaying games on a results page.
+  External users of this namespace should only need to call build-results-list."
   (:require [board-ultimatum.engine.model :as model]
             [board-ultimatum.views.attr-display :as attr-display]
             [clojure.string :as string])
@@ -17,7 +19,7 @@
       [:div {:style "float:left;"} "Total score"]
       [:div {:style "float:right;"} (attr-display/format-score (:score game))]]])
 
-(defpartial display-game [i game disp-recom disp-explanation]
+(defpartial display-game [i game disp-recom disp-explanation rating]
   [:div.well.game {:style "height:150px;position:relative;"}
     (if (and disp-explanation (not= (.size (:factors game)) 0))
       [:div
@@ -32,7 +34,8 @@
       [:tr {:style "height:50px;border-bottom:1px solid black;"}
         [:td {:colspan "4"}
           [:div {:style "font-size:34px;float:left;"}
-            (:name game)]
+            (:name game)
+            (when-not (nil? rating) (str " - " (format "%.1f" (* 100 rating)) "% Match"))]
           [:div {:style "float:right;"} 
             (link-to
               (str "http://boardgamegeek.com/boardgame/" (:bgg_id game) "/")
@@ -67,10 +70,12 @@
     [:div.open-recom {:style "height:150px;width:20px;float:right;display:none;"}
       [:i.icon-chevron-right {:style "position:absolute;top:45%;"}]]])
 
-
-(defpartial build-results-list [games disp-recom disp-explanation]
+;; Send true for disp-recom, disp-explanation if you wish to display recommendations
+;; and explanations on games. Ratings should be nil if no ratings are to be displayed.
+(defpartial build-results-list [games disp-recom disp-explanation ratings]
     (map display-game
       (iterate inc 1)
       games
       (iterate identity disp-recom)
-      (iterate identity disp-explanation)))
+      (iterate identity disp-explanation)
+      (if (nil? ratings) (cycle [nil]) ratings)))
