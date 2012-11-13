@@ -83,7 +83,11 @@
        ((fn [hsh]
            (if (Boolean/valueOf (:num-players-active attrs))
              (assoc hsh :num-players
-                    (map #(Integer/parseInt %) (:num-players attrs)))
+                    (flatten
+                     (map #(if (= % "7+")
+                             (range 7 100)
+                             (Integer/parseInt %))
+                          (:num-players attrs))))
            hsh)))
        ((fn [hsh]
            (if (Boolean/valueOf (:length-active attrs))
