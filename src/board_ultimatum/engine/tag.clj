@@ -52,7 +52,7 @@
    :else attr))
 
 (defn tags-by-subtype [subtype]
-  (sort-by #(* -1 (:frequency %)) (mc/find-maps "tags" {:subtype subtype})))
+  (sort-by :value (mc/find-maps "tags" {:subtype subtype})))
 
 (defn mechanics []
   (tags-by-subtype "mechanic"))
@@ -68,12 +68,6 @@
 
 (defn all-tags []
   (mc/find-maps "tags" {}))
-
-(defn most-popular-categories []
-  (sort (map :value (raw-freq-tags-by-subtype "category"))))
-
-(defn most-popular-mechanics []
-  (sort (map :value (raw-freq-tags-by-subtype "mechanic"))))
 
 (defn to-i [in]
   (cond

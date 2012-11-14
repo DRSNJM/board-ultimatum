@@ -42,15 +42,15 @@
               [:input {:type "hidden" :name "mechanics-active" :value "false"}]
               [:h3 "Mechanics"]
               [:p "Select gameplay mechanics that you like or dislike"]
-              (map #(attr-display/build-tri-state % "mechanics" %)
-                   (tag/most-popular-mechanics))]
+              (map #(attr-display/build-tri-state % "mechanics")
+                   (tag/mechanics))]
 
             [:div {:id "input-categories" :class "param well well-small"}
               [:input {:type "hidden" :name "categories-active" :value "false"}]
               [:h3 "Categories"]
               [:p "Select gameplay categories that you like or dislike"]
-              (map #(attr-display/build-tri-state % "categories" %)
-                   (tag/most-popular-categories))]
+              (map #(attr-display/build-tri-state % "categories")
+                   (tag/categories))]
 
            
             [:div {:id "input-weight" :class "param well well-small"}

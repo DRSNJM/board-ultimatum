@@ -22,14 +22,26 @@
 (defn format-score [score]
   (format "%+.1f" (float score)))
 
+(defpartial colored-attr [value freq color]
+  [:span value
+   [:span {:style (str "color: " color ";")}
+    " (" freq ")"]])
+
+(defn format-freq [value freq]
+  (cond
+   (> freq 150) (colored-attr value freq "#007FCF")
+   (> freq 100) (colored-attr value freq "#B751C2")
+   (> freq 60)  (colored-attr value freq "#D97C75")
+   :else        (colored-attr value freq "#CFA176")))
+
 ;; Build 3-state preference selection buttons
-(defpartial build-tri-state [name attr form-name]
+(defpartial build-tri-state [{:keys [value frequency]} attr]
   [:div {:style "float:left;margin:10px 20px 0px 0px;"}
-    [:div {:class "btn-group tri-state"}
-      [:button {:type "button" :class "btn btn-mini btn-danger"} [:i {:class "icon-thumbs-down"}]]
-      [:button {:type "button" :class "btn btn-mini option"} name]
-      [:button {:type "button" :class "btn btn-mini btn-success"} [:i {:class "icon-thumbs-up"}]]]
-    [:input {:type "hidden" :name (str attr "[" form-name "]") :value "0"}]])
+   [:div {:class "btn-group tri-state"}
+    [:button {:type "button" :class "btn btn-mini btn-danger"} [:i {:class "icon-thumbs-down"}]]
+    [:button {:type "button" :class "btn btn-mini option"} (format-freq value frequency )]
+    [:button {:type "button" :class "btn btn-mini btn-success"} [:i {:class "icon-thumbs-up"}]]]
+   [:input {:type "hidden" :name (str attr "[" value "]") :value "0"}]])
 
 ;; Build radio preference selection buttons
 (defpartial build-radio-buttons [name-value form-name]
