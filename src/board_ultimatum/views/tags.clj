@@ -13,7 +13,7 @@
       (with-group bgg_id
         [:tr
          [:td value]
-         [:td (text-field :description description)]
+         [:td (text-area :description description)]
          [:td (text-field :group group)]
          [:td (text-field :pos-influence pos-influence)]
          [:td (text-field :neg-influence neg-influence)]
