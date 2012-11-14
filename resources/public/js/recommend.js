@@ -62,6 +62,9 @@ jQuery(document).ready(function ($) {
     updateActiveDisplay($(this), 'medium', input);
   });
 
+  // Show tag descriptions
+  $('.tri-state .option').popover({placement: 'bottom', trigger: 'manual'});
+
   // Alter tri-state buttons' hidden input based on which button was clicked
   // and the current state
   $('.tri-state').on('click', '.tri-state button', function(event) {
@@ -73,16 +76,30 @@ jQuery(document).ready(function ($) {
     // Current state is stored on the input field.
     var state = formInput.val();
 
-    $option.removeClass('btn-danger btn-success');
-
     // Determine what newState should be.
     var newState = 0;
-    if ($btn != $option) {
+    if ($btn === $option) {
+      if($option.hasClass('btn-danger') || $option.hasClass('btn-success')) {
+        $option.removeClass('btn-danger btn-success');
+      } else {
+        if($option.hasClass('popover-open')){
+          $option.popover('hide');
+          $option.removeClass('popover-open');
+        } else {
+          $option.popover('show');
+          $option.addClass('popover-open');
+        }
+      }
+    } else {
       // It is not the center button
       if ($btn.hasClass('btn-success')) {
         newState = state == 1 ? 0 : 1;
       } else if ($btn.hasClass('btn-danger')) {
         newState = state == -1 ? 0 : -1;
+      }
+      if($option.hasClass('popover-open')){
+        $option.popover('hide');
+        $option.removeClass('popover-open');
       }
     }
 
