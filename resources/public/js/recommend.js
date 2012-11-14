@@ -47,6 +47,13 @@ jQuery(document).ready(function ($) {
     }
   });
 
+  // Submit On Enter
+  $(document).on('keypress',  function(e) {
+    if(e.which == 13) {
+      $('#game-params').submit();
+    }
+  });
+
 
   // Toggle what form elements are available
   $('#select li').on('click', function() {
