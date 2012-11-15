@@ -1,21 +1,23 @@
 DOCS_BRANCH=gh-pages
-SEPARATOR="============================================================================"
+SEPARATOR=============================================================================
 BOOTSTRAP_DIR=resources/bootstrap/
 BOOTSTRAP_MAKE=make -C ${BOOTSTRAP_DIR}
 ECHO=@echo -e
 
 # Call bootstrap's bootstrap task and copy the results into public.
 bootstrap:
-	$(ECHO) ${SEPARATOR}
-	$(ECHO) "Making with bootstrap..."
+	$(ECHO) $(SEPARATOR)
+	$(ECHO) Making with bootstrap...
 	$(ECHO) ${SEPARATOR}
 	${BOOTSTRAP_MAKE} bootstrap
-	$(ECHO) "\n${SEPARATOR}"
-	$(ECHO) "Copying bootstrap generated assets into resources/public/"
+	$(ECHO)
+	$(ECHO) ${SEPARATOR}
+	$(ECHO) Copying bootstrap generated assets into resources/public/
 	$(ECHO) ${SEPARATOR}
 	cp -R ${BOOTSTRAP_DIR}bootstrap/* resources/public/
-	$(ECHO) "\n${SEPARATOR}"
-	$(ECHO) "Cleaning up..."
+	$(ECHO)
+	$(ECHO) ${SEPARATOR}
+	$(ECHO) Cleaning up...
 	$(ECHO) ${SEPARATOR}
 	${BOOTSTRAP_MAKE} clean
 
@@ -24,7 +26,7 @@ quickbs:
 	recess --compile ${BOOTSTRAP_DIR}less/board-ultimatum.less > resources/public/css/bootstrap.min.css
 
 watch:
-	$(ECHO) "Watching less files..."; \
+	$(ECHO) Watching less files...; \
 
 	watchr -e "watch('${BOOTSTRAP_DIR}less/.*\.less') { system 'make quickbs' }"
 
