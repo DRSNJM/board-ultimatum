@@ -216,7 +216,7 @@
                            [[123 567] [234]])))}
   [games]
   [(map input-game-mapper (filter input-game-filter games))
-   (map input-game-mapper (filter (complement input-game-filter) games))])
+   (map input-game-mapper (remove input-game-filter games))])
 
 ;; Take selected games from an expert and if they selected 2 or more render an
 ;; interface for comparing them.
