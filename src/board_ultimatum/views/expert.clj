@@ -98,7 +98,7 @@
   (let [num-games (count games)
         num-rows (int (Math/ceil (/ num-games grid-cols)))
         remainder (mod num-games grid-cols)
-        last-row-size (if (= remainder 0) grid-cols remainder)]
+        last-row-size (if (zero? remainder) grid-cols remainder)]
     (for [y (range num-rows)]
       (for [x (range (if (= (dec num-rows) y) last-row-size grid-cols))]
         (nth games (+ (* y grid-cols) x))))))
