@@ -27,7 +27,7 @@
     (mg/connect-via-uri! (:uri connection-info))
     (let [db-name (:db-name connection-info)]
       (mg/connect!)
-      (when (not (nil? (:username connection-info)))
+      (when-not (nil? (:username connection-info))
         (mg/authenticate db-name
                          (:username connection-info)
                          (into-array Character/TYPE
@@ -50,10 +50,9 @@
 
 (defn times [selected]
   "Turns user inputted time approx. ranges into database queries matching the
-  actual game lengths in the database.
-
-  Usage: (times [30 45]) => (25 30 35 40 45 50)"
-  (mapcat #(time-map %) selected))
+  actual game lengths in the database."
+  ^{:test (fn [] (assert (= (times [30 45]) '(25 30 35 40 45 50))))}
+  (mapcat time-map selected))
 
 (defn find-all []
   "Queries mongo for all games."
@@ -84,7 +83,7 @@
 ;; player num
 
 (defn convert-player-num [num-key]
-  (if (< (.indexOf (name num-key) "+") 0)
+  (if (neg? (.indexOf (name num-key) "+"))
     (Integer/parseInt (name num-key))
     100))
 
@@ -96,8 +95,7 @@
      (* -1 (poll-result (keyword "Not Recommended"))))))
 
 (defn tally-player-poll [game]
-  (reduce #(recommended-num-player-votes %1 %2) {}
-          (game :suggested_players)))
+  (reduce recommended-num-player-votes {} (game :suggested_players)))
 
 (defn max-kv-by-value [hsh]
   (reduce (fn [[maxk maxv] [k v]]
@@ -135,7 +133,7 @@
 
 (defn num-players-factors [game attrs]
   (let [players (:num-players attrs)]
-    (if (> (count players) 0)
+    (if (pos? (count players))
       {:reason "Optimal Player Number"
        :score (num-players-score players game)})))
 
@@ -148,7 +146,7 @@
       {:reason
         (cond
           (> score 80.0) "Close Weight"
-          (> score 0.0) "Acceptable Weight"
+          (pos? score) "Acceptable Weight"
           (> w x) "Weight Too High"
           :else "Weight Too Low")
        :score score})))
@@ -189,13 +187,13 @@
 
 (defn filter-on-times [attrs games]
   (let [selected-times (:length attrs)]
-    (if (> (count selected-times) 0)
+    (if (pos? (count selected-times))
       (filter #(boolean (some #{(:length %)} (times selected-times))) games)
       games)))
 
 (defn filter-on-num-players [attrs games]
   (let [selected-num-players (:num-players attrs)]
-    (if (> (count selected-num-players) 0)
+    (if (pos? (count selected-num-players))
       (let [min-pl (apply min selected-num-players)
             max-pl (apply max selected-num-players)]
         (filter #(not (or (> min-pl (:max_players %))
