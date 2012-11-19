@@ -162,9 +162,10 @@
     (compare-game game-a)
     [:div.rating.span4 {:id (str "rating" index)}
      [:div.rating-slider {:id (str "rating-slider" index)}
-      [:select (select-options
-                 [["Bad" 1] ["" 1.5] ["Poor" 2] ["" 2.5] ["OK" 3] ["" 3.5]
-                  ["Good" 4] ["" 4.5] ["Great" 5]] 3)]]]
+      [:select {:name (str game-a "-" game-b)}
+       (select-options
+         [["Bad" 1] ["" 1.5] ["Poor" 2] ["" 2.5] ["OK" 3] ["" 3.5] ["Good" 4]
+          ["" 4.5] ["Great" 5]] 3)]]]
     (compare-game game-b)]])
 
 (defpartial expert-compare
@@ -229,7 +230,7 @@
 ;; This route specifies how to take the results of recommendation quality
 ;; ratings provided by an expert.
 (defpage [:post "/expert/compare"] {:as relationships}
-  (when-not (empty? relationships)
+  (when (seq relationships)
     (relationship/add-many
       (into {} (map (fn [[pair-str value]]
                       [(map #(Integer/parseInt %)
