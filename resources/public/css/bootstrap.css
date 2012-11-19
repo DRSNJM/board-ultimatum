@@ -9125,6 +9125,10 @@ html .ui-helper-clearfix {
   }
 }
 
+.instructions {
+  font-size: 1.25em;
+}
+
 #recommend #sidebar {
   min-height: 350px;
 }
