@@ -2,7 +2,8 @@ DOCS_BRANCH=gh-pages
 SEPARATOR=============================================================================
 BOOTSTRAP_DIR=resources/bootstrap/
 BOOTSTRAP_MAKE=make -C ${BOOTSTRAP_DIR}
-ECHO=@echo -e
+ECHO=@/usr/bin/env echo -e
+
 
 # Call bootstrap's bootstrap task and copy the results into public.
 bootstrap:

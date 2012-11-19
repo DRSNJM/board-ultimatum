@@ -9,9 +9,13 @@
   "The name of the collection on mongo containing relationships."
   "relationships")
 
-(def rating-increment-count
-  "The number of increments the rating slider uses."
-  1000)
+(def rating-span
+  "The difference in the span of possible rating values."
+  4)
+
+(def rating-offset
+  "The value at which the lowest rating starts."
+  1)
 
 (defn exists?
   "An relationship between the two games exists in the database."
@@ -34,7 +38,7 @@
   {:expert expert-obj-id
    ;; Always sort games on insert so we do not have [a b] and [b a] entries.
    :games (sort games)
-   :rating (float (/ rating rating-increment-count))})
+   :rating (float (/ (- rating rating-offset) rating-span))})
 
 (defn add-many
   "Add the given relationships to the datastore and keep track for the expert."
