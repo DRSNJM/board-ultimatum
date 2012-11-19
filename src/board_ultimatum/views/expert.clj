@@ -16,7 +16,7 @@
         [board-ultimatum.session]
         [hiccup core element]
         [clojure.walk :only [keywordize-keys]]
-        [hiccup.form :only [form-to label text-field submit-button]]))
+        [hiccup.form :only [select-options form-to label text-field submit-button]]))
 
 (pre-route [:any "/expert/*"] {:as req}
            (when-not (expert-logged-in?)
@@ -147,7 +147,7 @@
   [bgg-id]
   (let [{:keys [name thumbnail]} (model/get-game-by-id bgg-id
                                                        [:name :thumbnail])]
-    [:div.compare-game.span4
+    [:div.game.span4
      [:div.image-wrapper
       [:img.img-rounded {:src thumbnail}]]
      [:div.title-wrapper
@@ -157,14 +157,15 @@
   "Take an index and pair of games returning markup an expert can use to rate
   the recommendation quality of the pair."
   [index [game-a game-b]]
-  [:div.rate-games.row-fluid {:id (str "rate-games" index)}
-   (compare-game game-a)
-   [:div.rating.span4 {:id (str "rating" index)}
-    [:input {:id (str "rating-input" index) :type "hidden"
-             :name (str game-a "-" game-b) :value 500}]
-    [:h4 "Recommendation Quality"]
-    [:div.rating-slider {:id (str "rating-slider" index)}]]
-   (compare-game game-b)])
+  [:div.row-fluid {:id (str "rate-games" index)}
+   [:div.rate-games
+    (compare-game game-a)
+    [:div.rating.span4 {:id (str "rating" index)}
+     [:div.rating-slider {:id (str "rating-slider" index)}
+      [:select (select-options
+                 [["Bad" 1] ["" 1.5] ["Poor" 2] ["" 2.5] ["OK" 3] ["" 3.5]
+                  ["Good" 4] ["" 4.5] ["Great" 5]] 3)]]]
+    (compare-game game-b)]])
 
 (defpartial expert-compare
   "The main body of /expert/compare when ids is greater than 1. Provides an
@@ -172,6 +173,7 @@
   [ids]
   (common/with-javascripts (concat common/*javascripts*
                                    ["/js/jquery-ui-slider.min.js"
+                                    "/js/selectToUISlider.jQuery.min.js"
                                     "/js/expert-compare.js"])
     (common/layout
       [:div.page-header
