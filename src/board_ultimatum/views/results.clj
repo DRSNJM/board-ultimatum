@@ -5,7 +5,11 @@
             [board-ultimatum.views.attr-display :as attr-display]
             [clojure.string :as string])
   (:use [hiccup.element]
-        [noir.core]))
+        [noir.core]
+        [cheshire.core :only [generate-string]]))
+
+(defpage [:post "/top-similar"] {:keys [bggID]} 
+  bggID)
 
 (defn game-weight-text [weight]
   (cond
@@ -78,6 +82,7 @@
 
 (defpartial display-game [i game disp-recom disp-explanation rating]
   [:div.well.game {:style "position:relative;overflow:hidden;"}
+    [:input {:type "hidden" :name "bggID" :value (:bgg_id game)}]
     (if (and disp-explanation (not= (.size (:factors game)) 0))
       (pp-factors-trigger game))
     (if disp-recom (recom-trigger))
@@ -107,7 +112,7 @@
           (weight game)]]]
     [:div.recom {:style "clear:both;display:none;"}
       [:div {:style "height:20px;"}]
-      [:div.well {:style "height:80px;background-color:aliceBlue;"}
+      [:div.well.similar {:style "height:80px;background-color:aliceBlue;"}
         [:div.spin {:style "position:relative;left:50%;top:45%;"}]]]])
 
 ;; Send true for disp-recom, disp-explanation if you wish to display recommendations

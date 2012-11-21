@@ -11,7 +11,8 @@ jQuery(document).ready(function ($) {
   );
   $('.open-recom').click(function() {
     $(this).find('.icon-chevron-down, .icon-chevron-up').toggle();
-    $(this).parents('.game').children('.recom').slideToggle('fast');
+    var game = $(this).parents('.game');
+    game.children('.recom').slideToggle('fast');
     var opts = {
       lines: 9, // The number of lines to draw
       length: 10, // The length of each line
@@ -20,6 +21,21 @@ jQuery(document).ready(function ($) {
       trail: 50, // Afterglow percentage
     };
     var spinner = new Spinner(opts).spin();
-    $(this).parents('.game').find('.spin').html(spinner.el);
+    var serializedID = game.children(':input').serialize();
+    
+    $.ajax({
+        url: "/top-similar",
+        type: "post",
+        data: serializedID,
+        beforeSend: function() {
+          game.find('.spin').html(spinner.el);
+        },
+        success: function(response, textStatus, jqXHR) {
+          console.log("Hooray, it worked! " + response);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          game.find('.similar').text('There was an error looking up similar games: ' + errorThrown)
+        }
+    });
   });
 });
