@@ -69,10 +69,12 @@
     [:div "weight"]])
 
 (defpartial recom-trigger []
-  [:div {:style "position:absolute;left:50%;bottom:0px;"}
-    [:div.open-recom {:style "display:none;position:relative;left:-50%;height:30px;width:40px;"}
-      [:i.icon-chevron-down]
-      [:i.icon-chevron-up {:style "display:none;"}]]])
+  [:div.open-recom {:style "display:none;position:absolute;left:50%;bottom:7px;margin-left:-35px;"}
+    [:div {:style "display:block;width:70px;"}
+      [:div {:style "display:block;margin:0px auto;width:14px;"}
+        [:i.icon-chevron-down]]
+      [:div {:style "display:block;margin:0px auto;width:14px;"}
+        [:i.icon-chevron-up {:style "display:none;"}]]]])
 
 (defpartial display-game [i game disp-recom disp-explanation rating]
   [:div.well.game {:style "position:relative;overflow:hidden;"}
@@ -105,7 +107,8 @@
           (weight game)]]]
     [:div.recom {:style "clear:both;display:none;"}
       [:div {:style "height:20px;"}]
-      [:div.well.spin {:style "height:80px;background-color:aliceBlue;"}]] ])
+      [:div.well {:style "height:80px;background-color:aliceBlue;"}
+        [:div.spin {:style "position:relative;left:50%;top:45%;"}]]]])
 
 ;; Send true for disp-recom, disp-explanation if you wish to display recommendations
 ;; and explanations on games. Ratings should be nil if no ratings are to be displayed.

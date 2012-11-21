@@ -10,7 +10,16 @@ jQuery(document).ready(function ($) {
     function() { $(this).find(".pop-trigger, .open-recom").fadeOut("fast"); }
   );
   $('.open-recom').click(function() {
-    $(this).children('.icon-chevron-down, .icon-chevron-up').toggle();
+    $(this).find('.icon-chevron-down, .icon-chevron-up').toggle();
     $(this).parents('.game').children('.recom').slideToggle('fast');
+    var opts = {
+      lines: 9, // The number of lines to draw
+      length: 10, // The length of each line
+      width: 6, // The line thickness
+      radius: 13, // The radius of the inner circle
+      trail: 50, // Afterglow percentage
+    };
+    var spinner = new Spinner(opts).spin();
+    $(this).parents('.game').find('.spin').html(spinner.el);
   });
 });
