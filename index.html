@@ -3031,34 +3031,7 @@ net.brehaut.ClojureTools = (function (SH) {
 })(SyntaxHighlighter);
 </script><title>board-ultimatum -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">board-ultimatum</h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>Noir front-end to the board-ultimatum board game recomendation
                engine.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0-beta10</td></tr><tr><td class="dep-name">enclog</td><td class="dotted"><hr /></td><td class="dep-version">0.5.8-SNAPSHOT</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.7.5</td></tr><tr><td class="dep-name">org.clojure/math.combinatorics</td><td class="dotted"><hr /></td><td class="dep-version">0.0.3</td></tr><tr><td class="dep-name">com.novemberain/monger</td><td class="dotted"><hr /></td><td class="dep-version">1.1.2</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#board-ultimatum.attr_engine">board-ultimatum.attr_engine</a></li><li><a href="#board-ultimatum.engine">board-ultimatum.engine</a></li><li><a href="#board-ultimatum.engine.config">board-ultimatum.engine.config</a></li><li><a href="#board-ultimatum.engine.model">board-ultimatum.engine.model</a></li><li><a href="#board-ultimatum.engine.model.expert">board-ultimatum.engine.model.expert</a></li><li><a href="#board-ultimatum.engine.model.relationship">board-ultimatum.engine.model.relationship</a></li><li><a href="#board-ultimatum.engine.neural">board-ultimatum.engine.neural</a></li><li><a href="#board-ultimatum.flash">board-ultimatum.flash</a></li><li><a href="#board-ultimatum.form-validators">board-ultimatum.form-validators</a></li><li><a href="#board-ultimatum.server">board-ultimatum.server</a></li><li><a href="#board-ultimatum.session">board-ultimatum.session</a></li><li><a href="#board-ultimatum.views.common">board-ultimatum.views.common</a></li><li><a href="#board-ultimatum.views.expert">board-ultimatum.views.expert</a></li><li><a href="#board-ultimatum.views.index">board-ultimatum.views.index</a></li><li><a href="#board-ultimatum.views.recommend">board-ultimatum.views.recommend</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.attr_engine" name="board-ultimatum.attr_engine"><h1 class="project-name">board-ultimatum.attr_engine</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.attr_engine
-	(:require [clojure.set :as set])
-	(:use [clojure.set]))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn sort-tags [game]
-	(apply merge-with union
-		(map 
-			#(identity 
-				{(keyword (:subtype %)) #{(keyword (:value %))}})
-			(:tags game))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn num-players-score [attrs game])</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn mechanics-score [attrs tags]
-	; TODO Check mechanics was active
-	(apply + 
-		(map 
-			#(if (contains? (:mechanic tags) (keyword (key %)))
-				(* (Integer/parseInt (val %)) 20)
-				0)
-			(:mechanics attrs))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn weight-score [attrs game])</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn score-game [attrs game]
-	(let [tags (sort-tags game)]
-		(merge 
-			game
-			{:score (+
-				(mechanics-score attrs tags))})))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn score-games [attrs games]
-	(map #(score-game attrs %) games))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine" name="board-ultimatum.engine"><h1 class="project-name">board-ultimatum.engine</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0-beta10</td></tr><tr><td class="dep-name">enclog</td><td class="dotted"><hr /></td><td class="dep-version">0.5.8-SNAPSHOT</td></tr><tr><td class="dep-name">org.clojure/core.logic</td><td class="dotted"><hr /></td><td class="dep-version">0.7.5</td></tr><tr><td class="dep-name">com.novemberain/monger</td><td class="dotted"><hr /></td><td class="dep-version">1.3.4</td></tr><tr><td class="dep-name">org.clojure/math.combinatorics</td><td class="dotted"><hr /></td><td class="dep-version">0.0.3</td></tr><tr><td class="dep-name">incanter</td><td class="dotted"><hr /></td><td class="dep-version">1.2.4</td></tr><tr><td class="dep-name">org.clojure/data.json</td><td class="dotted"><hr /></td><td class="dep-version">0.2.0</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#board-ultimatum.engine">board-ultimatum.engine</a></li><li><a href="#board-ultimatum.engine.config">board-ultimatum.engine.config</a></li><li><a href="#board-ultimatum.engine.model">board-ultimatum.engine.model</a></li><li><a href="#board-ultimatum.engine.model.expert">board-ultimatum.engine.model.expert</a></li><li><a href="#board-ultimatum.engine.model.relationship">board-ultimatum.engine.model.relationship</a></li><li><a href="#board-ultimatum.engine.neural">board-ultimatum.engine.neural</a></li><li><a href="#board-ultimatum.engine.tag">board-ultimatum.engine.tag</a></li><li><a href="#board-ultimatum.engine.vector-convert">board-ultimatum.engine.vector-convert</a></li><li><a href="#board-ultimatum.flash">board-ultimatum.flash</a></li><li><a href="#board-ultimatum.form-validators">board-ultimatum.form-validators</a></li><li><a href="#board-ultimatum.server">board-ultimatum.server</a></li><li><a href="#board-ultimatum.session">board-ultimatum.session</a></li><li><a href="#board-ultimatum.views.attr-display">board-ultimatum.views.attr-display</a></li><li><a href="#board-ultimatum.views.common">board-ultimatum.views.common</a></li><li><a href="#board-ultimatum.views.expert">board-ultimatum.views.expert</a></li><li><a href="#board-ultimatum.views.index">board-ultimatum.views.index</a></li><li><a href="#board-ultimatum.views.recommend">board-ultimatum.views.recommend</a></li><li><a href="#board-ultimatum.views.results">board-ultimatum.views.results</a></li><li><a href="#board-ultimatum.views.similar">board-ultimatum.views.similar</a></li><li><a href="#board-ultimatum.views.tags">board-ultimatum.views.tags</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine" name="board-ultimatum.engine"><h1 class="project-name">board-ultimatum.engine</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine
     (:refer-clojure :exclude [==])
     (:use [clojure.core.logic]))</pre></td></tr><tr><td class="docs"><p>I don't do a whole lot.</p>
@@ -3130,9 +3103,10 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.model
   (:require [monger.core :as mg]
             [monger.collection :as mc]
-            [board-ultimatum.attr_engine :as attr_engine])
+            [board-ultimatum.engine.tag :as tag])
   (:use [monger.operators]
-        [clojure.pprint]))</pre></td></tr><tr><td class="docs"><p>This namespace contains all functions related to manipulating the
+        [clojure.pprint]
+        [clojure.string :only [blank?]]))</pre></td></tr><tr><td class="docs"><p>This namespace contains all functions related to manipulating the
 applications "model" (which is mostly mongo).</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Ensures the existence of several indexes to use mongo efficiently.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn ensure-indexes
@@ -3140,14 +3114,16 @@ applications "model" (which is mostly mongo).</p>
   (mc/ensure-index &quot;experts&quot; {:identifier 1})
   (mc/ensure-index &quot;board_games&quot; {:bgg_id 1} {:unique 1 :dropDups 1})
   (mc/ensure-index &quot;board_games&quot; {:name 1})
-  (mc/ensure-index &quot;board_games&quot; {:bgg_id 1, :random &quot;2d&quot;}))</pre></td></tr><tr><td class="docs"><p>Connect to mongo based on the given connection information.</p>
+  (mc/ensure-index &quot;board_games&quot; {:bgg_id 1, :random &quot;2d&quot;})
+  (mc/ensure-index &quot;network_data&quot; {:id 1})
+  (mc/ensure-index &quot;network_output&quot; {:game_a 1}))</pre></td></tr><tr><td class="docs"><p>Connect to mongo based on the given connection information.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn connect
   [connection-info]
   (if (:uri connection-info)
     (mg/connect-via-uri! (:uri connection-info))
     (let [db-name (:db-name connection-info)]
       (mg/connect!)
-      (when (not (nil? (:username connection-info)))
+      (when-not (nil? (:username connection-info))
         (mg/authenticate db-name
                          (:username connection-info)
                          (into-array Character/TYPE
@@ -3168,63 +3144,30 @@ applications "model" (which is mostly mongo).</p>
    360 [420 480 600 720 1200 6000]})</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn times [selected]
   &quot;Turns user inputted time approx. ranges into database queries matching the
-  actual game lengths in the database.
-  Usage: (times [30 45]) =&gt; (25 30 35 40 45 50)&quot;
-  (mapcat #(time-map %) selected))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn uniq-tag [subtype]
-  (distinct
-   (map #(:value %)
-        (filter
-         (fn [h] (= (:subtype h) subtype))
-         (flatten
-          (map (fn [g] (:tags g))
-               (mc/find-maps &quot;board_games&quot;)))))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn all-mechanics []
-  (uniq-tag &quot;mechanic&quot;))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn all-categories []
-  (uniq-tag &quot;category&quot;))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn all-families []
-  (uniq-tag &quot;family&quot;))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn all-publishers []
-  (uniq-tag &quot;publisher&quot;))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn all-designers []
-  (uniq-tag &quot;designer&quot;))</pre></td></tr><tr><td class="docs">
+  actual game lengths in the database.&quot;
+  ^{:test (fn [] (assert (= (times [30 45]) '(25 30 35 40 45 50))))}
+  (mapcat time-map selected))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn find-all []
+  &quot;Queries mongo for all games.&quot;
+  (mc/find-maps &quot;board_games&quot;))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn tag-values-by-subtype [game subtype]
   (set (map :value (filter #(= subtype (:subtype %)) (:tags game)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn mechanics [game]
   (tag-values-by-subtype game &quot;mechanic&quot;))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn categories [game]
-  (tag-values-by-subtype game &quot;category&quot;))</pre></td></tr><tr><td class="docs"><p>extract all this nonsense and store it in the databse</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def most-popular-categories
- (list &quot;Card Game&quot; &quot;Wargame&quot; &quot;Economic&quot; &quot;Fantasy&quot; &quot;Fighting&quot; &quot;Medieval&quot; &quot;Ancient&quot; &quot;Science Fiction&quot; &quot;World War II&quot; &quot;Adventure&quot; &quot;City Building&quot; &quot;Bluffing&quot; &quot;Exploration&quot; &quot;Political&quot; &quot;Miniatures&quot; &quot;Negotiation&quot; &quot;Civilization&quot; &quot;Abstract Strategy&quot; &quot;Transportation&quot; &quot;Territory Building&quot; &quot;Deduction&quot; &quot;Dice&quot; &quot;Nautical&quot; &quot;Racing&quot; &quot;Trains&quot; &quot;Animals&quot; &quot;Novel-based&quot; &quot;Horror&quot; &quot;Party Game&quot; &quot;Renaissance&quot; &quot;Humor&quot; &quot;Industry / Manufacturing&quot; &quot;Aviation / Flight&quot; &quot;Sports&quot; &quot;Action / Dexterity&quot; &quot;Mythology&quot; &quot;Space Exploration&quot; &quot;Travel&quot; &quot;Farming&quot; &quot;Napoleonic&quot; &quot;Movies / TV / Radio theme&quot; &quot;Real-time&quot; &quot;Murder/Mystery&quot; &quot;Children's Game&quot; &quot;American West&quot; &quot;Collectible Components&quot; &quot;Puzzle&quot;))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def most-popular-mechanics
-  (list &quot;Hand Management&quot; &quot;Dice Rolling&quot; &quot;Variable Player Powers&quot; &quot;Area Control / Area Influence&quot; &quot;Set Collection&quot; &quot;Modular Board&quot; &quot;Auction/Bidding&quot; &quot;Tile Placement&quot; &quot;Card Drafting&quot; &quot;Simultaneous Action Selection&quot; &quot;Area Movement&quot; &quot;Action Point Allowance System&quot; &quot;Route/Network Building&quot; &quot;Hex-and-Counter&quot; &quot;Partnerships&quot; &quot;Point to Point Movement&quot; &quot;Simulation&quot; &quot;Campaign / Battle Card Driven&quot; &quot;Worker Placement&quot; &quot;Secret Unit Deployment&quot; &quot;Pick-up and Deliver&quot; &quot;Co-operative Play&quot; &quot;Trading&quot; &quot;Role Playing&quot; &quot;Commodity Speculation&quot; &quot;Variable Phase Order&quot; &quot;Stock Holding&quot; &quot;Voting&quot; &quot;Betting/Wagering&quot; &quot;Grid Movement&quot; &quot;Deck / Pool Building&quot; &quot;Area Enclosure&quot; &quot;Roll / Spin and Move&quot; &quot;Memory&quot; &quot;Pattern Building&quot; &quot;Press Your Luck&quot; &quot;Trick-taking&quot; &quot;Chit-Pull System&quot; &quot;Pattern Recognition&quot; &quot;Storytelling&quot;))</pre></td></tr><tr><td class="docs">
+  (tag-values-by-subtype game &quot;category&quot;))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def basic-score-weight 100)</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn simple-score-data [data]
-  (reduce #(assoc %1 %2 {:score basic-score-weight :reason %2}) {} data))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def simple-mechanics-score-data
-  (simple-score-data most-popular-mechanics))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def simple-category-score-data
-  (simple-score-data most-popular-categories))</pre></td></tr><tr><td class="docs"><p>silly, quick hack</p>
-</td><td class="codes"><pre class="brush: clojure">(defn simple-data [attr-type]
-  (cond
-   (= &quot;mechanics&quot; attr-type) simple-mechanics-score-data
-   (= &quot;categories&quot; attr-type) simple-category-score-data))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn singular-attr [attr]
-  (if (= attr &quot;mechanics&quot;)
-    &quot;mechanic&quot;
-    &quot;category&quot;))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn score-attr [score-data [attr-name attr-value]]
-  (let [new-score (* (:score (score-data attr-name))
-                     attr-value)]
-    (assoc (score-data attr-name) :score new-score)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn score-attr [subtype [attr-name influence-sign]]
+  (let [tag (mc/find-one-as-map &quot;tags&quot; {:subtype (tag/singular-subtype subtype) :value attr-name})]
+    (if (pos? influence-sign)
+      {:score (:pos-influence tag) :reason (:value tag)}
+      {:score (:neg-influence tag) :reason (:value tag)})))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn rank-score [game]
   {:reason &quot;BGG Rank&quot;
    :score (- basic-score-weight (/ (float (:rank game)) 10))})</pre></td></tr><tr><td class="docs"><p>player num</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn convert-player-num [num-key]
-  (if (&lt; (.indexOf (name num-key) &quot;+&quot;) 0)
+  (if (neg? (.indexOf (name num-key) &quot;+&quot;))
     (Integer/parseInt (name num-key))
     100))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn recommended-num-player-votes [hsh [player-num poll-result]]
@@ -3234,8 +3177,7 @@ applications "model" (which is mostly mongo).</p>
      (* 1 (poll-result :Recommended))
      (* -1 (poll-result (keyword &quot;Not Recommended&quot;))))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn tally-player-poll [game]
-  (reduce #(recommended-num-player-votes %1 %2) {}
-          (game :suggested_players)))</pre></td></tr><tr><td class="docs">
+  (reduce recommended-num-player-votes {} (game :suggested_players)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn max-kv-by-value [hsh]
   (reduce (fn [[maxk maxv] [k v]]
             (if (&gt; v maxv)
@@ -3266,49 +3208,59 @@ applications "model" (which is mostly mongo).</p>
                               (* (get norm-votes min-pl) basic-score-weight)
                               (* -1 basic-score-weight))
      :else 0)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn num-players-factors [attrs game]
+</td><td class="codes"><pre class="brush: clojure">(defn num-players-factors [game attrs]
   (let [players (:num-players attrs)]
-    (if (&gt; (count players) 0)
+    (if (pos? (count players))
       {:reason &quot;Optimal Player Number&quot;
-       :score (num-players-score players game)})))</pre></td></tr><tr><td class="docs"><p>player num</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>returns [ [attr-name value] ]</p>
-</td><td class="codes"><pre class="brush: clojure">(defn score-factor [attr-type game query-attrs]
-  (let [relevant-attrs (query-attrs (keyword attr-type))
-        game-attrs (tag-values-by-subtype game (singular-attr attr-type))
-        score-data (simple-data attr-type)]
+       :score (num-players-score players game)})))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn weight-factor [game attrs]
+  (if (not (clojure.string/blank? (:weight attrs)))
+    (let [w (:weight_average game)
+          x (. Float parseFloat (:weight attrs))
+          d (- x w)
+          score (- basic-score-weight (* 16 d d))]
+      {:reason
+        (cond
+          (&gt; score 80.0) &quot;Close Weight&quot;
+          (pos? score) &quot;Acceptable Weight&quot;
+          (&gt; w x) &quot;Weight Too High&quot;
+          :else &quot;Weight Too Low&quot;)
+       :score score})))</pre></td></tr><tr><td class="docs"><p>returns [ [attr-name value] ]</p>
+</td><td class="codes"><pre class="brush: clojure">(defn score-factor [attr-type game relevant-attrs]
+  (let [game-attrs (tag-values-by-subtype game (tag/singular-subtype attr-type))]
     (remove nil?
             (map #(if (contains? game-attrs (str (first %)))
-                     (score-attr score-data %))
+                    (score-attr attr-type %))
                  relevant-attrs))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn collect-score-factors [game query-attrs]
   (flatten
    (remove empty?
            (list
-            (score-factor &quot;mechanics&quot; game query-attrs)
-            (score-factor &quot;categories&quot; game query-attrs)
+            (score-factor &quot;mechanics&quot; game (:mechanics query-attrs))
+            (score-factor &quot;categories&quot; game (:categories query-attrs))
             (rank-score game)
-            (num-players-factors query-attrs game)))))</pre></td></tr><tr><td class="docs">
+            (num-players-factors game query-attrs)
+            (weight-factor game query-attrs)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn sum-score [factors]
   (apply + (map :score factors)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn total-score [game]
   (sum-score (:factors game)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn sorted-ranked-games [games query-attrs]
-  (take 30
-        (sort-by
-         #(* -1 (:score %))
-         (filter #(&gt; (:score %) 0)
-                 (map #(let [factors (collect-score-factors % query-attrs)]
-                         (assoc % :factors factors
-                                :score (sum-score factors)))
-                      games)))))</pre></td></tr><tr><td class="docs">
+  (sort-by
+   #(* -1 (:score %))
+   (filter #(&gt; (:score %) 0)
+           (map #(let [factors (collect-score-factors % query-attrs)]
+                   (assoc % :factors factors
+                          :score (sum-score factors)))
+                games))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn filter-on-times [attrs games]
   (let [selected-times (:length attrs)]
-    (if (&gt; (count selected-times) 0)
+    (if (pos? (count selected-times))
       (filter #(boolean (some #{(:length %)} (times selected-times))) games)
       games)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn filter-on-num-players [attrs games]
   (let [selected-num-players (:num-players attrs)]
-    (if (&gt; (count selected-num-players) 0)
+    (if (pos? (count selected-num-players))
       (let [min-pl (apply min selected-num-players)
             max-pl (apply max selected-num-players)]
         (filter #(not (or (&gt; min-pl (:max_players %))
@@ -3337,7 +3289,17 @@ applications "model" (which is mostly mongo).</p>
   []
   (map (fn [{obj-id :_id}]
          (mc/update-by-id &quot;board_games&quot; obj-id {$set {:random [(rand) 0]}}))
-       (mc/find-maps &quot;board_games&quot; {} [:_id])))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.model.expert" name="board-ultimatum.engine.model.expert"><h1 class="project-name">board-ultimatum.engine.model.expert</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>A namespace for maniuplating the experts as part of the datastore</p>
+       (mc/find-maps &quot;board_games&quot; {} [:_id])))</pre></td></tr><tr><td class="docs"><p>functions for getting similar game results</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-game-by-name [name]
+  &quot;Get a game from the db by name&quot;
+  (mc/find-one-as-map &quot;board_games&quot; {:name name}))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-id-by-name [name]
+  &quot;Returns the id of the game with the provided name&quot;
+  (:bgg_id (get-game-by-name name)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-similar [id]
+  &quot;Get the ids of all games similar to that provided&quot;
+  (mc/find-maps &quot;network_output&quot; {:game_a id}))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.model.expert" name="board-ultimatum.engine.model.expert"><h1 class="project-name">board-ultimatum.engine.model.expert</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>A namespace for maniuplating the experts as part of the datastore</p>
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.model.expert
   (:refer-clojure :exclude [sort find])
   (:require [clojure.string :as string]
@@ -3364,18 +3326,19 @@ applications "model" (which is mostly mongo).</p>
             (get expert :identifier))))</pre></td></tr><tr><td class="docs"><p>For the given expert specify</p>
 </td><td class="codes"><pre class="brush: clojure">(defn add-unfamiliar-games
   [id games]
-  (mc/update coll {:identifier (string/lower-case id)} {$pushAll {:unfamiliar-games games}}))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn games-for [id num-games]
-  &quot;Get num-games games for the given expert to compare.&quot;
-  (let [unfamiliar-games (get (mc/find-one-as-map
-                                coll
-                                {:identifier (string/lower-case id)}
-                                [:unfamiliar-games])
-                              :unfamiliar-games [])]
-    (with-collection &quot;board_games&quot;
-      (find {:bgg_id {$nin unfamiliar-games}
-             :random {&quot;$near&quot; [(rand) 0]}})
-      (limit num-games))))</pre></td></tr><tr><td class="docs"><p>Add an expert with the given id to the datastore.</p>
+  (mc/update coll {:identifier (string/lower-case id)} {$pushAll {:unfamiliar-games games}}))</pre></td></tr><tr><td class="docs"><p>For the given expert get the games that they are unfamiliar with.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn unfamiliar-games-for
+  [id]
+  (:unfamiliar-games (mc/find-one-as-map coll
+                                         {:identifier (string/lower-case id)}
+                                         [:unfamiliar-games])
+                     []))</pre></td></tr><tr><td class="docs"><p>Get num-games games for the given expert to compare.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn games-for
+  [id num-games]
+  (with-collection &quot;board_games&quot;
+    (find {:bgg_id {$nin (unfamiliar-games-for id)}
+           :random {&quot;$near&quot; [(rand) 0]}})
+    (limit num-games)))</pre></td></tr><tr><td class="docs"><p>Add an expert with the given id to the datastore.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn add
   [id]
   (mc/insert coll {:pretty-id id
@@ -3386,9 +3349,11 @@ applications "model" (which is mostly mongo).</p>
             [board-ultimatum.engine.model.expert :as expert])
   (:use [monger.operators]))</pre></td></tr><tr><td class="docs"><p>The name of the collection on mongo containing relationships.</p>
 </td><td class="codes"><pre class="brush: clojure">(def coll
-  &quot;relationships&quot;)</pre></td></tr><tr><td class="docs"><p>The number of increments the rating slider uses.</p>
-</td><td class="codes"><pre class="brush: clojure">(def rating-increment-count
-  1000)</pre></td></tr><tr><td class="docs"><p>An relationship between the two games exists in the database.</p>
+  &quot;relationships&quot;)</pre></td></tr><tr><td class="docs"><p>The difference in the span of possible rating values.</p>
+</td><td class="codes"><pre class="brush: clojure">(def rating-span
+  4)</pre></td></tr><tr><td class="docs"><p>The value at which the lowest rating starts.</p>
+</td><td class="codes"><pre class="brush: clojure">(def rating-offset
+  1)</pre></td></tr><tr><td class="docs"><p>An relationship between the two games exists in the database.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn exists?
   [games] (boolean (mc/find-one coll {:games {$all games}} [:_id])))</pre></td></tr><tr><td class="docs"><p>Get an expert from the database by id.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn from-games
@@ -3403,20 +3368,362 @@ applications "model" (which is mostly mongo).</p>
   {:expert expert-obj-id
    ;; Always sort games on insert so we do not have [a b] and [b a] entries.
    :games (sort games)
-   :rating (float (/ rating rating-increment-count))})</pre></td></tr><tr><td class="docs"><p>Add the given relationships to the datastore and keep track for the expert.</p>
+   :rating (float (/ (- rating rating-offset) rating-span))})</pre></td></tr><tr><td class="docs"><p>Add the given relationships to the datastore and keep track for the expert.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn add-many
   [game-relationships expert-id]
   (mc/insert-batch coll (map (partial convert-to-object
                                       (expert/from-id expert-id [:_id]))
                              game-relationships)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.neural" name="board-ultimatum.engine.neural"><h1 class="project-name">board-ultimatum.engine.neural</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.neural
-    (use [enclog nnets training]))</pre></td></tr><tr><td class="docs">
+  (:require [monger.core :as mg]
+            [monger.collection :as mc]
+            [board-ultimatum.engine.model :as model]
+            [board-ultimatum.engine.model.relationship :as relationship]
+            [board-ultimatum.engine.config :as config])
+  (:use clojure.pprint)
+  (use [enclog nnets training])
+  (:use [monger.operators]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(let [connection-info (if (nil? (:db-name config/storage))
+     (assoc config/storage :db-name &quot;board_ultimatum&quot;) config/storage)]
+
+  (try
+    (model/connect connection-info)
+    (catch java.io.IOException e
+      (println &quot;ERROR: Could not connect to MongoDB.&quot;))
+    (catch java.lang.NullPointerException e
+      (println &quot;ERROR: Could not authenticate with Mongo. See config: \n\t&quot;
+               (str (assoc connection-info :password &quot;********&quot;))))))</pre></td></tr><tr><td class="docs"><p>network functions</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def net
   (network  (neural-pattern :feed-forward)
     :activation :sigmoid
-    :input   200
+    :input   20
     :output  1
-    :hidden [200 100]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.flash" name="board-ultimatum.flash"><h1 class="project-name">board-ultimatum.flash</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Wrap noir's flash functionality with some helper functions to simplify the
+    :hidden [20 10]))</pre></td></tr><tr><td class="docs"><p>for each id, join each id with every other id and calculate output</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def game-ids
+  (into [] 
+    (map 
+      (fn [game] (:bgg_id game))
+      (model/find-all))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-vector [game-id] 
+  (:data (mc/find-one-as-map &quot;network_data&quot; {:id game-id})))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn join-vector [id-A id-B] (into [] (concat (get-vector id-A) (get-vector id-B))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn to-dataset [id-A id-B] (data :basic-dataset [(join-vector id-A id-B)]
+                                [[-1.0]]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn output-pair [id-A id-B] (map 
+  (fn [pair] (. (. net compute (. pair getInput)) getData 0))
+  (to-dataset id-A id-B)))</pre></td></tr><tr><td class="docs"><p>set up the training data</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def training-set 
+  (data :basic-dataset 
+    (into [] 
+      (map 
+        (fn [rel] 
+          (join-vector (nth (:_id rel) 0) (nth (:_id rel) 1)))
+        (relationship/average-ratings)))
+    (into [] 
+      (map 
+        (fn [rel] 
+          [(:rating rel)])
+        (relationship/average-ratings)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def prop-train (trainer :resilient-prop :network net :training-set training-set)) </pre></td></tr><tr><td class="docs"><p>use this function to train the network</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn train-network []
+  (train prop-train 0.01 500 []))</pre></td></tr><tr><td class="docs"><p>iterate and add top 50 games to DB</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn network-eval [] 
+  (dorun 
+    (mc/remove &quot;network_output&quot;)
+    (doseq [id-A game-ids] 
+      (doseq [game-record (take 50 
+        (sort-by :rating &gt;
+          (map 
+            (fn [id-B] 
+              { :rating (nth (output-pair id-A id-B) 0) :game_a id-A :game_b id-B })
+            game-ids)))]
+        (mc/insert &quot;network_output&quot; game-record)))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.tag" name="board-ultimatum.engine.tag"><h1 class="project-name">board-ultimatum.engine.tag</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.tag
+  (:require [monger.core :as mg]
+            [monger.collection :as mc])
+  (:use [monger.operators]
+        [clojure.pprint]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn all-raw-tags []
+  (flatten
+   (map (fn [g] (:tags g))
+        (mc/find-maps &quot;board_games&quot;))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn subtype? [subtype tag]
+  (= (:subtype tag) subtype))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn raw-tags-by-subtype [subtype]
+  (filter
+   (partial subtype? subtype)
+   (all-raw-tags)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn raw-freq-tags-by-subtype [subtype]
+  (sort-by (fn [tag] (* -1 (:frequency tag)))
+           (map (fn [[tag freq]] (assoc tag :frequency freq))
+                (frequencies (raw-tags-by-subtype subtype)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn uniq-tags-by-subtype [subtype]
+  (distinct
+   (raw-tags-by-subtype subtype)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn create-tags-db-by-subtype [subtype]
+  (mc/insert-batch &quot;tags&quot;
+                   (map #(assoc % :pos-influence 100 :neg-influence -200 :group &quot;Uncategorized&quot;)
+                        (raw-freq-tags-by-subtype subtype))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn reset-tags-table! []
+  (do
+    (mc/drop &quot;tags&quot;)
+    (mc/create &quot;tags&quot; {})
+    (create-tags-db-by-subtype &quot;mechanic&quot;)
+    (create-tags-db-by-subtype &quot;category&quot;)
+    (create-tags-db-by-subtype &quot;designer&quot;)
+    (create-tags-db-by-subtype &quot;publisher&quot;)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn singular-subtype [attr]
+  (cond
+   (= attr &quot;mechanics&quot;) &quot;mechanic&quot;
+   (= attr &quot;categories&quot;) &quot;category&quot;
+   (= attr &quot;designers&quot;) &quot;designer&quot;
+   (= attr &quot;publishers&quot;) &quot;publisher&quot;
+   :else attr))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn tags-by-subtype [subtype]
+  (sort-by :value (mc/find-maps &quot;tags&quot; {:subtype subtype})))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn mechanics []
+  (tags-by-subtype &quot;mechanic&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn categories []
+  (tags-by-subtype &quot;category&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn designers []
+    (tags-by-subtype &quot;designer&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn publishers []
+  (tags-by-subtype &quot;publisher&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn all-tags []
+  (mc/find-maps &quot;tags&quot; {}))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn to-i [in]
+  (cond
+   (integer? in) in
+   (string? in) (Integer/parseInt in)
+   :else (int in)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn update [subtype bgg-id new-data]
+  (let [data (reduce #(update-in %1 [%2] to-i)
+                     new-data
+                     [:pos-influence :neg-influence])]
+    (mc/update &quot;tags&quot; {:subtype subtype :bgg_id bgg-id} {$set data})))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.engine.vector-convert" name="board-ultimatum.engine.vector-convert"><h1 class="project-name">board-ultimatum.engine.vector-convert</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.engine.vector-convert
+  (:require [monger.core :as mg]
+            [monger.collection :as mc]
+            [board-ultimatum.engine.model :as model]
+            [board-ultimatum.engine.config :as config])
+  (:use clojure.pprint)
+  (:use clojure.set)
+  (:use incanter.core incanter.stats incanter.charts))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(let [connection-info (if (nil? (:db-name config/storage))
+     (assoc config/storage :db-name &quot;board_ultimatum&quot;) config/storage)]
+
+  (try
+    (model/connect connection-info)
+    (catch java.io.IOException e
+      (println &quot;ERROR: Could not connect to MongoDB.&quot;))
+    (catch java.lang.NullPointerException e
+      (println &quot;ERROR: Could not authenticate with Mongo. See config: \n\t&quot;
+               (str (assoc connection-info :password &quot;********&quot;))))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn has-tag [game subtype value]
+  (cond
+    (some #(= value %) 
+      (remove nil? 
+        (map (fn [tag] 
+          (cond (= (:subtype tag) subtype) (:value tag))) (:tags game)))) 1.0
+     :else 0.0))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn game-categories [game]
+  &quot;Return all categories for some game&quot;
+  (into #{} (remove nil? 
+    (map (fn [tag] 
+      (cond (= (:subtype tag) &quot;category&quot;) (:value tag))) (:tags game)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn game-mechanics [game]
+  &quot;Return all game mechanics for some game&quot;
+  (into #{} (remove nil? 
+    (map (fn [tag] 
+      (cond (= (:subtype tag) &quot;mechanic&quot;) (:value tag))) (:tags game)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn all-categories []
+  &quot;Return all possible categories&quot;
+  (seq (apply union (map game-categories
+    (model/find-all)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn all-mechanics []
+  &quot;Return all possible mechanics&quot;
+  (seq (apply union (map game-mechanics
+    (model/find-all)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn to-vector [game]
+  &quot;Convert Mongo game record to normalized numeric vector&quot;
+  { :id (:bgg_id game)
+    :data [ (/ (:length game) 6000.0)
+            (/ (:min_players game) 8.0)
+            (/ (:max_players game) 8.0)
+            (/ (:min_age game) 18.0)
+            (/ (:rank game) 1000.0)
+            (/ (:weight_average game) 5.0)
+            (/ (:rating_average game) 10.0)
+            (/ (:rank game) 1000.0)
+            (has-tag game &quot;category&quot; &quot;Video Game Theme&quot;)
+            (has-tag game &quot;category&quot; &quot;Vietnam War&quot;)
+            (has-tag game &quot;category&quot; &quot;Aviation / Flight&quot;)
+            (has-tag game &quot;category&quot; &quot;Print &amp; Play&quot;)
+            (has-tag game &quot;category&quot; &quot;Memory&quot;)
+            (has-tag game &quot;category&quot; &quot;Negotiation&quot;)
+            (has-tag game &quot;category&quot; &quot;Novel-based&quot;)
+            (has-tag game &quot;category&quot; &quot;Card Game&quot;)
+            (has-tag game &quot;category&quot; &quot;Prehistoric&quot;)
+            (has-tag game &quot;category&quot; &quot;Movies / TV / Radio theme&quot;)
+            (has-tag game &quot;category&quot; &quot;Exploration&quot;)
+            (has-tag game &quot;category&quot; &quot;Trivia&quot;)
+            (has-tag game &quot;category&quot; &quot;World War I&quot;)
+            (has-tag game &quot;category&quot; &quot;Humor&quot;)
+            (has-tag game &quot;category&quot; &quot;Arabian&quot;)
+            (has-tag game &quot;category&quot; &quot;Mythology&quot;)
+            (has-tag game &quot;category&quot; &quot;Napoleonic&quot;)
+            (has-tag game &quot;category&quot; &quot;Deduction&quot;)
+            (has-tag game &quot;category&quot; &quot;World War II&quot;)
+            (has-tag game &quot;category&quot; &quot;Fantasy&quot;)
+            (has-tag game &quot;category&quot; &quot;American Revolutionary War&quot;)
+            (has-tag game &quot;category&quot; &quot;Children's Game&quot;)
+            (has-tag game &quot;category&quot; &quot;Dice&quot;)
+            (has-tag game &quot;category&quot; &quot;Space Exploration&quot;)
+            (has-tag game &quot;category&quot; &quot;City Building&quot;)
+            (has-tag game &quot;category&quot; &quot;Action / Dexterity&quot;)
+            (has-tag game &quot;category&quot; &quot;Book&quot;)
+            (has-tag game &quot;category&quot; &quot;Spies/Secret Agents&quot;)
+            (has-tag game &quot;category&quot; &quot;Horror&quot;)
+            (has-tag game &quot;category&quot; &quot;Mafia&quot;)
+            (has-tag game &quot;category&quot; &quot;Word&quot;)
+            (has-tag game &quot;category&quot; &quot;Industry / Manufacturing&quot;)
+            (has-tag game &quot;category&quot; &quot;Trains&quot;)
+            (has-tag game &quot;category&quot; &quot;Party Game&quot;)
+            (has-tag game &quot;category&quot; &quot;Transportation&quot;)
+            (has-tag game &quot;category&quot; &quot;Korean War&quot;)
+            (has-tag game &quot;category&quot; &quot;Farming&quot;)
+            (has-tag game &quot;category&quot; &quot;Zombies&quot;)
+            (has-tag game &quot;category&quot; &quot;Racing&quot;)
+            (has-tag game &quot;category&quot; &quot;American West&quot;)
+            (has-tag game &quot;category&quot; &quot;Adventure&quot;)
+            (has-tag game &quot;category&quot; &quot;Abstract Strategy&quot;)
+            (has-tag game &quot;category&quot; &quot;Mature / Adult&quot;)
+            (has-tag game &quot;category&quot; &quot;Medical&quot;)
+            (has-tag game &quot;category&quot; &quot;Civilization&quot;)
+            (has-tag game &quot;category&quot; &quot;Fighting&quot;)
+            (has-tag game &quot;category&quot; &quot;Renaissance&quot;)
+            (has-tag game &quot;category&quot; &quot;Educational&quot;)
+            (has-tag game &quot;category&quot; &quot;American Indian Wars&quot;)
+            (has-tag game &quot;category&quot; &quot;Economic&quot;)
+            (has-tag game &quot;category&quot; &quot;Miniatures&quot;)
+            (has-tag game &quot;category&quot; &quot;Modern Warfare&quot;)
+            (has-tag game &quot;category&quot; &quot;Comic Book / Strip&quot;)
+            (has-tag game &quot;category&quot; &quot;Bluffing&quot;)
+            (has-tag game &quot;category&quot; &quot;Nautical&quot;)
+            (has-tag game &quot;category&quot; &quot;Animals&quot;)
+            (has-tag game &quot;category&quot; &quot;Murder/Mystery&quot;)
+            (has-tag game &quot;category&quot; &quot;Science Fiction&quot;)
+            (has-tag game &quot;category&quot; &quot;Ancient&quot;)
+            (has-tag game &quot;category&quot; &quot;Medieval&quot;)
+            (has-tag game &quot;category&quot; &quot;Territory Building&quot;)
+            (has-tag game &quot;category&quot; &quot;Pirates&quot;)
+            (has-tag game &quot;category&quot; &quot;Collectible Components&quot;)
+            (has-tag game &quot;category&quot; &quot;Wargame&quot;)
+            (has-tag game &quot;category&quot; &quot;Travel&quot;)
+            (has-tag game &quot;category&quot; &quot;Religious&quot;)
+            (has-tag game &quot;category&quot; &quot;Civil War&quot;)
+            (has-tag game &quot;category&quot; &quot;American Civil War&quot;)
+            (has-tag game &quot;category&quot; &quot;Real-time&quot;)
+            (has-tag game &quot;category&quot; &quot;Electronic&quot;)
+            (has-tag game &quot;category&quot; &quot;Game System&quot;)
+            (has-tag game &quot;category&quot; &quot;Political&quot;)
+            (has-tag game &quot;category&quot; &quot;Puzzle&quot;)
+            (has-tag game &quot;category&quot; &quot;Environmental&quot;)
+            (has-tag game &quot;category&quot; &quot;Sports&quot;)
+            (has-tag game &quot;category&quot; &quot;Maze&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Rock-Paper-Scissors&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Trading&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Memory&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Press Your Luck&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Area Movement&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Worker Placement&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Pick-up and Deliver&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Crayon Rail System&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Paper-and-Pencil&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Pattern Building&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Role Playing&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Roll / Spin and Move&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Variable Phase Order&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Voting&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Simulation&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Pattern Recognition&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Simultaneous Action Selection&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Betting/Wagering&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Grid Movement&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Variable Player Powers&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Area Control / Area Influence&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Dice Rolling&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Route/Network Building&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Campaign / Battle Card Driven&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Chit-Pull System&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Partnerships&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Auction/Bidding&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Commodity Speculation&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Modular Board&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Acting&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Deck / Pool Building&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Action Point Allowance System&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Secret Unit Deployment&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Card Drafting&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Line Drawing&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Tile Placement&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Hex-and-Counter&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Hand Management&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Point to Point Movement&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Area-Impulse&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Time Track&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Stock Holding&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Storytelling&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Set Collection&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Co-operative Play&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Trick-taking&quot;)
+            (has-tag game &quot;mechanic&quot; &quot;Area Enclosure&quot;)
+          ]})</pre></td></tr><tr><td class="docs"><p>compile full vector data into a matrix</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def game-ids
+  (into [] 
+    (map 
+      (fn [game] (:bgg_id game))
+      (model/find-all))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def full-data (matrix (into [] (map 
+  (fn [game] (:data game)) 
+  (map to-vector
+    (model/find-all))))))</pre></td></tr><tr><td class="docs"><p>perform pca on the data</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def pca (principal-components full-data))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def components (:rotation pca))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def pc (into [] (map 
+    (fn [i] 
+      (sel components :cols i))
+    (range 10))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def x (into [] (map 
+    (fn [i] 
+      (mmult full-data (nth pc i)))
+    (range 10))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def data-2d (dataset 
+  [&quot;id&quot; &quot;x1&quot; &quot;x2&quot;]
+  (trans (matrix [game-ids (nth x 0) (nth x 1)]))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn data-convert [] 
+  (dorun 
+    ;; add the data to the mongo db
+    (mc/remove &quot;network_data&quot;)
+    (dorun (map 
+        (fn [id data] 
+          (mc/insert &quot;network_data&quot; { :id id :data (into [] data) }))
+        game-ids 
+        (trans (matrix x))))
+    ;; plot the data in 2D
+    ;(view (scatter-plot (nth x 0) (nth x 1) 
+    ;                    :x-label &quot;PC1&quot; 
+    ;                    :y-label &quot;PC2&quot; 
+    ;                    :title &quot;Game Data&quot;))
+    ;; view a table of the dataset
+    ;(view ($order [:x1 :x2] :desc data-2d))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.flash" name="board-ultimatum.flash"><h1 class="project-name">board-ultimatum.flash</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Wrap noir's flash functionality with some helper functions to simplify the
   default use case of an alert flash.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.flash
   (:refer-clojure :exclude [get])
@@ -3506,7 +3813,62 @@ applications "model" (which is mostly mongo).</p>
   {&quot;Register&quot; expert-register &quot;Log In&quot; expert-login})</pre></td></tr><tr><td class="docs"><p>Process the given attempt by either creating a new user or logging them in.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn process-login-attempt
   [{:keys [action identity]}]
-  ((get attempt-action-to-function action) identity))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.common" name="board-ultimatum.views.common"><h1 class="project-name">board-ultimatum.views.common</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+  ((get attempt-action-to-function action) identity))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.attr-display" name="board-ultimatum.views.attr-display"><h1 class="project-name">board-ultimatum.views.attr-display</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.attr-display
+  (:use [hiccup.element]
+        [hiccup.form]
+        [noir.core]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn pretty-hours [length]
+  (let [hours (/ (float length) 60)]
+    (if (== hours (int hours))
+      (str (int hours) &quot; hours&quot;)
+      (str hours &quot; hours&quot;))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn game-length [length]
+  (cond
+   (&gt;= length 120) (pretty-hours length)
+   :else (str length &quot; minutes&quot;)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn num-players [min-players max-players]
+  (cond
+   (= min-players max-players) (str max-players &quot; player&quot;)
+   :else (str min-players &quot;-&quot; max-players &quot; players&quot;)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn format-score [score]
+  (format &quot;%+.1f&quot; (float score)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpartial colored-attr [value freq color]
+  [:span value
+   [:span {:style (str &quot;color: &quot; color &quot;;&quot;)}
+    &quot; (&quot; freq &quot;)&quot;]])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn format-freq [value freq]
+  (cond
+   (&gt; freq 150) (colored-attr value freq &quot;#007FCF&quot;)
+   (&gt; freq 100) (colored-attr value freq &quot;#B751C2&quot;)
+   (&gt; freq 60)  (colored-attr value freq &quot;#D97C75&quot;)
+   :else        (colored-attr value freq &quot;#CFA176&quot;)))</pre></td></tr><tr><td class="docs"><p>Build 3-state preference selection buttons</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial build-tri-state [{:keys [value frequency description]} attr]
+  [:div {:style &quot;float:left;margin:10px 20px 0px 0px;&quot;}
+   [:div {:class (clojure.string/join &quot; &quot; [&quot;btn-group&quot; &quot;tri-state&quot; value])}
+    [:button {:type &quot;button&quot; :class &quot;btn btn-mini btn-danger&quot;} [:i {:class &quot;icon-thumbs-down&quot;}]]
+    [:button {:type &quot;button&quot; :data-title &quot;More Info&quot; :data-content description :class &quot;btn btn-mini option&quot;} (format-freq value frequency )]
+    [:button {:type &quot;button&quot; :class &quot;btn btn-mini btn-success&quot;} [:i {:class &quot;icon-thumbs-up&quot;}]]]
+   [:input {:type &quot;hidden&quot; :name (str attr &quot;[&quot; value &quot;]&quot;) :value &quot;0&quot;}]])</pre></td></tr><tr><td class="docs"><p>Build radio preference selection buttons</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial build-radio-buttons [name-value form-name]
+  [:div
+    [:div {:class &quot;btn-group radio-buttons&quot; :data-toggle &quot;buttons-radio&quot;}
+      (map 
+        #(identity [:button {:type &quot;button&quot; :value (val %) :class &quot;btn&quot;} (key %)])
+        name-value)]
+    [:input {:type &quot;hidden&quot; :name form-name :value }]])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpartial player-checkboxes [num]
+  [:div.selection
+   [:label.checkbox
+    [:div.icon.player]
+    (check-box &quot;num-players[]&quot; false num)
+    [:div.bottom-label (str num &quot; Players&quot;)]]])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpartial time-checkboxes [num]
+  [:div.selection
+   [:label.checkbox
+    [:div.icon.time]
+    (check-box &quot;length[]&quot; false num)
+    [:div.bottom-label (game-length num)]]])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.common" name="board-ultimatum.views.common"><h1 class="project-name">board-ultimatum.views.common</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.common
   (:require [clojure.string :as string]
             [board-ultimatum.flash :as flash])
@@ -3539,9 +3901,7 @@ applications "model" (which is mostly mongo).</p>
   ([type message] (alert type type message true)))</pre></td></tr><tr><td class="docs"><p>Takes a collection of error messages and formats it into html.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial format-errors
   [errs]
-  (when-not (empty? errs)
-    [:div.help-block
-     [:ul (map #(html [:li %]) errs)]]))</pre></td></tr><tr><td class="docs"><h2>Layouts</h2>
+  (when (seq errs) [:div.help-block [:ul (map #(html [:li %]) errs)]]))</pre></td></tr><tr><td class="docs"><h2>Layouts</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Base layout used by the web app.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial base-layout [&amp; content]
   (html5
@@ -3568,10 +3928,12 @@ applications "model" (which is mostly mongo).</p>
        [:a.brand.dropdown-toggle {:href &quot;/&quot;} site-title]
        [:div.nav-collapse
         [:ul.nav
-         [:li.divider-vertical]
          [:li (link-to &quot;/recommend&quot; &quot;Recommend&quot;)]
-         [:li (link-to &quot;/similar&quot; &quot;Similar Games&quot;)]
+         [:li (link-to &quot;/similar&quot; &quot;Similar Games&quot;)]]
+        [:ul.nav.pull-right
          [:li (link-to &quot;/expert&quot; &quot;Experts&quot;)]
+         [:li (link-to &quot;/tags&quot; &quot;Edit Tags&quot;)]
+         [:li.divider-vertical]
          [:li [:a
                {:href &quot;http://drsnjm.github.com/board-ultimatum&quot;}
                &quot;Documentation&quot;]]
@@ -3603,7 +3965,7 @@ applications "model" (which is mostly mongo).</p>
         [board-ultimatum.session]
         [hiccup core element]
         [clojure.walk :only [keywordize-keys]]
-        [hiccup.form :only [form-to label text-field submit-button]]))</pre></td></tr><tr><td class="docs">
+        [hiccup.form :only [select-options form-to label text-field submit-button]]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(pre-route [:any &quot;/expert/*&quot;] {:as req}
            (when-not (expert-logged-in?)
              (flash/put! :warning &quot;You must log in before accessing this
@@ -3663,14 +4025,17 @@ attempt and redirects back to the GET page.</p>
   (resp/redirect &quot;/expert&quot;))</pre></td></tr><tr><td class="docs"><p>grid-cols must divide 12 for use with CSS grid system.</p>
 </td><td class="codes"><pre class="brush: clojure">(def grid-cols 4)
 (def grid-rows 3)
-(def grid-size (* grid-cols grid-rows))</pre></td></tr><tr><td class="docs"><p>Takes a collection of games and returns a grid-cols by grid-rows 2-D vector.</p>
+(def grid-size (* grid-cols grid-rows))</pre></td></tr><tr><td class="docs"><p>Takes a collection of games and returns a 2-D vector of games where each row
+  is of length grid-cols.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn games-to-grid
   [games]
-  {:pre [(= (count games) grid-size)]
-   :post [(= (count %) grid-rows) (= (count (first %)) grid-cols)]}
-  (for [y (range grid-rows)]
-    (for [x (range grid-cols)]
-      (nth games (+ (* y grid-cols) x)))))</pre></td></tr><tr><td class="docs"><p>Takes a map representing a game and returns markup for a game including its
+  (let [num-games (count games)
+        num-rows (int (Math/ceil (/ num-games grid-cols)))
+        remainder (mod num-games grid-cols)
+        last-row-size (if (zero? remainder) grid-cols remainder)]
+    (for [y (range num-rows)]
+      (for [x (range (if (= (dec num-rows) y) last-row-size grid-cols))]
+        (nth games (+ (* y grid-cols) x))))))</pre></td></tr><tr><td class="docs"><p>Takes a map representing a game and returns markup for a game including its
   title and thumbnail.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial game-thumb
   [{:keys [bgg_id name thumbnail]}]
@@ -3707,7 +4072,7 @@ attempt and redirects back to the GET page.</p>
   [bgg-id]
   (let [{:keys [name thumbnail]} (model/get-game-by-id bgg-id
                                                        [:name :thumbnail])]
-    [:div.compare-game.span4
+    [:div.game.span4
      [:div.image-wrapper
       [:img.img-rounded {:src thumbnail}]]
      [:div.title-wrapper
@@ -3715,19 +4080,22 @@ attempt and redirects back to the GET page.</p>
   the recommendation quality of the pair.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial compare-games
   [index [game-a game-b]]
-  [:div.rate-games.row-fluid {:id (str &quot;rate-games&quot; index)}
-   (compare-game game-a)
-   [:div.rating.span4 {:id (str &quot;rating&quot; index)}
-    [:input {:id (str &quot;rating-input&quot; index) :type &quot;hidden&quot;
-             :name (str game-a &quot;-&quot; game-b) :value 500}]
-    [:h4 &quot;Recommendation Quality&quot;]
-    [:div.rating-slider {:id (str &quot;rating-slider&quot; index)}]]
-   (compare-game game-b)])</pre></td></tr><tr><td class="docs"><p>The main body of /expert/compare when ids is greater than 1. Provides an
+  [:div.row-fluid {:id (str &quot;rate-games&quot; index)}
+   [:div.rate-games
+    (compare-game game-a)
+    [:div.rating.span4 {:id (str &quot;rating&quot; index)}
+     [:div.rating-slider {:id (str &quot;rating-slider&quot; index)}
+      [:select {:name (str game-a &quot;-&quot; game-b)}
+       (select-options
+         [[&quot;Bad&quot; 1] [&quot;&quot; 1.5] [&quot;Poor&quot; 2] [&quot;&quot; 2.5] [&quot;OK&quot; 3] [&quot;&quot; 3.5] [&quot;Good&quot; 4]
+          [&quot;&quot; 4.5] [&quot;Great&quot; 5]] 3)]]]
+    (compare-game game-b)]])</pre></td></tr><tr><td class="docs"><p>The main body of /expert/compare when ids is greater than 1. Provides an
   interface for rating the quality of each game pair combination.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial expert-compare
   [ids]
   (common/with-javascripts (concat common/*javascripts*
                                    [&quot;/js/jquery-ui-slider.min.js&quot;
+                                    &quot;/js/selectToUISlider.jQuery.min.js&quot;
                                     &quot;/js/expert-compare.js&quot;])
     (common/layout
       [:div.page-header
@@ -3763,7 +4131,7 @@ attempt and redirects back to the GET page.</p>
                            [[123 567] [234]])))}
   [games]
   [(map input-game-mapper (filter input-game-filter games))
-   (map input-game-mapper (filter (complement input-game-filter) games))])</pre></td></tr><tr><td class="docs"><p>Take selected games from an expert and if they selected 2 or more render an
+   (map input-game-mapper (remove input-game-filter games))])</pre></td></tr><tr><td class="docs"><p>Take selected games from an expert and if they selected 2 or more render an
 interface for comparing them.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/expert/select&quot;] {:keys [games]}
   (let [[selected-ids unfamiliar-ids] (convert-input-games games)]
@@ -3773,7 +4141,7 @@ interface for comparing them.</p>
       (expert-compare selected-ids))))</pre></td></tr><tr><td class="docs"><p>This route specifies how to take the results of recommendation quality
 ratings provided by an expert.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/expert/compare&quot;] {:as relationships}
-  (when-not (empty? relationships)
+  (when (seq relationships)
     (relationship/add-many
       (into {} (map (fn [[pair-str value]]
                       [(map #(Integer/parseInt %)
@@ -3795,46 +4163,17 @@ ratings provided by an expert.</p>
 
            [:h3 &quot;Pages&quot;]
            [:p (link-to &quot;/recommend&quot; &quot;Recommend V1&quot;)]
-           [:p (link-to &quot;/recommend_alt&quot; &quot;Recommend Alt&quot;)]
+           [:p (link-to &quot;/tags&quot; &quot;Tag Administration&quot;)]
            [:p (link-to &quot;/expert&quot; &quot;Expert Interface&quot;)]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.recommend" name="board-ultimatum.views.recommend"><h1 class="project-name">board-ultimatum.views.recommend</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.recommend
   (:require [board-ultimatum.views.common :as common]
             [board-ultimatum.engine.model :as model]
+            [board-ultimatum.engine.tag :as tag]
+            [board-ultimatum.views.attr-display :as attr-display]
+            [board-ultimatum.views.results :as results]
             [clojure.string :as string])
   (:use [noir.core :only [defpage defpartial]]
-        [hiccup.element]
-        [hiccup.form]
-        [clojure.pprint]))</pre></td></tr><tr><td class="docs"><p>Build 3-state preference selection buttons</p>
-</td><td class="codes"><pre class="brush: clojure">(defpartial build-tri-state [name attr form-name]
-  [:div {:style &quot;float:left;margin:10px 20px 0px 0px;&quot;}
-    [:div {:class &quot;btn-group tri-state&quot;}
-      [:button {:type &quot;button&quot; :class &quot;btn btn-mini btn-danger&quot;} [:i {:class &quot;icon-thumbs-down&quot;}]]
-      [:button {:type &quot;button&quot; :class &quot;btn btn-mini option&quot;} name]
-      [:button {:type &quot;button&quot; :class &quot;btn btn-mini btn-success&quot;} [:i {:class &quot;icon-thumbs-up&quot;}]]]
-    [:input {:type &quot;hidden&quot; :name (str attr &quot;[&quot; form-name &quot;]&quot;) :value &quot;0&quot;}]])</pre></td></tr><tr><td class="docs"><p>Build radio preference selection buttons</p>
-</td><td class="codes"><pre class="brush: clojure">(defn build-radio-buttons [name-value form-name]
-  [:div
-    [:div {:class &quot;btn-group radio-buttons&quot; :data-toggle &quot;buttons-radio&quot;}
-      (map 
-        #(identity [:button {:type &quot;button&quot; :value (val %) :class &quot;btn&quot;} (key %)])
-        name-value)]
-    [:input {:type &quot;hidden&quot; :name form-name :value }]])</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn game-length [length]
-  (cond
-   (&gt;= length 120) (str (/ length 60) &quot; hours&quot;)
-   :else (str length &quot; minutes&quot;)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn player-checkboxes [num]
-  [:div.selection
-   [:label.checkbox
-    [:div.icon.player]
-    (check-box &quot;num-players[]&quot; false num)
-    [:div.bottom-label (str num &quot; Players&quot;)]]])</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn time-checkboxes [num]
-  [:div.selection
-   [:label.checkbox
-    [:div.icon.time]
-    (check-box &quot;length[]&quot; false num)
-    [:div.bottom-label (game-length num)]]])</pre></td></tr><tr><td class="docs"><p>Page for querying the logic based recommendation engine.</p>
+        [clojure.pprint]))</pre></td></tr><tr><td class="docs"><p>Page for querying the logic based recommendation engine.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage &quot;/recommend&quot; []
     (common/with-javascripts (cons &quot;/js/recommend.js&quot; common/*javascripts*)
       (common/layout
@@ -3856,27 +4195,27 @@ ratings provided by an expert.</p>
               [:input {:type &quot;hidden&quot; :name &quot;length-active&quot; :value &quot;false&quot;}]
               [:h3 &quot;Game Length&quot;]
               [:p &quot;This is a description of this field&quot;]
-              (map time-checkboxes [20 30 45 60 90 120 180 240 300])]
+              (map attr-display/time-checkboxes [20 30 45 60 90 120 180 240 300])]
 
             [:div {:id &quot;input-num-players&quot; :class &quot;param well well-small&quot;}
               [:input {:type &quot;hidden&quot; :name &quot;num-players-active&quot; :value &quot;false&quot;}]
               [:h3 &quot;Number of Players&quot;]
               [:p &quot;This is a description of this field&quot;]
-              (map player-checkboxes [&quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot; &quot;6&quot; &quot;7+&quot;])]
+              (map attr-display/player-checkboxes [&quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; &quot;5&quot; &quot;6&quot; &quot;7+&quot;])]
 
             [:div {:id &quot;input-mechanics&quot; :class &quot;param well well-small&quot;}
               [:input {:type &quot;hidden&quot; :name &quot;mechanics-active&quot; :value &quot;false&quot;}]
               [:h3 &quot;Mechanics&quot;]
               [:p &quot;Select gameplay mechanics that you like or dislike&quot;]
-              (map #(build-tri-state % &quot;mechanics&quot; %)
-                   model/most-popular-mechanics)]
+              (map #(attr-display/build-tri-state % &quot;mechanics&quot;)
+                   (tag/mechanics))]
 
             [:div {:id &quot;input-categories&quot; :class &quot;param well well-small&quot;}
               [:input {:type &quot;hidden&quot; :name &quot;categories-active&quot; :value &quot;false&quot;}]
               [:h3 &quot;Categories&quot;]
               [:p &quot;Select gameplay categories that you like or dislike&quot;]
-              (map #(build-tri-state % &quot;categories&quot; %)
-                   model/most-popular-categories)]
+              (map #(attr-display/build-tri-state % &quot;categories&quot;)
+                   (tag/categories))]
 
            
             [:div {:id &quot;input-weight&quot; :class &quot;param well well-small&quot;}
@@ -3884,38 +4223,12 @@ ratings provided by an expert.</p>
               [:h3 &quot;Weight&quot;]
               [:p &quot;This is a description of this field&quot;]
               [:div {:class &quot;btn-group&quot; :data-toggle &quot;buttons-radio&quot;}
-              (build-radio-buttons (array-map :Light &quot;1&quot; :Medium-Light &quot;2&quot;
-                                    :Medium &quot;3&quot; :Medium-Heavy &quot;4&quot;
-                                    :Heavy &quot;5&quot;) &quot;weight&quot;)]]        
-            [:button {:type &quot;submit&quot; :class &quot;btn&quot;} &quot;Submit&quot;]]]])))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn num-players [min-players max-players]
-  (cond
-   (= min-players max-players) (str max-players &quot; Player&quot;)
-   :else (str min-players &quot;-&quot; max-players &quot; Players&quot;)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn format-score [score]
-  (format &quot;%+.1f&quot; (float score)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn pp-factors [game]
-  (interpose &quot;&lt;br/&gt;&quot;
-             (map #(str (:reason %) &quot;: &quot;
-                        (format-score (:score %)))
-                  (:factors game))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn display-game [i game]
-  [:tr.game
-   [:td (+ 1 i) &quot;.&quot;]
-   [:td (image (:thumbnail game))]
-   [:td (link-to (str &quot;http://boardgamegeek.com/boardgame/&quot; (:bgg_id game) &quot;/&quot;)
-             (:rank game) &quot;. &quot;)]
-   [:td.name
-    [:div.game-name (:name game)]
-    [:ul
-     (map (fn [e] [:li e])
-          (concat (model/mechanics game)
-                  (model/categories game)))]]
-   [:td (game-length (:length game))]
-   [:td (num-players (:min_players game) (:max_players game))]
-   [:td (:min_age game) &quot;+&quot;]
-   [:td (format-score (:score game)) &quot; points&quot;]
-   [:td.why (pp-factors game)]])</pre></td></tr><tr><td class="docs"><p>Should probaby do this filtering in js</p>
+              (attr-display/build-radio-buttons 
+                (array-map :Light &quot;1&quot; :Medium-Light &quot;2&quot;
+                           :Medium &quot;3&quot; :Medium-Heavy &quot;4&quot;
+                           :Heavy &quot;5&quot;) 
+                &quot;weight&quot;)]]    
+            [:button {:type &quot;submit&quot; :class &quot;btn btn-submit&quot;} &quot;Submit&quot;]]]])))</pre></td></tr><tr><td class="docs"><p>Should probaby do this filtering in js</p>
 </td><td class="codes"><pre class="brush: clojure">(defn sanitize-query-params [attrs]
   (-&gt;&gt; {}
        ((fn [hsh]
@@ -3933,7 +4246,11 @@ ratings provided by an expert.</p>
        ((fn [hsh]
            (if (Boolean/valueOf (:num-players-active attrs))
              (assoc hsh :num-players
-                    (map #(Integer/parseInt %) (:num-players attrs)))
+                    (flatten
+                     (map #(if (= % &quot;7+&quot;)
+                             (range 7 100)
+                             (Integer/parseInt %))
+                          (:num-players attrs))))
            hsh)))
        ((fn [hsh]
            (if (Boolean/valueOf (:length-active attrs))
@@ -3944,7 +4261,7 @@ ratings provided by an expert.</p>
            (if (Boolean/valueOf (:weight-active attrs))
              (assoc hsh :weight (:weight attrs))
              hsh)))))</pre></td></tr><tr><td class="docs"><p>messy, but just debug info, so who cares?</p>
-</td><td class="codes"><pre class="brush: clojure">(defn display-query-params [[attr-type values]]
+</td><td class="codes"><pre class="brush: clojure">(defpartial display-query-params [[attr-type values]]
   [:li attr-type &quot;: &quot;
    (if (vector? (first values))
      [:ul
@@ -3955,26 +4272,200 @@ ratings provided by an expert.</p>
            values)]
      (string/join &quot;, &quot; values))])</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/recommend&quot;] {:as params}
+  (common/with-javascripts
+    (concat common/*javascripts* [&quot;/js/bootstrap.js&quot; &quot;/js/results.js&quot;])
+    (common/layout
+     [:h1 &quot;Have fun playing!&quot;]
+     [:h3 &quot;Query Params&quot;]
+     [:div.well {:style &quot;overflow:hidden;&quot;}
+      [:ul.query-params
+       (map display-query-params (sanitize-query-params params))]]
+     (results/build-results-list
+      (take 30 (model/find-games
+                (sanitize-query-params params)))
+      true
+      true
+      false))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.results" name="board-ultimatum.views.results"><h1 class="project-name">board-ultimatum.views.results</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Namespace of html generating code for displaying games on a results page.
+  External users of this namespace should only need to call build-results-list.</p>
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.results
+  (:require [board-ultimatum.engine.model :as model]
+            [board-ultimatum.views.attr-display :as attr-display]
+            [clojure.string :as string])
+  (:use [hiccup.element]
+        [noir.core]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn game-weight-text [weight]
+  (cond
+    (&lt; weight 1.5) &quot;Light&quot;
+    (&lt; weight 2.5) &quot;Medium Light&quot;
+    (&lt; weight 3.5) &quot;Medium&quot;
+    (&lt; weight 4.5) &quot;Medium Heavy&quot;
+    :else &quot;Heavy&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpartial pp-factor [factor]
+  [:div {:style &quot;clear:both;&quot;}
+    [:div {:style &quot;float:left;&quot;} (:reason factor)]
+    [:div {:style &quot;float:right;&quot;} (attr-display/format-score (:score factor))]])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpartial pp-factors [game]
+  (map pp-factor (:factors game))
+  [:div {:style &quot;clear:left;border-top: 1px solid #666666;padding: 5px 0px;&quot;}
+    [:b
+      [:div {:style &quot;float:left;&quot;} &quot;Total score&quot;]
+      [:div {:style &quot;float:right;&quot;} (attr-display/format-score (:score game))]]])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpartial display-game [i game disp-recom disp-explanation rating]
+  [:div.well.game {:style &quot;height:150px;position:relative;&quot;}
+    (if (and disp-explanation (not= (.size (:factors game)) 0))
+      [:div
+        [:div.pop-trigger {:style &quot;position:absolute;right:5px;top:2px;float:left;display:none;&quot;
+             :rel &quot;popover&quot; :data-placement &quot;left&quot; :data-trigger &quot;hover&quot;
+             :data-title &quot;How did this game match up to your preferences?&quot;}
+          [:i.icon-question-sign {:style &quot;margin-left:10px;&quot;}]]
+        [:div.pop-content {:style &quot;display:none;&quot;} (pp-factors game)]])
+    [:div {:style &quot;width:200px;float:left;&quot;}
+      [:img {:src (:thumbnail game) :style &quot;margin: 0px auto;display: block;&quot;}]]
+    [:table {:style &quot;float:left;margin-left:20px;width:75%;line-height:normal;&quot;}
+      [:tr {:style &quot;height:50px;border-bottom:1px solid black;&quot;}
+        [:td {:colspan &quot;5&quot;}
+          [:div {:style &quot;font-size:34px;float:left;&quot;}
+            (:name game)
+            (when-not (nil? rating) (str &quot; - &quot; (format &quot;%.1f&quot; (* 100 rating)) &quot;% Match&quot;))]
+          [:div {:style &quot;float:right;&quot;} 
+            (link-to
+              (str &quot;http://boardgamegeek.com/boardgame/&quot; (:bgg_id game) &quot;/&quot;)
+              &quot;BGG Rank: &quot; (:rank game) &quot; &quot;
+              [:i {:class &quot;icon-share&quot;}])]]]
+      [:tr {:style &quot;height:80px;&quot;}
+        [:td {:style &quot;width:50%;&quot;}
+          (map #(identity [:span {:style &quot;width:50%;float:left;margin-bottom:2px;&quot;} &quot;&amp;#149; &quot; %])
+            (concat (model/mechanics game)
+              (model/categories game)))]
+        [:td {:style &quot;width:12%;&quot;}
+          (let [length-disp
+            (string/split
+              (attr-display/game-length (:length game))
+              #&quot;\s+&quot;)]
+            [:div {:style &quot;text-align:center;border-left:1px solid black;&quot;}
+              [:div {:style &quot;font-size:30px;&quot;} (first length-disp)]
+              [:div (second length-disp)]])]
+        [:td {:style &quot;width:12%;&quot;}
+          (let [num-pl-disp
+            (string/split 
+              (attr-display/num-players (:min_players game) (:max_players game))
+              #&quot;\s+&quot;)]
+            [:div {:style &quot;text-align:center;border-left:1px solid black;&quot;}
+              [:div {:style &quot;font-size:30px;&quot;} (first num-pl-disp)]
+              [:div (second num-pl-disp)]])]
+        [:td {:style &quot;width:12%;&quot;}
+          [:div {:style &quot;text-align:center;border-left:1px solid black;&quot;}
+            [:div {:style &quot;font-size:30px;&quot;} (:min_age game) &quot;+&quot;]
+            [:div &quot;years old&quot;]]]
+        [:td {:style &quot;width:14%;&quot;}
+          [:div {:style &quot;text-align:center;border-left:1px solid black;&quot;}
+            (let [text (string/split (game-weight-text (:weight_average game)) #&quot;\s+&quot;)]
+              (if
+                (&lt; 1 (.size text))
+                [:b (map #(identity [:div {:style &quot;font-size:16px;&quot;} %]) text)]
+                (identity [:div {:style &quot;font-size:30px;&quot;} (first text)])))
+            [:div &quot;weight&quot;]]]]]
+    [:div.open-recom {:style &quot;height:150px;width:20px;float:right;display:none;&quot;}
+      [:i.icon-chevron-right {:style &quot;position:absolute;top:45%;&quot;}]]])</pre></td></tr><tr><td class="docs"><p>Send true for disp-recom, disp-explanation if you wish to display recommendations
+and explanations on games. Ratings should be nil if no ratings are to be displayed.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial build-results-list [games disp-recom disp-explanation ratings]
+    (map display-game
+      (iterate inc 1)
+      games
+      (iterate identity disp-recom)
+      (iterate identity disp-explanation)
+      (if ratings
+        ratings
+        (cycle [nil]))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.similar" name="board-ultimatum.views.similar"><h1 class="project-name">board-ultimatum.views.similar</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.similar
+  (:require [board-ultimatum.views.common :as common]
+            [board-ultimatum.engine.model :as model]
+            [board-ultimatum.views.results :as results]
+            [board-ultimatum.flash :as flash]
+            [clojure.string :as string]
+            [clojure.data.json :as json])
+  (:use [noir.core :only [defpage defpartial]]
+        [noir.response :only [redirect]]
+        [hiccup.element]
+        [hiccup.form]
+        [clojure.pprint]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn names-to-json []
+  (json/write-str (map (fn [game] (:name game)) (model/find-all))))</pre></td></tr><tr><td class="docs"><p>Page for searching for "similar" games</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage &quot;/similar&quot; []
+    (common/with-javascripts (cons &quot;/js/similar.js&quot; common/*javascripts*)
+      (common/layout
+        [:script {:type &quot;text/javascript&quot;} (str &quot;var taValues = &quot; (names-to-json) &quot;;&quot;)]
+        [:h1 &quot;Liked a game?&quot;]
+        [:h2 &quot;Enter the name below to find more that you will enjoy!&quot;]
+        [:div#recommend.row-fluid
+          [:form#game-params {:action &quot;/similar&quot; :method &quot;post&quot;}
+            [:div.input-append
+              [:input#game-name {:type &quot;text&quot; :data-provide &quot;typeahead&quot; :name &quot;game-name&quot;}]
+              [:button {:type &quot;submit&quot; :class &quot;btn&quot;} &quot;Search&quot;]]]])))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/similar&quot;] {:as params}
+    (if
+      (nil? (model/get-id-by-name (:game-name params)))
+        (do (flash/put! :error (str (:game-name params) &quot; not found in database&quot;)) 
+            (redirect &quot;/similar&quot;))
+      (common/with-javascripts (cons &quot;/js/similar.js&quot; common/*javascripts*)
+        (common/layout      
+          [:h1 &quot;Game Results&quot;]
+          [:h2 &quot;Based on \&quot;&quot; (:game-name params) &quot;\&quot;&quot;]
+          (let [game-ids
+            (sort-by :rating &gt;
+              (model/get-similar 
+                (model/get-id-by-name 
+                  (:game-name params))))]
+            (results/build-results-list
+              (map #(model/get-game-by-id (:game_b %)) game-ids)
+              false
+              false
+              (map :rating game-ids)))
+          [:h4 [:a {:href &quot;/similar&quot;} &quot;Search again&quot;]]))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#board-ultimatum.views.tags" name="board-ultimatum.views.tags"><h1 class="project-name">board-ultimatum.views.tags</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns board-ultimatum.views.tags
+  (:require [board-ultimatum.views.common :as common]
+            [board-ultimatum.engine.tag :as tag])
+  (:use [noir.core]
+        [hiccup.core]
+        [hiccup.element]
+        [hiccup.form]
+        [clojure.pprint]
+        [monger.result]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpartial tag-item [{:keys [value bgg_id description group subtype pos-influence neg-influence frequency]}]
+    (with-group subtype
+      (with-group bgg_id
+        [:tr
+         [:td value]
+         [:td (text-area :description description)]
+         [:td (text-field :group group)]
+         [:td (text-field :pos-influence pos-influence)]
+         [:td (text-field :neg-influence neg-influence)]
+         [:td frequency]])))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpartial subtype-table [subtype]
+  [:h3 (clojure.string/capitalize subtype)]
+  [:table.table.table-striped.table-condensed
+   [:thead
+    [:th &quot;Name&quot;]
+    [:th &quot;Description&quot;]
+    [:th &quot;Group&quot;]
+    [:th &quot;Positive Influence&quot;]
+    [:th &quot;Negative Influence&quot;]
+    [:th &quot;Frequency&quot;]]
+   [:tbody
+    (map tag-item (tag/tags-by-subtype subtype))]])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpage &quot;/tags&quot; []
   (common/layout
-   [:h1 &quot;Have fun playing!&quot;]
-   [:h3 &quot;Query Params&quot;]
-   [:div.well
-    [:ul.query-params (map
-          display-query-params
-          (sanitize-query-params params))]]
-   [:table.games.table.table-striped
-    [:thead
-     [:th &quot;#&quot;]
-     [:th &quot;Thumb&quot;]
-     [:th &quot;BGG Rank&quot;]
-     [:th &quot;Name&quot;]
-     [:th &quot;Length&quot;]
-     [:th &quot;Num Players&quot;]
-     [:th &quot;Min Age&quot;]
-     [:th &quot;Score&quot;]
-     [:th &quot;Why?&quot;]]
-    [:tbody
-     (map-indexed display-game
-          (model/find-games
-           (sanitize-query-params params)))]]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+   [:h1 &quot;Tag Administration&quot;]
+   (form-to [:post &quot;/tags&quot;]
+            (map subtype-table [&quot;mechanic&quot; &quot;category&quot;])
+            (submit-button &quot;Save Corrections&quot;))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn update-tag [subtype params]
+  (doall (map (fn [[bgg-id data]]
+                (tag/update subtype (Integer/parseInt bgg-id) data))
+              (subtype params)))  )</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/tags&quot;] [:as params]
+  (do
+    (update-tag :mechanic params)
+    (update-tag :category params)
+    (render &quot;/tags&quot;)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
        SyntaxHighlighter.all()</script></body></html>
