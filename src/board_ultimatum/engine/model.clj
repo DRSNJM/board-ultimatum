@@ -244,3 +244,7 @@
 (defn get-similar [id]
   "Get the ids of all games similar to that provided"
   (mc/find-maps "network_output" {:game_a id}))
+
+(defn get-ranked-similar [id]
+  (sort-by :rating >
+    (get-similar id)))
