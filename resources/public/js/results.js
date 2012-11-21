@@ -9,4 +9,8 @@ jQuery(document).ready(function ($) {
     function() { $(this).find(".pop-trigger, .open-recom").fadeIn("fast"); },
     function() { $(this).find(".pop-trigger, .open-recom").fadeOut("fast"); }
   );
+  $('.open-recom').click(function() {
+    $(this).children('.icon-chevron-down, .icon-chevron-up').toggle();
+    $(this).parents('.game').children('.recom').slideToggle('fast');
+  });
 });

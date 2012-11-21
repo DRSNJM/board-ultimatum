@@ -113,7 +113,7 @@
 
 (defpage [:post "/recommend"] {:as params}
   (common/with-javascripts
-    (concat common/*javascripts* ["/js/bootstrap.js" "/js/results.js"])
+    (concat common/*javascripts* ["/js/bootstrap.js" "/js/results.js" "/js/spin.js"])
     (common/layout
      [:h1 "Have fun playing!"]
      [:h3 "Query Params"]
