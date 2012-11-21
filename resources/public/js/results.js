@@ -36,15 +36,19 @@ jQuery(document).ready(function ($) {
           gameWell.find('.spin').remove();
 
           var games = jQuery.parseJSON(response)["games"];
-          for (var i = 0; i < games.length; i++) {
-            var game = games[i];
-            var $clone = $('#recom-template').clone();
-            $clone.removeAttr('id');
-            $clone.find('img').attr('src', game['thumb']);
-            $clone.find('.title').text(game['name']);
-            gameWell.find('.similar').append($clone);
+          if (games.length > 0) {
+            for (var i = 0; i < games.length; i++) {
+              var game = games[i];
+              var $clone = $('#recom-template').clone();
+              $clone.removeAttr('id');
+              $clone.find('img').attr('src', game['thumb']);
+              $clone.find('.title').text(game['name']);
+              gameWell.find('.similar').append($clone);
+            }
+            gameWell.find('.similar').children().fadeIn('slow');
+          } else {
+            gameWell.find('.similar').text("No recommendations have been determined for this game.")
           }
-          gameWell.find('.similar').children().fadeIn('slow');
         },
         error: function(jqXHR, textStatus, errorThrown) {
           gameWell.find('.similar').text('There was an error looking up similar games: ' + errorThrown)
