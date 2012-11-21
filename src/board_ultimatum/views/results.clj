@@ -10,15 +10,19 @@
 
 (def num-top-similar-games 3)
 
-(defn similar-game-elements [idx game]
-  (let [prefix (str "g" idx)]
-    {(keyword (str prefix "name")) (:name game)
-     (keyword (str prefix "thumb")) (:thumbnail game)}))
+(defn format-rating [rating]
+  (format "%.1f" (* 100 rating)))
 
+(defn similar-game-elements [idx game]
+    {:name (:name game)
+     :thumb (:thumbnail game)
+     :rating (format-rating (:rating game))})
+
+;; AJAX handler for returning the top similar games
 (defpage [:post "/top-similar"] {:keys [bggID]}
   (generate-string 
     (let [games (model/get-ranked-similar-games (Integer/parseInt bggID) num-top-similar-games)]
-      (apply merge (map-indexed similar-game-elements games)))))
+      {:games (apply list (map-indexed similar-game-elements games))})))
 
 (defn game-weight-text [weight]
   (cond
@@ -103,7 +107,7 @@
           [:div {:style "font-size:34px;float:left;"}
             (:name game)
             (let [rating (:rating game)]
-              (when-not (nil? rating) (str " - " (format "%.1f" (* 100 rating)) "% Match")))]
+              (when-not (nil? rating) (str " - " (format-rating rating) "% Match")))]
           [:div {:style "float:right;"} 
             (link-to
               (str "http://boardgamegeek.com/boardgame/" (:bgg_id game) "/")
