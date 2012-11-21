@@ -15,10 +15,10 @@
     {(keyword (str prefix "name")) (:name game)
      (keyword (str prefix "thumb")) (:thumbnail game)}))
 
-(defpage [:post "/top-similar"] {:keys [bggID]} 
+(defpage [:post "/top-similar"] {:keys [bggID]}
   (generate-string 
-    (let [games (take num-top-similar-games (model/get-ranked-similar bggID))]
-      (merge (map-indexed similar-game-elements games)))))
+    (let [games (model/get-ranked-similar-games (Integer/parseInt bggID) num-top-similar-games)]
+      (apply merge (map-indexed similar-game-elements games)))))
 
 (defn game-weight-text [weight]
   (cond
