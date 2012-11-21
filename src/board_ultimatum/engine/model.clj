@@ -245,6 +245,8 @@
   "Get the ids of all games similar to that provided"
   (mc/find-maps "network_output" {:game_a id}))
 
-(defn get-ranked-similar [id]
-  (sort-by :rating >
-    (get-similar id)))
+(defn get-ranked-similar-games [id n]
+  "Get the hashes of the top n games similar to the game specified by id"
+  (map
+    #(merge (get-game-by-id (:game_b %)) {:rating (:rating %)})
+    (take n (sort-by :rating > (get-similar id)))))

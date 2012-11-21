@@ -8,8 +8,17 @@
         [noir.core]
         [cheshire.core :only [generate-string]]))
 
+(def num-top-similar-games 3)
+
+(defn similar-game-elements [idx game]
+  (let [prefix (str "g" idx)]
+    {(keyword (str prefix "name")) (:name game)
+     (keyword (str prefix "thumb")) (:thumbnail game)}))
+
 (defpage [:post "/top-similar"] {:keys [bggID]} 
-  bggID)
+  (generate-string 
+    (let [games (take num-top-similar-games (model/get-ranked-similar bggID))]
+      (merge (map-indexed similar-game-elements games)))))
 
 (defn game-weight-text [weight]
   (cond
@@ -80,7 +89,7 @@
       [:div {:style "display:block;margin:0px auto;width:14px;"}
         [:i.icon-chevron-up {:style "display:none;"}]]]])
 
-(defpartial display-game [i game disp-recom disp-explanation rating]
+(defpartial display-game [i game disp-recom disp-explanation]
   [:div.well.game {:style "position:relative;overflow:hidden;"}
     [:input {:type "hidden" :name "bggID" :value (:bgg_id game)}]
     (if (and disp-explanation (not= (.size (:factors game)) 0))
@@ -93,7 +102,8 @@
         [:td {:colspan "5"}
           [:div {:style "font-size:34px;float:left;"}
             (:name game)
-            (when-not (nil? rating) (str " - " (format "%.1f" (* 100 rating)) "% Match"))]
+            (let [rating (:rating game)]
+              (when-not (nil? rating) (str " - " (format "%.1f" (* 100 rating)) "% Match")))]
           [:div {:style "float:right;"} 
             (link-to
               (str "http://boardgamegeek.com/boardgame/" (:bgg_id game) "/")
@@ -117,12 +127,9 @@
 
 ;; Send true for disp-recom, disp-explanation if you wish to display recommendations
 ;; and explanations on games. Ratings should be nil if no ratings are to be displayed.
-(defpartial build-results-list [games disp-recom disp-explanation ratings]
+(defpartial build-results-list [games disp-recom disp-explanation]
     (map display-game
       (iterate inc 1)
       games
       (iterate identity disp-recom)
-      (iterate identity disp-explanation)
-      (if ratings
-        ratings
-        (cycle [nil]))))
+      (iterate identity disp-explanation)))
