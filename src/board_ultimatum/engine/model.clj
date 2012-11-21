@@ -1,7 +1,8 @@
 (ns board-ultimatum.engine.model
   (:require [monger.core :as mg]
             [monger.collection :as mc]
-            [board-ultimatum.engine.tag :as tag])
+            [board-ultimatum.engine.tag :as tag]
+            [clojure.contrib.math :as math])
   (:use [monger.operators]
         [clojure.pprint]
         [clojure.string :only [blank?]]))
@@ -142,10 +143,10 @@
     (let [w (:weight_average game)
           x (. Float parseFloat (:weight attrs))
           d (- x w)
-          score (- basic-score-weight (* 16 d d))]
+          score (- basic-score-weight (math/abs (* basic-score-weight d)))]
       {:reason
         (cond
-          (> score 80.0) "Close Weight"
+          (> score 70.0) "Close Weight"
           (pos? score) "Acceptable Weight"
           (> w x) "Weight Too High"
           :else "Weight Too Low")
