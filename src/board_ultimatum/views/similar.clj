@@ -42,7 +42,7 @@
                 (model/get-id-by-name 
                   (:game-name params))))]
             (results/build-results-list
-              (map #(model/get-game-by-id (:game_b %)) game-ids)
+              (map #(model/get-game-by-id (:game_b %)) (take 30 game-ids))
               false
               false
               (map :rating game-ids)))
