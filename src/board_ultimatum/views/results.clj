@@ -138,7 +138,7 @@
     (iterate identity disp-recom)
     (iterate identity disp-explanation))
   (if disp-recom
-    [:div#recom-template {:style "float:left;width:33%;"}
+    [:div#recom-template {:style "float:left;width:33%;display:none;"}
       [:div {:style "float:left;width:35%;"}
-        [:img.img-polaroid {:src "" :style "margin: 0px auto;display: block;"}]]
+        [:img.img-polaroid {:style "margin: 0px auto;display: block;"}]]
       [:div.title {:style "float:right;width:58%;"}]]))

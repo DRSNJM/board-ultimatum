@@ -39,11 +39,12 @@ jQuery(document).ready(function ($) {
           for (var i = 0; i < games.length; i++) {
             var game = games[i];
             var $clone = $('#recom-template').clone();
-            $clone.remove('id');
+            $clone.removeAttr('id');
             $clone.find('img').attr('src', game['thumb']);
-            $clone.find('.title').text(game['title']);
+            $clone.find('.title').text(game['name']);
             gameWell.find('.similar').append($clone);
           }
+          gameWell.find('.similar').children().fadeIn('slow');
         },
         error: function(jqXHR, textStatus, errorThrown) {
           gameWell.find('.similar').text('There was an error looking up similar games: ' + errorThrown)
