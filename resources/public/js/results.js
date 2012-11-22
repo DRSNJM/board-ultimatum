@@ -42,7 +42,7 @@ jQuery(document).ready(function ($) {
               var $clone = $('#recom-template').clone();
               $clone.removeAttr('id');
               $clone.find('img').attr('src', game['thumb']);
-              $clone.find('.title').text(game['name']);
+              $clone.find('.title').html("<b>" + game['name'] + "</b></br>" + game['rating'] + "% match");
               gameWell.find('.similar').append($clone);
             }
             gameWell.find('.similar').children().fadeIn('slow');

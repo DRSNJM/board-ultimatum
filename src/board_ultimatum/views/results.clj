@@ -126,7 +126,9 @@
           (weight game)]]]
     [:div.recom {:style "clear:both;display:none;"}
       [:div {:style "height:20px;"}]
-      [:div.well.similar {:style "height:80px;background-color:aliceBlue;overflow:hidden;"}
+      [:div.well.similar {:style "height:auto;background-color:aliceBlue;overflow:hidden;"}
+        [:div {:style "font-size:18px;margin-bottom:15px;display:none;"}
+          "If you enjoyed " (:name game) ", then we recommend you try these games:"]
         [:div.spin {:style "position:relative;left:50%;top:45%;"}]]]])
 
 ;; Send true for disp-recom, disp-explanation if you wish to display recommendations
@@ -140,5 +142,5 @@
   (if disp-recom
     [:div#recom-template {:style "float:left;width:33%;display:none;"}
       [:div {:style "float:left;width:35%;"}
-        [:img.img-polaroid {:style "margin: 0px auto;display: block;height:70px;width:auto;"}]]
-      [:div.title {:style "float:right;width:58%;"}]]))
+        [:img.img-polaroid {:style "margin-left:auto;display:block;height:70px;width:auto;"}]]
+      [:div.title {:style "float:left;width:58%;padding-left:10px;font-size:16px;"}]]))
