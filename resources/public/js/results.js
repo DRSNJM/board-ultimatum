@@ -13,6 +13,10 @@ jQuery(document).ready(function ($) {
     $(this).find('.icon-chevron-down, .icon-chevron-up').toggle();
     var gameWell = $(this).parents('.game');
     gameWell.children('.recom').slideToggle('fast');
+  });
+  $('.open-recom').click(function(event) {
+    $(this).unbind(event);
+    var gameWell = $(this).parents('.game');
     var opts = {
       lines: 9, // The number of lines to draw
       length: 10, // The length of each line
