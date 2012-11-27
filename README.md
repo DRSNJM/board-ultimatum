@@ -73,6 +73,27 @@ something like this:
 This project uses [kibit](https://github.com/jonase/kibit) for code quality
 static analysis.
 
+## Testing
+
+Use the following command to run tests:
+
+```bash
+lein midje
+```
+
+You can also check facts in a repl. This way you don't have to start up another
+JVM each time you want to retest.
+
+```clojure
+=> (use 'midje.sweet)
+=> (load-facts)
+```
+
+For more detailed instructions see the [midje documentation on testing in the
+repl](https://github.com/marick/Midje/wiki/Rechecking-facts-in-the-repl).
+
+Test coverage is a work in progress.
+
 ## License
 
 Copyright (C) 2012 DRSNJM

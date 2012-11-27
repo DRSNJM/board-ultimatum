@@ -23,6 +23,7 @@ function updateTriStateDisplay(button, formInput) {
   }
   // If the sent button is not the option (center) button then find it
   var $option = button.hasClass('option') ? button : button.siblings('.option');
+  $option.removeClass('btn-success btn-danger');
   // State is not 0 so set the appropriate class on the option button.
   if (formInput.val() != '0') {
     $option.addClass(formInput.val() == 1 ? 'btn-success' : 'btn-danger');

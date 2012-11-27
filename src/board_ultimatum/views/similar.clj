@@ -36,16 +36,12 @@
         (common/layout      
           [:h1 "Game Results"]
           [:h2 "Based on \"" (:game-name params) "\""]
-          (let [game-ids
-            (sort-by :rating >
-              (model/get-similar 
-                (model/get-id-by-name 
-                  (:game-name params))))]
+          (let [games (model/get-ranked-similar-games
+                        (model/get-id-by-name 
+                          (:game-name params))
+                        30)]
             (results/build-results-list
-              (map #(model/get-game-by-id (:game_b %)) game-ids)
+              games
               false
-              false
-              (map :rating game-ids)))
+              false))
           [:h4 [:a {:href "/similar"} "Search again"]]))))
-
-

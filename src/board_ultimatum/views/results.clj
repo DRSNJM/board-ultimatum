@@ -5,7 +5,24 @@
             [board-ultimatum.views.attr-display :as attr-display]
             [clojure.string :as string])
   (:use [hiccup.element]
-        [noir.core]))
+        [noir.core]
+        [cheshire.core :only [generate-string]]))
+
+(def num-top-similar-games 3)
+
+(defn format-rating [rating]
+  (format "%.1f" (* 100 rating)))
+
+(defn similar-game-elements [idx game]
+    {:name (:name game)
+     :thumb (:thumbnail game)
+     :rating (format-rating (:rating game))})
+
+;; AJAX handler for returning the top similar games
+(defpage [:post "/top-similar"] {:keys [bggID]}
+  (generate-string 
+    (let [games (model/get-ranked-similar-games (Integer/parseInt bggID) num-top-similar-games)]
+      {:games (apply list (map-indexed similar-game-elements games))})))
 
 (defn game-weight-text [weight]
   (cond
@@ -27,72 +44,103 @@
       [:div {:style "float:left;"} "Total score"]
       [:div {:style "float:right;"} (attr-display/format-score (:score game))]]])
 
-(defpartial display-game [i game disp-recom disp-explanation rating]
-  [:div.well.game {:style "height:150px;position:relative;"}
+(defpartial pp-factors-trigger [game]
+  [:div
+    [:div.pop-trigger {:style "position:absolute;right:5px;top:2px;float:left;display:none;"
+         :rel "popover" :data-placement "left" :data-trigger "hover"
+         :data-title "How did this game match up to your preferences?"}
+      [:i.icon-question-sign {:style "margin-left:10px;"}]]
+    [:div.pop-content {:style "display:none;"} (pp-factors game)]])
+
+(defpartial mechanics-categories [game]
+  (map #(identity [:span {:style "width:50%;float:left;margin-bottom:2px;"} "&#149; " %])
+    (concat (model/mechanics game)
+      (model/categories game))))
+
+(defpartial length [game]
+  (let [length-disp
+    (string/split (attr-display/game-length (:length game)) #"\s+")]
+    [:div {:style "text-align:center;border-left:1px solid black;"}
+      [:div {:style "font-size:30px;"} (first length-disp)]
+      [:div (second length-disp)]]))
+
+(defpartial num-players [game]
+  (let [num-pl-disp
+    (string/split (attr-display/num-players (:min_players game) (:max_players game)) #"\s+")]
+    [:div {:style "text-align:center;border-left:1px solid black;"}
+      [:div {:style "font-size:30px;"} (first num-pl-disp)]
+      [:div (second num-pl-disp)]]))
+
+(defpartial min-age [game]
+  [:div {:style "text-align:center;border-left:1px solid black;"}
+    [:div {:style "font-size:30px;"} (:min_age game) "+"]
+    [:div "years old"]])
+
+(defpartial weight [game]
+  [:div {:style "text-align:center;border-left:1px solid black;"}
+    (let [text (string/split (game-weight-text (:weight_average game)) #"\s+")]
+      (if
+        (< 1 (.size text))
+        [:b (map #(identity [:div {:style "font-size:16px;"} %]) text)]
+        (identity [:div {:style "font-size:30px;"} (first text)])))
+    [:div "weight"]])
+
+(defpartial recom-trigger []
+  [:div.open-recom {:style "display:none;position:absolute;left:50%;bottom:7px;margin-left:-35px;"}
+    [:div {:style "display:block;width:70px;"}
+      [:div {:style "display:block;margin:0px auto;width:14px;"}
+        [:i.icon-chevron-down]]
+      [:div {:style "display:block;margin:0px auto;width:14px;"}
+        [:i.icon-chevron-up {:style "display:none;"}]]]])
+
+(defpartial display-game [i game disp-recom disp-explanation]
+  [:div.well.game {:style "position:relative;overflow:hidden;"}
+    [:input {:type "hidden" :name "bggID" :value (:bgg_id game)}]
     (if (and disp-explanation (not= (.size (:factors game)) 0))
-      [:div
-        [:div.pop-trigger {:style "position:absolute;right:5px;top:2px;float:left;display:none;"
-             :rel "popover" :data-placement "left" :data-trigger "hover"
-             :data-title "How did this game match up to your preferences?"}
-          [:i.icon-question-sign {:style "margin-left:10px;"}]]
-        [:div.pop-content {:style "display:none;"} (pp-factors game)]])
-    [:div {:style "width:200px;float:left;"}
-      [:img {:src (:thumbnail game) :style "margin: 0px auto;display: block;"}]]
-    [:table {:style "float:left;margin-left:20px;width:75%;line-height:normal;"}
+      (pp-factors-trigger game))
+    (if disp-recom (recom-trigger))
+    [:div {:style "width:20%;float:left;"}
+      [:img.img-polaroid {:src (:thumbnail game) :style "margin: 0px auto;display: block;"}]]
+    [:table {:style "float:right;margin-left:20px;width:78%;line-height:normal;"}
       [:tr {:style "height:50px;border-bottom:1px solid black;"}
         [:td {:colspan "5"}
           [:div {:style "font-size:34px;float:left;"}
             (:name game)
-            (when-not (nil? rating) (str " - " (format "%.1f" (* 100 rating)) "% Match"))]
+            (let [rating (:rating game)]
+              (when-not (nil? rating) (str " - " (format-rating rating) "% Match")))]
           [:div {:style "float:right;"} 
             (link-to
               (str "http://boardgamegeek.com/boardgame/" (:bgg_id game) "/")
-              "BGG Rank: " (:rank game) " "
-              [:i {:class "icon-share"}])]]]
+              "BGG Rank: " (:rank game)
+              [:i.icon-share {:style "margin-left:4px;"}])]]]
       [:tr {:style "height:80px;"}
         [:td {:style "width:50%;"}
-          (map #(identity [:span {:style "width:50%;float:left;margin-bottom:2px;"} "&#149; " %])
-            (concat (model/mechanics game)
-              (model/categories game)))]
-        [:td {:style "width:12%;"}
-          (let [length-disp
-            (string/split
-              (attr-display/game-length (:length game))
-              #"\s+")]
-            [:div {:style "text-align:center;border-left:1px solid black;"}
-              [:div {:style "font-size:30px;"} (first length-disp)]
-              [:div (second length-disp)]])]
-        [:td {:style "width:12%;"}
-          (let [num-pl-disp
-            (string/split 
-              (attr-display/num-players (:min_players game) (:max_players game))
-              #"\s+")]
-            [:div {:style "text-align:center;border-left:1px solid black;"}
-              [:div {:style "font-size:30px;"} (first num-pl-disp)]
-              [:div (second num-pl-disp)]])]
-        [:td {:style "width:12%;"}
-          [:div {:style "text-align:center;border-left:1px solid black;"}
-            [:div {:style "font-size:30px;"} (:min_age game) "+"]
-            [:div "years old"]]]
-        [:td {:style "width:14%;"}
-          [:div {:style "text-align:center;border-left:1px solid black;"}
-            (let [text (string/split (game-weight-text (:weight_average game)) #"\s+")]
-              (if
-                (< 1 (.size text))
-                [:b (map #(identity [:div {:style "font-size:16px;"} %]) text)]
-                (identity [:div {:style "font-size:30px;"} (first text)])))
-            [:div "weight"]]]]]
-    [:div.open-recom {:style "height:150px;width:20px;float:right;display:none;"}
-      [:i.icon-chevron-right {:style "position:absolute;top:45%;"}]]])
+          (mechanics-categories game)]
+        [:td {:style "width:11%;"}
+          (length game)]
+        [:td {:style "width:11%;"}
+          (num-players game)]
+        [:td {:style "width:11%;"}
+          (min-age game)]
+        [:td {:style "width:17%;"}
+          (weight game)]]]
+    [:div.recom {:style "clear:both;display:none;"}
+      [:div {:style "height:20px;"}]
+      [:div.well.similar {:style "height:auto;background-color:aliceBlue;overflow:hidden;"}
+        [:div {:style "font-size:18px;margin-bottom:15px;display:none;"}
+          "If you enjoyed " (:name game) ", then we recommend you try these games:"]
+        [:div.spin {:style "position:relative;left:50%;top:45%;"}]]]])
 
 ;; Send true for disp-recom, disp-explanation if you wish to display recommendations
 ;; and explanations on games. Ratings should be nil if no ratings are to be displayed.
-(defpartial build-results-list [games disp-recom disp-explanation ratings]
-    (map display-game
-      (iterate inc 1)
-      games
-      (iterate identity disp-recom)
-      (iterate identity disp-explanation)
-      (if ratings
-        ratings
-        (cycle [nil]))))
+(defpartial build-results-list [games disp-recom disp-explanation]
+  (map display-game
+    (iterate inc 1)
+    games
+    (iterate identity disp-recom)
+    (iterate identity disp-explanation))
+  (if disp-recom
+    [:div#recom-template {:style "float:left;width:33%;display:none;"}
+      [:div {:style "float:left;width:35%;"}
+        [:img.img-polaroid {:style "margin-left:auto;display:block;height:70px;width:auto;"}]]
+      [:div.title {:style "float:left;width:58%;padding-left:10px;font-size:16px;"}]]))

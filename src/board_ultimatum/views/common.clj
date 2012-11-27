@@ -44,9 +44,7 @@
 (defpartial format-errors
   "Takes a collection of error messages and formats it into html."
   [errs]
-  (when-not (empty? errs)
-    [:div.help-block
-     [:ul (map #(html [:li %]) errs)]]))
+  (when (seq errs) [:div.help-block [:ul (map #(html [:li %]) errs)]]))
 
 ;; ## Layouts
 
