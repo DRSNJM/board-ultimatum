@@ -101,7 +101,7 @@
     (if disp-recom (recom-trigger))
     [:div {:style "width:20%;float:left;"}
       [:img.img-polaroid {:src (:thumbnail game) :style "margin: 0px auto;display: block;"}]]
-    [:table {:style "float:right;margin-left:20px;width:78%;line-height:normal;"}
+    [:table {:style "float:right;margin-left:20px;width:75%;line-height:normal;"}
       [:tr {:style "height:50px;border-bottom:1px solid black;"}
         [:td {:colspan "5"}
           [:div {:style "font-size:34px;float:left;"}
