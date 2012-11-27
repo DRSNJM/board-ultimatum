@@ -43,14 +43,14 @@
               [:h3 "Mechanics"]
               [:p "Select gameplay mechanics that you like or dislike"]
               (map #(attr-display/build-tri-state % "mechanics")
-                   (tag/mechanics))]
+                   (attr-display/columns 3 (tag/mechanics)))]
 
             [:div {:id "input-categories" :class "param well well-small"}
               [:input {:type "hidden" :name "categories-active" :value "false"}]
               [:h3 "Categories"]
               [:p "Select gameplay categories that you like or dislike"]
               (map #(attr-display/build-tri-state % "categories")
-                   (tag/categories))]
+                   (attr-display/columns 3 (tag/categories)))]
 
            
             [:div {:id "input-weight" :class "param well well-small"}
@@ -121,7 +121,7 @@
       [:ul.query-params
        (map display-query-params (sanitize-query-params params))]]
      (results/build-results-list
-      (take 30 (model/find-games
+      (take 60 (model/find-games
                 (sanitize-query-params params)))
       true
       true

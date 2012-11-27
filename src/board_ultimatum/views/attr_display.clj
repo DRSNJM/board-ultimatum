@@ -22,6 +22,22 @@
 (defn format-score [score]
   (format "%+.1f" (float score)))
 
+(defn split-by-n
+  "Returns a lazy sequence of n successive items from coll while
+  (pred item) returns true. pred must be free of side-effects."
+  [n coll]
+  (lazy-seq
+   (let [s (seq coll)
+              front (take n s)]
+       (when (not-empty s)
+         (cons front (split-by-n n (drop n s)))))))
+
+(defn n-groups [n coll]
+  (split-by-n (/ (count coll) n) coll))
+
+(defn columns [n coll]
+  (apply interleave (n-groups n coll)))
+
 (defpartial colored-attr [value freq color]
   [:span value
    [:span {:style (str "color: " color ";")}
@@ -38,9 +54,17 @@
 (defpartial build-tri-state [{:keys [value frequency description]} attr]
   [:div {:style "float:left;margin:10px 20px 0px 0px;"}
    [:div {:class (clojure.string/join " " ["btn-group" "tri-state" value])}
-    [:button {:type "button" :class "btn btn-mini btn-danger"} [:i {:class "icon-thumbs-down"}]]
-    [:button {:type "button" :data-title "More Info" :data-content description :class "btn btn-mini option"} (format-freq value frequency )]
-    [:button {:type "button" :class "btn btn-mini btn-success"} [:i {:class "icon-thumbs-up"}]]]
+    [:button {:type "button"
+              :class "btn btn-mini btn-danger"}
+     [:i {:class "icon-thumbs-down"}]]
+    [:button {:type "button"
+              :data-title "More Info"
+              :data-content description
+              :class "btn btn-mini option"}
+     (format-freq value frequency )]
+    [:button {:type "button"
+              :class "btn btn-mini btn-success"}
+     [:i {:class "icon-thumbs-up"}]]]
    [:input {:type "hidden" :name (str attr "[" value "]") :value "0"}]])
 
 ;; Build radio preference selection buttons
