@@ -12,8 +12,8 @@
 (defpage "/recommend" []
     (common/with-javascripts (cons "/js/recommend.js" common/*javascripts*)
       (common/layout
-        [:h1 "Want a game recommendation?"]
-        [:h4 "Click on an option for a brief description."]
+       [:h1 "Want a game recommendation?"]
+       [:h4 "You may select multiple options from each category."]
         [:div#recommend.row-fluid
          [:div#sidebar.span2
           [:ul#select.nav.nav-pills.nav-stacked.affix
@@ -29,34 +29,34 @@
             [:div {:id "input-length" :class "param well well-small"}
               [:input {:type "hidden" :name "length-active" :value "false"}]
               [:h3 "Game Length"]
-              [:p "This is a description of this field"]
+              [:p "Approximate Game Length."]
               (map attr-display/time-checkboxes [20 30 45 60 90 120 180 240 300])]
 
             [:div {:id "input-num-players" :class "param well well-small"}
               [:input {:type "hidden" :name "num-players-active" :value "false"}]
               [:h3 "Number of Players"]
-              [:p "This is a description of this field"]
               (map attr-display/player-checkboxes ["1" "2" "3" "4" "5" "6" "7+"])]
 
             [:div {:id "input-mechanics" :class "param well well-small"}
               [:input {:type "hidden" :name "mechanics-active" :value "false"}]
               [:h3 "Mechanics"]
-              [:p "Select gameplay mechanics that you like or dislike"]
+              [:p "Select gameplay mechanics that you like or dislike."]
+              [:p "You may click on the center button of unselected mechanics for a brief description."]
               (map #(attr-display/build-tri-state % "mechanics")
                    (attr-display/columns 3 (tag/mechanics)))]
 
             [:div {:id "input-categories" :class "param well well-small"}
               [:input {:type "hidden" :name "categories-active" :value "false"}]
               [:h3 "Categories"]
-              [:p "Select gameplay categories that you like or dislike"]
+              [:p "Select gameplay categories that you like or dislike."]
+              [:p "You may click on the center button of unselected category for a brief description."]
               (map #(attr-display/build-tri-state % "categories")
                    (attr-display/columns 3 (tag/categories)))]
-
            
             [:div {:id "input-weight" :class "param well well-small"}
               [:input {:type "hidden" :name "weight-active" :value "false"}]
               [:h3 "Weight"]
-              [:p "This is a description of this field"]
+              [:p "Weight describes how hard you have to think during the game. Heavier games require more analysis in game."]
               [:div {:class "btn-group" :data-toggle "buttons-radio"}
               (attr-display/build-radio-buttons 
                 (array-map :Light "1" :Medium-Light "2"
