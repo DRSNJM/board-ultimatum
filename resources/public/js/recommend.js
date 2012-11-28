@@ -77,16 +77,18 @@ jQuery(document).ready(function ($) {
     // Current state is stored on the input field.
     var state = formInput.val();
 
+    var open = $option.hasClass('popover-open');
+    var $allOptions = $('.tri-state .option');
+    $allOptions.popover('hide');
+    $allOptions.removeClass('popover-open');
+
     // Determine what newState should be.
     var newState = 0;
     if ($btn === $option) {
       if($option.hasClass('btn-danger') || $option.hasClass('btn-success')) {
         $option.removeClass('btn-danger btn-success');
       } else {
-        if($option.hasClass('popover-open')){
-          $option.popover('hide');
-          $option.removeClass('popover-open');
-        } else {
+        if(!open){
           $option.popover('show');
           $option.addClass('popover-open');
         }
@@ -97,10 +99,6 @@ jQuery(document).ready(function ($) {
         newState = state == 1 ? 0 : 1;
       } else if ($btn.hasClass('btn-danger')) {
         newState = state == -1 ? 0 : -1;
-      }
-      if($option.hasClass('popover-open')){
-        $option.popover('hide');
-        $option.removeClass('popover-open');
       }
     }
 
@@ -118,4 +116,5 @@ jQuery(document).ready(function ($) {
   $('.radio-buttons').on('click', '.btn', function(event) {
     $(this).parent().siblings('input[type=hidden]').val($(this).val());
   });
+
 });

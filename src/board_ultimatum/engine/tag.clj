@@ -43,6 +43,17 @@
     (create-tags-db-by-subtype "designer")
     (create-tags-db-by-subtype "publisher")))
 
+(defn recount-tags-db-by-subtype [subtype]
+  (map (fn recount [{:keys [bgg_id frequency]}]
+         (mc/update "tags" {:subtype subtype :bgg_id bgg_id}
+                    {$set {:frequency frequency}}))
+       (raw-freq-tags-by-subtype subtype)))
+
+(defn recount-tags-table! []
+  (do
+    (recount-tags-db-by-subtype "mechanic")
+    (recount-tags-db-by-subtype "category")))
+
 (defn singular-subtype [attr]
   (cond
    (= attr "mechanics") "mechanic"

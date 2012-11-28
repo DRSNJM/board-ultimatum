@@ -13,7 +13,7 @@
     (common/with-javascripts (cons "/js/recommend.js" common/*javascripts*)
       (common/layout
         [:h1 "Want a game recommendation?"]
-        [:h2 "Fill in the inputs below with your preferences"]
+        [:h4 "Click on an option for a brief description."]
         [:div#recommend.row-fluid
          [:div#sidebar.span2
           [:ul#select.nav.nav-pills.nav-stacked.affix
