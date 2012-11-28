@@ -23,11 +23,11 @@ jQuery(document).ready(function ($) {
     $(this).unbind(event);
     var gameWell = $(this).parents('.game');
     var opts = {
-      lines: 9, // The number of lines to draw
-      length: 10, // The length of each line
-      width: 6, // The line thickness
-      radius: 13, // The radius of the inner circle
-      trail: 50, // Afterglow percentage
+      lines: 11, // The number of lines to draw
+      length: 6, // The length of each line
+      width: 4, // The line thickness
+      radius: 9, // The radius of the inner circle
+      trail: 60, // Afterglow percentage
     };
     var spinner = new Spinner(opts).spin();
     var serializedID = gameWell.children(':input').serialize();
