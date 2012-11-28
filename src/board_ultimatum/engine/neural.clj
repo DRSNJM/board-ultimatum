@@ -85,11 +85,12 @@
 
 (defn cross-train []
   (loop []
-    (if (<= (cross-error) 0.001)
-      true
-      (do 
+    (do 
+        (cross-iteration)
         (println (cross-error)) 
-        (recur)))))
+        (if (<= (cross-error) 0.01)
+          (cross-error)
+          (recur)))))
 
 ;; iterate and add top 50 games to DB
 
