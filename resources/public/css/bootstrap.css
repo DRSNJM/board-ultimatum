@@ -9304,21 +9304,132 @@ html .ui-helper-clearfix {
   margin: 0 auto;
 }
 
-.selection .icon.player {
-  background: url("/img/player_icon.png") no-repeat;
+.selection .icon.player.p1 {
+  background: url("/img/player-icons/1P.png") no-repeat;
 }
 
-.selection .icon.player.active {
-  background: url("/img/player_icon_selected.png") no-repeat;
+.selection .icon.player.p1.active {
+  background: url("/img/player-icons/1Pa.png") no-repeat;
 }
 
-.selection .icon.time {
-  width: 44px;
-  background: url("/img/hourglass.png") no-repeat;
+.selection .icon.player.p2 {
+  background: url("/img/player-icons/2P.png") no-repeat;
 }
 
-.selection .icon.time.active {
-  background: url("/img/hourglass_selected.png") no-repeat;
+.selection .icon.player.p2.active {
+  background: url("/img/player-icons/2Pa.png") no-repeat;
+}
+
+.selection .icon.player.p3 {
+  background: url("/img/player-icons/3P.png") no-repeat;
+}
+
+.selection .icon.player.p3.active {
+  background: url("/img/player-icons/3Pa.png") no-repeat;
+}
+
+.selection .icon.player.p4 {
+  background: url("/img/player-icons/4P.png") no-repeat;
+}
+
+.selection .icon.player.p4.active {
+  background: url("/img/player-icons/4Pa.png") no-repeat;
+}
+
+.selection .icon.player.p5 {
+  background: url("/img/player-icons/5P.png") no-repeat;
+}
+
+.selection .icon.player.p5.active {
+  background: url("/img/player-icons/5Pa.png") no-repeat;
+}
+
+.selection .icon.player.p6 {
+  background: url("/img/player-icons/6P.png") no-repeat;
+}
+
+.selection .icon.player.p6.active {
+  background: url("/img/player-icons/6Pa.png") no-repeat;
+}
+
+.selection .icon.player.p7 {
+  background: url("/img/player-icons/7+P.png") no-repeat;
+}
+
+.selection .icon.player.p7.active {
+  background: url("/img/player-icons/7+Pa.png") no-repeat;
+}
+
+.selection .icon.time.t20 {
+  background: url("/img/time-icons/1T.png") no-repeat;
+}
+
+.selection .icon.time.t20.active {
+  background: url("/img/time-icons/1Ta.png") no-repeat;
+}
+
+.selection .icon.time.t30 {
+  background: url("/img/time-icons/2T.png") no-repeat;
+}
+
+.selection .icon.time.t30.active {
+  background: url("/img/time-icons/2Ta.png") no-repeat;
+}
+
+.selection .icon.time.t45 {
+  background: url("/img/time-icons/3T.png") no-repeat;
+}
+
+.selection .icon.time.t45.active {
+  background: url("/img/time-icons/3Ta.png") no-repeat;
+}
+
+.selection .icon.time.t60 {
+  background: url("/img/time-icons/4T.png") no-repeat;
+}
+
+.selection .icon.time.t60.active {
+  background: url("/img/time-icons/4Ta.png") no-repeat;
+}
+
+.selection .icon.time.t90 {
+  background: url("/img/time-icons/5T.png") no-repeat;
+}
+
+.selection .icon.time.t90.active {
+  background: url("/img/time-icons/5Ta.png") no-repeat;
+}
+
+.selection .icon.time.t120 {
+  background: url("/img/time-icons/6T.png") no-repeat;
+}
+
+.selection .icon.time.t120.active {
+  background: url("/img/time-icons/6Ta.png") no-repeat;
+}
+
+.selection .icon.time.t180 {
+  background: url("/img/time-icons/7T.png") no-repeat;
+}
+
+.selection .icon.time.t180.active {
+  background: url("/img/time-icons/7Ta.png") no-repeat;
+}
+
+.selection .icon.time.t240 {
+  background: url("/img/time-icons/8T.png") no-repeat;
+}
+
+.selection .icon.time.t240.active {
+  background: url("/img/time-icons/8Ta.png") no-repeat;
+}
+
+.selection .icon.time.t300 {
+  background: url("/img/time-icons/9T.png") no-repeat;
+}
+
+.selection .icon.time.t300.active {
+  background: url("/img/time-icons/9Ta.png") no-repeat;
 }
 
 .selection input[type="checkbox"] {
@@ -9388,4 +9499,12 @@ td.name {
 
 td.why {
   width: 200px;
+}
+
+.popover {
+  width: 350px;
+}
+
+td.desc {
+  padding: 15px;
 }

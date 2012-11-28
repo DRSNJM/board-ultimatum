@@ -71,7 +71,7 @@
 (defpartial build-radio-buttons [name-value form-name]
   [:div
     [:div {:class "btn-group radio-buttons" :data-toggle "buttons-radio"}
-      (map 
+      (map
         #(identity [:button {:type "button" :value (val %) :class "btn"} (key %)])
         name-value)]
     [:input {:type "hidden" :name form-name :value ""}]])
@@ -79,13 +79,13 @@
 (defpartial player-checkboxes [num]
   [:div.selection
    [:label.checkbox
-    [:div.icon.player]
+    [:div {:class (str "icon player p" (first num))}]
     (check-box "num-players[]" false num)
     [:div.bottom-label (str num " Players")]]])
 
 (defpartial time-checkboxes [num]
   [:div.selection
    [:label.checkbox
-    [:div.icon.time]
+    [:div {:class (str "icon time t" num)}]
     (check-box "length[]" false num)
     [:div.bottom-label (game-length num)]]])
