@@ -208,6 +208,18 @@
   (map to-vector
     (model/find-all))))))
 
+(defn data-convert-no-pca [] 
+  (dorun 
+    ;; add the data to the mongo db
+    (mc/remove "network_data")
+    (dorun (map 
+        (fn [id data] 
+          (mc/insert "network_data" { :id id :data (into [] data) }))
+        game-ids 
+        full-data)
+    )))
+
+(comment 
 ;; perform pca on the data
 
 (def pca (principal-components full-data))
@@ -219,7 +231,7 @@
       (sel components :cols i))
     (range 10))))
 
-(def x (into [] (map 
+(def pca-x (into [] (map 
     (fn [i] 
       (mmult full-data (nth pc i)))
     (range 10))))
@@ -236,7 +248,7 @@
         (fn [id data] 
           (mc/insert "network_data" { :id id :data (into [] data) }))
         game-ids 
-        (trans (matrix x))))
+        (trans (matrix pca-x))))
     ;; plot the data in 2D
     ;(view (scatter-plot (nth x 0) (nth x 1) 
     ;                    :x-label "PC1" 
@@ -245,3 +257,6 @@
     ;; view a table of the dataset
     ;(view ($order [:x1 :x2] :desc data-2d))
     ))
+
+)
+
