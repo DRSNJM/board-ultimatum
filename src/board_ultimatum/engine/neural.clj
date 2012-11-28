@@ -7,6 +7,9 @@
   (:use clojure.pprint)
   (use [enclog nnets training])
   (:use [monger.operators]))
+(:import 
+  org.encog.neural.networks.training.cross.CrossValidationKFold
+  org.encog.ml.data.folded.FoldedDataSet)
 
 (let [connection-info (if (nil? (:db-name config/storage))
      (assoc config/storage :db-name "board_ultimatum") config/storage)]
@@ -24,9 +27,9 @@
 (def net
   (network  (neural-pattern :feed-forward)
     :activation :sigmoid
-    :input   20
+    :input   131
     :output  1
-    :hidden [20 10]))
+    :hidden [131]))
 
 ;; for each id, join each id with every other id and calculate output
 
@@ -51,17 +54,18 @@
 ;; set up the training data
 
 (def training-set 
-  (data :basic-dataset 
-    (into [] 
-      (map 
-        (fn [rel] 
-          (join-vector (nth (:_id rel) 0) (nth (:_id rel) 1)))
-        (relationship/average-ratings)))
-    (into [] 
-      (map 
-        (fn [rel] 
-          [(:rating rel)])
-        (relationship/average-ratings)))))
+  (new org.encog.ml.data.folded.FoldedDataSet 
+    (data :basic-dataset 
+      (into [] 
+        (map 
+          (fn [rel] 
+            (join-vector (nth (:_id rel) 0) (nth (:_id rel) 1)))
+          (relationship/average-ratings)))
+      (into [] 
+        (map 
+          (fn [rel] 
+            [(:rating rel)])
+          (relationship/average-ratings))))))
 
 (def prop-train (trainer :resilient-prop :network net :training-set training-set)) 
 
@@ -69,6 +73,24 @@
 
 (defn train-network []
   (train prop-train 0.01 500 []))
+
+;; train with cross validation
+
+(def cross-trainer
+  (new org.encog.neural.networks.training.cross.CrossValidationKFold prop-train 5))
+
+(defn cross-iteration [] (.iteration cross-trainer))
+
+(defn cross-error [] (.getError cross-trainer))
+
+(defn cross-train []
+  (loop []
+    (do 
+        (cross-iteration)
+        (println (cross-error)) 
+        (if (<= (cross-error) 0.01)
+          (cross-error)
+          (recur)))))
 
 ;; iterate and add top 50 games to DB
 
