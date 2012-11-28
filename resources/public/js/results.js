@@ -9,6 +9,11 @@ jQuery(document).ready(function ($) {
     function() { $(this).find(".pop-trigger, .open-recom").fadeIn("fast"); },
     function() { $(this).find(".pop-trigger, .open-recom").fadeOut("fast"); }
   );
+
+  $('.results').find('.tags, .desc').on('click', function(e) {
+    $(this).closest('tr').find('.tags, .desc').toggle();
+  });
+
   $('.open-recom').click(function() {
     $(this).find('.icon-chevron-down, .icon-chevron-up').toggle();
     var gameWell = $(this).parents('.game');
