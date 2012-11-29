@@ -19,3 +19,12 @@
                (str (assoc connection-info :password "********"))))))
 
 ;; 
+
+(def game-ids
+  (into [] 
+    (map 
+      (fn [game] (:bgg_id game))
+      (model/find-all))))
+
+(defn get-vector [game-id] 
+  (:data (mc/find-one-as-map "network_data" {:id game-id})))
