@@ -197,9 +197,9 @@
         [:p "For each pair below please rate how good of a recommendation each
             game is given the other."]]
        [:div#expert-compare
-        (form-to [:post "/expert/compare"]
-          (map-indexed compare-games
-                       (shuffle (map shuffle (combo/combinations ids 2))))
+        (form-to
+          [:post "/expert/compare"]
+          (get-valid-game-pairs ids)
           [:div.form-actions
            [:div.row-fluid
             [:button#main-button.btn.btn-large.span6.btn-primary
