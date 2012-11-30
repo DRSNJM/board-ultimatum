@@ -162,7 +162,8 @@
     (compare-game game-a)
     [:div.rating.span4 {:id (str "rating" index)}
      [:div.rating-slider {:id (str "rating-slider" index)}
-      [:select {:name (str game-a "-" game-b)}
+      [:select (let [id-pair (str game-a "-" game-b)]
+                 {:id (str "sel" id-pair) :name id-pair})
        (select-options
          [["Bad" 1] ["" 1.5] ["Poor" 2] ["" 2.5] ["OK" 3] ["" 3.5] ["Good" 4]
           ["" 4.5] ["Great" 5]] 3)]]]
@@ -235,7 +236,7 @@
       (into {} (map (fn [[pair-str value]]
                       [(map #(Integer/parseInt %)
                             (string/split pair-str (re-pattern "-")))
-                       (Integer/parseInt value)])
+                       (Float/parseFloat value)])
                     relationships))
       (current-expert-id)))
   (resp/redirect "/expert/select"))
