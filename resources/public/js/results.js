@@ -5,10 +5,6 @@ jQuery(document).ready(function ($) {
       return $(this).siblings('.pop-content').html();
     }
   });
-  $('.game').hover(
-    function() { $(this).find(".pop-trigger, .open-recom").fadeIn("fast"); },
-    function() { $(this).find(".pop-trigger, .open-recom").fadeOut("fast"); }
-  );
 
   $('.results').find('.tags, .desc').on('click', function(e) {
     $(this).closest('tr').find('.tags, .desc').toggle();

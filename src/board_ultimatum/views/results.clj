@@ -46,11 +46,11 @@
 
 (defpartial pp-factors-trigger [game]
   [:div
-    [:div.pop-trigger {:style "position:absolute;right:5px;top:2px;float:left;display:none;"
-         :rel "popover" :data-placement "left" :data-trigger "hover"
+    [:div.pop-trigger {:style "position:absolute;right:20px;top:2px;float:left;color:#08C;cursor:pointer;"
+         :rel "popover" :data-placement "left" :data-trigger "click"
          :data-title "How did this game match up to your preferences?"}
-      [:i.icon-question-sign {:style "margin-left:10px;"}]]
-    [:div.pop-content {:style "display:none;"} (pp-factors game)]])
+      "Why was this chosen?" [:i.icon-question-sign {:style "margin-left:5px;"}]]
+    [:div.pop-content {:style "display:none; margin-bottom: 10px;"} (pp-factors game)]])
 
 (defpartial mechanics-categories [game]
   (map #(identity [:span {:style "width:50%;float:left;margin-bottom:2px;"} "&#149; " %])
@@ -112,7 +112,7 @@
             (link-to
               (str "http://boardgamegeek.com/boardgame/" (:bgg_id game) "/")
               "BGG Rank: " (:rank game)
-              [:i.icon-share {:style "margin-left:4px;"}])]]]
+              [:i.icon-share {:style "margin-left:5px;"}])]]]
       [:tr {:style "height:80px;"}
         [:td.tags {:style "width:50%;"}
          (mechanics-categories game)]
