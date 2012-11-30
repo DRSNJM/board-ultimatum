@@ -12,8 +12,13 @@
 (defpage "/recommend" []
     (common/with-javascripts (cons "/js/recommend.js" common/*javascripts*)
       (common/layout
-       [:h1 "Want a game recommendation?"]
-       [:h4 "You may select multiple options from each category."]
+
+       [:div.row-fluid
+        [:h1.row9.offset2 "Want a game recommendation?"]]
+
+       [:div.row-fluid
+        [:h4.row9.offset2 "You may select multiple options from each category."]]
+       
         [:div#recommend.row-fluid
          [:div#sidebar.span2
           [:ul#select.nav.nav-pills.nav-stacked.affix
