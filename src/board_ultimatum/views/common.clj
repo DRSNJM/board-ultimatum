@@ -80,7 +80,6 @@
          [:li (link-to "/similar" "Similar Games")]]
         [:ul.nav.pull-right
          [:li (link-to "/expert" "Experts")]
-         [:li (link-to "/tags" "Edit Tags")]
          [:li.divider-vertical]
          [:li [:a
                {:href "http://drsnjm.github.com/board-ultimatum"}
