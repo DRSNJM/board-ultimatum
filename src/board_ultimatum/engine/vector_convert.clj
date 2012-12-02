@@ -241,19 +241,23 @@
   (dorun 
     ;; add the data to the mongo db
     (mc/remove "network_data")
-    (dorun (map 
+    (dorun 
+      (map 
         (fn [id data] 
           (mc/insert "network_data" { :id id :data (into [] data) }))
         game-ids 
-        (trans (matrix (pca-x n)))))
-    ;; plot the data in 2D
-    ;(view (scatter-plot (nth x 0) (nth x 1) 
-    ;                    :x-label "PC1" 
-    ;                    :y-label "PC2" 
-    ;                    :title "Game Data"))
-    ;; view a table of the dataset
-    ;(view ($order [:x1 :x2] :desc data-2d))
-    ))
+        (trans (matrix (pca-x n)))))))
 
+(def data-2d (dataset 
+  ["id" "x1" "x2"]
+  (trans (matrix [game-ids (nth (pca-x 2) 0) (nth (pca-x 2) 1)]))))
 
-
+(defn view-2d []
+    "Plot the data in 2D"
+    (do 
+        (view (scatter-plot (nth (pca-x 2) 0) (nth (pca-x 2) 1) 
+                            :x-label "PC1" 
+                            :y-label "PC2" 
+                            :title "Game Data"))
+        ;; view a table of the dataset
+        (view ($order [:x1 :x2] :desc data-2d))))
