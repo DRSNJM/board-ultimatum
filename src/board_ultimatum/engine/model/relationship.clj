@@ -46,3 +46,11 @@
   (mc/insert-batch coll (map (partial convert-to-object
                                       (expert/from-id expert-id [:_id]))
                              game-relationships)))
+
+(defn pairs-seen-by
+  "Return a sequence of pairs already seen by the given expert."
+  [expert-id]
+  (set (map :games
+            (mc/find-maps coll
+                          {:expert (:_id (expert/from-id expert-id))}
+                          [:games]))))
