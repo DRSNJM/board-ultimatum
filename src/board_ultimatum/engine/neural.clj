@@ -5,8 +5,10 @@
             [board-ultimatum.engine.model.relationship :as relationship]
             [board-ultimatum.engine.config :as config])
   (:use clojure.pprint)
+  (:use clojure.math.numeric-tower)
   (use [enclog nnets training])
   (:use [monger.operators]))
+
 (:import 
   org.encog.neural.networks.training.cross.CrossValidationKFold
   org.encog.ml.data.folded.FoldedDataSet)
@@ -27,9 +29,9 @@
 (def net
   (network  (neural-pattern :feed-forward)
     :activation :sigmoid
-    :input   262
+    :input   4
     :output  1
-    :hidden [262 262 131 65 65 65]))
+    :hidden [4 4]))
 
 ;; for each id, join each id with every other id and calculate output
 
@@ -42,7 +44,18 @@
 (defn get-vector [game-id] 
   (:data (mc/find-one-as-map "network_data" {:id game-id})))
 
-(defn join-vector [id-A id-B] (into [] (concat (get-vector id-A) (get-vector id-B))))
+(defn join-vector [id-A id-B] 
+  "Concatenate two vectors"
+  (into [] (concat (get-vector id-A) (get-vector id-B))))
+
+(defn vector-abs-difference [id-A id-B]
+  "calculate the absoulute value difference between the two vectors" 
+  (into [] 
+    (map
+      (fn [a b] 
+        (abs (- a b))) 
+      (get-vector id-A) 
+      (get-vector id-B))))
 
 (defn to-dataset [id-A id-B] (data :basic-dataset [(join-vector id-A id-B)]
                                 [[-1.0]]))
@@ -72,7 +85,7 @@
 ;; use this function to train the network
 
 (defn train-network []
-  (train prop-train 0.01 500 []))
+  (train prop-train 0.0001 500 []))
 
 ;; train with cross validation
 

@@ -60,3 +60,18 @@
             game-ids)))]
         (mc/insert "network_output" game-record)))))
 
+(defn init-adjusted-data []
+  (doseq [id game-ids]
+    (mc/update "adjusted_output" 
+      { :id id}
+      { :id id :data (get-vector id) }
+      :upsert true )))
+
+(defn spatial-shift []
+  (doseq [rel (relationship/average-ratings)]
+    (doseq [id game-ids]
+      (mc/update "adjusted_output" 
+        { :id id}
+        { :id id :data [0.0 0.0] }
+        :upsert true ))))
+
