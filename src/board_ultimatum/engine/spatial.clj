@@ -56,7 +56,7 @@
 (defn calc-rating [id-A id-B]
   (if (= id-A id-B) 
     0.0
-    (/ (- 4.0 (euc-dist (get-adjusted id-A) (get-adjusted id-B))) 4.0)))
+    (/ (- 10.0 (euc-dist (get-adjusted id-A) (get-adjusted id-B))) 10.0)))
 
 ;; iterate and add top 30 games to DB
 
