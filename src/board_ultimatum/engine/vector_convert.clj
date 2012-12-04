@@ -219,44 +219,45 @@
         full-data)
     )))
 
-(comment 
 ;; perform pca on the data
 
 (def pca (principal-components full-data))
 
 (def components (:rotation pca))
 
-(def pc (into [] (map 
-    (fn [i] 
-      (sel components :cols i))
-    (range 10))))
+(defn pc [n]
+    (into [] (map 
+        (fn [i] 
+          (sel components :cols i))
+        (range n))))
 
-(def pca-x (into [] (map 
-    (fn [i] 
-      (mmult full-data (nth pc i)))
-    (range 10))))
+(defn pca-x [n]
+    (into [] (map 
+        (fn [i] 
+          (mmult full-data (nth (pc n) i)))
+        (range n))))
 
-(def data-2d (dataset 
-  ["id" "x1" "x2"]
-  (trans (matrix [game-ids (nth x 0) (nth x 1)]))))
-
-(defn data-convert [] 
+(defn data-convert [n] 
   (dorun 
     ;; add the data to the mongo db
     (mc/remove "network_data")
-    (dorun (map 
+    (dorun 
+      (map 
         (fn [id data] 
           (mc/insert "network_data" { :id id :data (into [] data) }))
         game-ids 
-        (trans (matrix pca-x))))
-    ;; plot the data in 2D
-    ;(view (scatter-plot (nth x 0) (nth x 1) 
-    ;                    :x-label "PC1" 
-    ;                    :y-label "PC2" 
-    ;                    :title "Game Data"))
-    ;; view a table of the dataset
-    ;(view ($order [:x1 :x2] :desc data-2d))
-    ))
+        (trans (matrix (pca-x n)))))))
 
-)
+(def data-2d (dataset 
+  ["id" "x1" "x2"]
+  (trans (matrix [game-ids (nth (pca-x 2) 0) (nth (pca-x 2) 1)]))))
 
+(defn view-2d []
+    "Plot the data in 2D"
+    (do 
+        (view (scatter-plot (nth (pca-x 2) 0) (nth (pca-x 2) 1) 
+                            :x-label "PC1" 
+                            :y-label "PC2" 
+                            :title "Game Data"))
+        ;; view a table of the dataset
+        (view ($order [:x1 :x2] :desc data-2d))))

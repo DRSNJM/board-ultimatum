@@ -27,9 +27,9 @@
 (def net
   (network  (neural-pattern :feed-forward)
     :activation :sigmoid
-    :input   131
+    :input   262
     :output  1
-    :hidden [131]))
+    :hidden [262 262 131 65 65 65]))
 
 ;; for each id, join each id with every other id and calculate output
 
@@ -88,7 +88,7 @@
     (do 
         (cross-iteration)
         (println (cross-error)) 
-        (if (<= (cross-error) 0.01)
+        (if (<= (cross-error) 0.001)
           (cross-error)
           (recur)))))
 
