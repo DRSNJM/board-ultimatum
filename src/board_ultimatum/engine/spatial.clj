@@ -30,6 +30,9 @@
 (defn get-vector [game-id] 
   (:data (mc/find-one-as-map "network_data" {:id game-id})))
 
+(defn get-adjusted [game-id] 
+  (:data (mc/find-one-as-map "adjusted_output" {:id game-id})))
+
 
 (defn euc-dist [vec-a vec-b] 
   "Returns the euclidean distance between 2 vectors"
@@ -39,12 +42,21 @@
         (fn [a b]
           (expt (- a b) 2))
         vec-a
-        vec-b)))) 
+        vec-b))))
+
+(defn vector-difference [vec-a vec-b] 
+  "Returns the differnce between 2 vectors"
+  (into []
+    (map
+      (fn [a b]
+        (- a b))
+      vec-a
+      vec-b)))  
 
 (defn calc-rating [id-A id-B]
   (if (= id-A id-B) 
     0.0
-    (/ (- 4.0 (euc-dist (get-vector id-A) (get-vector id-B))) 4.0)))
+    (/ (- 10.0 (euc-dist (get-adjusted id-A) (get-adjusted id-B))) 10.0)))
 
 ;; iterate and add top 30 games to DB
 
@@ -61,17 +73,45 @@
         (mc/insert "network_output" game-record)))))
 
 (defn init-adjusted-data []
+  "Set up the spatial data"
   (doseq [id game-ids]
     (mc/update "adjusted_output" 
       { :id id}
       { :id id :data (get-vector id) }
       :upsert true )))
 
+(defn gauss-dist [vec-a vec-b]
+  (expt 2.187 
+        (* -2.0 
+           (expt (euc-dist vec-a vec-b) 
+                 2))))
+
+(defn adjust-point [data-point point-a point-b weight]
+  "Adjust the location of a certain datapoint based on an existing relationship"
+  (into [] 
+    (map
+      (fn [x a b]
+        (+ x
+           (* (- weight 0.5)
+              (+ (* (/ (- b a) 
+                       (euc-dist point-a point-b))
+                    (gauss-dist data-point point-a))  
+                 (* (/ (- a b) 
+                       (euc-dist point-b point-a))
+                    (gauss-dist data-point point-b))))))
+      data-point 
+      point-a
+      point-b)))
+
 (defn spatial-shift []
+  "Shift the data based on the relationships in the db and save the results"
   (doseq [rel (relationship/average-ratings)]
     (doseq [id game-ids]
       (mc/update "adjusted_output" 
         { :id id}
-        { :id id :data [0.0 0.0] }
+        { :id id :data (adjust-point (get-adjusted id) 
+                                     (get-adjusted (nth (:_id rel) 0))
+                                     (get-adjusted (nth (:_id rel) 1))
+                                     (:rating rel))}
         :upsert true ))))
 
