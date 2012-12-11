@@ -243,8 +243,8 @@
 
 (def engine-choices
   "A mapping of input choices to collections containing rating outputs."
-  {"Neural Net" "network_output"
-   "Simple Stats" "simple_stats"})
+  {"Neural Net" "network_output_ml"
+   "Simple Stats" "network_output_stats"})
 
 (defn get-similar [engine-choice id]
   "Get the ids of all games similar to that provided"
