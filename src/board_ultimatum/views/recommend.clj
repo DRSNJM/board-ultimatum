@@ -18,7 +18,7 @@
 
        [:div.row-fluid
         [:h4.row9.offset2 "You may select multiple options from each category."]]
-       
+
         [:div#recommend.row-fluid
          [:div#sidebar.span2
           [:ul#select.nav.nav-pills.nav-stacked.affix
@@ -57,17 +57,17 @@
               [:p "You may click on the center button of unselected category for a brief description."]
               (map #(attr-display/build-tri-state % "categories")
                    (attr-display/columns 3 (tag/categories)))]
-           
+
             [:div {:id "input-weight" :class "param well well-small"}
               [:input {:type "hidden" :name "weight-active" :value "false"}]
               [:h3 "Weight"]
               [:p "Weight describes how hard you have to think during the game. Heavier games require more analysis in game."]
               [:div {:class "btn-group" :data-toggle "buttons-radio"}
-              (attr-display/build-radio-buttons 
+              (attr-display/build-radio-buttons
                 (array-map :Light "1" :Medium-Light "2"
                            :Medium "3" :Medium-Heavy "4"
-                           :Heavy "5") 
-                "weight")]]    
+                           :Heavy "5")
+                "weight")]]
             [:button {:type "submit" :class "btn btn-submit"} "Submit"]]]])))
 
 ;; Should probaby do this filtering in js
@@ -116,17 +116,34 @@
            values)]
      (string/join ", " values))])
 
+(def engine-choices
+  "Possible choices determining what engine to use for *similar* games."
+  (keys model/engine-choices))
+
+(defpartial choice-buttons
+  "Display a choice button that is toggled if choice matches default."
+  [default choice]
+  [:button.btn (when (= default choice)
+                 {:class "btn active" :data-toggle "button"})
+   choice])
+
 (defpage [:post "/recommend"] {:as params}
   (common/with-javascripts
     (concat common/*javascripts* ["/js/bootstrap.js" "/js/results.js" "/js/spin.js"])
     (common/layout
-     [:h1 "Have fun playing!"]
-     [:h3 "Query Params"]
-     [:div.well {:style "overflow:hidden;"}
-      [:ul.query-params
-       (map display-query-params (sanitize-query-params params))]]
-     (results/build-results-list
-      (take 60 (model/find-games
-                (sanitize-query-params params)))
-      true
-      true))))
+      [:h1 "Have fun playing!"]
+      [:h3 "Query Params"]
+      [:div.well {:style "overflow:hidden;"}
+       [:ul.query-params
+        (map display-query-params (sanitize-query-params params))]]
+      [:div#engine-choice.row-fluid {:style "margin-bottom: 1em;"}
+       [:div.span6 {:style "padding: 5px 0; text-align: right; font-weight: bold;"}
+        "Choose a similar games provider:"]
+       [:div.span6
+        [:div.btn-group {:data-toggle "buttons-radio"}
+         (map (partial choice-buttons "Simple Stats") engine-choices)]]]
+      (results/build-results-list
+        (take 60 (model/find-games
+                   (sanitize-query-params params)))
+        true
+        true))))

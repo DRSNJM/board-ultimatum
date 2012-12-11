@@ -240,6 +240,11 @@
 (defn get-id-by-name [name]
   "Returns the id of the game with the provided name"
   (:bgg_id (get-game-by-name name)))
+
+(def engine-choices
+  "A mapping of input choices to collections containing rating outputs."
+  {"Neural Net" "network_output"
+   "Simple Stats" "simple_stats"})
                                    
 (defn get-similar [id]
   "Get the ids of all games similar to that provided"
