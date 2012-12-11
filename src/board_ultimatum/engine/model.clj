@@ -241,12 +241,16 @@
   "Returns the id of the game with the provided name"
   (:bgg_id (get-game-by-name name)))
                                    
-(defn get-similar [id]
+(defn get-similar [id use-ml]
   "Get the ids of all games similar to that provided"
-  (mc/find-maps "network_output" {:game_a id}))
+  (mc/find-maps 
+    (cond 
+      use-ml "network_output_ml"
+      :else "network_output_stats")    
+    {:game_a id}))
 
-(defn get-ranked-similar-games [id n]
+(defn get-ranked-similar-games [id n use-ml]
   "Get the hashes of the top n games similar to the game specified by id"
   (map
     #(merge (get-game-by-id (:game_b %)) {:rating (:rating %)})
-    (take n (sort-by :rating > (get-similar id)))))
+    (take n (sort-by :rating > (get-similar id use-ml)))))

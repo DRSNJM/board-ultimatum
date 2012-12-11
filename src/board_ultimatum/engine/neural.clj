@@ -109,7 +109,7 @@
 
 (defn network-eval [] 
   (dorun 
-    (mc/remove "network_output")
+    (mc/remove "network_output_ml")
     (doseq [id-A game-ids] 
       (doseq [game-record (take 50 
         (sort-by :rating >
@@ -117,5 +117,5 @@
             (fn [id-B] 
               { :rating (nth (output-pair id-A id-B) 0) :game_a id-A :game_b id-B })
             game-ids)))]
-        (mc/insert "network_output" game-record)))))
+        (mc/insert "network_output_ml" game-record)))))
 

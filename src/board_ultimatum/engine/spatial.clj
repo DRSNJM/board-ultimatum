@@ -62,7 +62,7 @@
 
 (defn data-eval [] 
   (dorun 
-    (mc/remove "network_output")
+    (mc/remove "network_output_stats")
     (doseq [id-A game-ids] 
       (doseq [game-record (take 30 
         (sort-by :rating >
@@ -70,7 +70,7 @@
             (fn [id-B] 
               { :rating (calc-rating id-A id-B) :game_a id-A :game_b id-B })
             game-ids)))]
-        (mc/insert "network_output" game-record)))))
+        (mc/insert "network_output_stats" game-record)))))
 
 (defn init-adjusted-data []
   "Set up the spatial data"
