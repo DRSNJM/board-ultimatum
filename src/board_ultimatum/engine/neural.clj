@@ -29,9 +29,9 @@
 (def net
   (network  (neural-pattern :feed-forward)
     :activation :sigmoid
-    :input   4
+    :input   262
     :output  1
-    :hidden [4 4]))
+    :hidden [262 262]))
 
 ;; for each id, join each id with every other id and calculate output
 
@@ -44,18 +44,8 @@
 (defn get-vector [game-id] 
   (:data (mc/find-one-as-map "network_data" {:id game-id})))
 
-(defn join-vector [id-A id-B] 
-  "Concatenate two vectors"
-  (into [] (concat (get-vector id-A) (get-vector id-B))))
-
-(defn vector-abs-difference [id-A id-B]
-  "calculate the absoulute value difference between the two vectors" 
-  (into [] 
-    (map
-      (fn [a b] 
-        (abs (- a b))) 
-      (get-vector id-A) 
-      (get-vector id-B))))
+(defn join-vector [id-A id-B] "Concatenate two vectors"
+  (vec (concat (get-vector id-A) (get-vector id-B))))
 
 (defn to-dataset [id-A id-B] (data :basic-dataset [(join-vector id-A id-B)]
                                 [[-1.0]]))
@@ -69,12 +59,12 @@
 (def training-set 
   (new org.encog.ml.data.folded.FoldedDataSet 
     (data :basic-dataset 
-      (into [] 
+      (vec 
         (map 
           (fn [rel] 
             (join-vector (nth (:_id rel) 0) (nth (:_id rel) 1)))
           (relationship/average-ratings)))
-      (into [] 
+      (vec
         (map 
           (fn [rel] 
             [(:rating rel)])
@@ -85,7 +75,7 @@
 ;; use this function to train the network
 
 (defn train-network []
-  (train prop-train 0.0001 500 []))
+  (train prop-train 0.002 1000000 []))
 
 ;; train with cross validation
 
@@ -101,7 +91,7 @@
     (do 
         (cross-iteration)
         (println (cross-error)) 
-        (if (<= (cross-error) 0.001)
+        (if (<= (cross-error) 0.15)
           (cross-error)
           (recur)))))
 
@@ -111,7 +101,7 @@
   (dorun 
     (mc/remove "network_output_ml")
     (doseq [id-A game-ids] 
-      (doseq [game-record (take 50 
+      (doseq [game-record (take 30 
         (sort-by :rating >
           (map 
             (fn [id-B] 
