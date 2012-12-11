@@ -15,6 +15,7 @@ jQuery(document).ready(function ($) {
     var gameWell = $(this).parents('.game');
     gameWell.children('.recom').slideToggle('fast');
   });
+  $engineChoice = $('#main #engine-choice .btn-group');
   $('.open-recom').click(function(event) {
     $(this).unbind(event);
     var gameWell = $(this).parents('.game');
@@ -27,7 +28,11 @@ jQuery(document).ready(function ($) {
     };
     var spinner = new Spinner(opts).spin();
     var serializedID = gameWell.children(':input').serialize();
-    
+    if (serializedID.length > 0) {
+      serializedID += "&engine-choice=" +
+        encodeURIComponent($engineChoice.children('.active').text());
+    }
+
     $.ajax({
         url: "/top-similar",
         type: "post",
