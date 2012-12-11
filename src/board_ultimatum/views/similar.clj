@@ -3,6 +3,7 @@
             [board-ultimatum.engine.model :as model]
             [board-ultimatum.views.results :as results]
             [board-ultimatum.flash :as flash]
+            [board-ultimatum.views.attr-display :as attr-display]
             [clojure.string :as string]
             [clojure.data.json :as json])
   (:use [noir.core :only [defpage defpartial]]
@@ -25,7 +26,10 @@
           [:form#game-params {:action "/similar" :method "post"}
             [:div.input-append
               [:input#game-name {:type "text" :data-provide "typeahead" :name "game-name"}]
-              [:button {:type "submit" :class "btn"} "Search"]]]])))
+              [:button {:type "submit" :class "btn"} "Search"]]
+            (attr-display/build-radio-buttons 
+                (array-map "Similar Results (Stats)" "0" "Varied Results (ML)" "1") 
+                "method")]])))
 
 (defpage [:post "/similar"] {:as params}
     (if
@@ -45,7 +49,8 @@
           (let [games (model/get-ranked-similar-games
                         (model/get-id-by-name 
                           (:game-name params))
-                        30)]
+                        30
+                        (= (:method params) 1))]
             (results/build-results-list
               games
               false
