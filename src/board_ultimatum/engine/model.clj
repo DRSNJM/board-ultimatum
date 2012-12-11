@@ -245,13 +245,14 @@
   "A mapping of input choices to collections containing rating outputs."
   {"Neural Net" "network_output"
    "Simple Stats" "simple_stats"})
-                                   
-(defn get-similar [id]
-  "Get the ids of all games similar to that provided"
-  (mc/find-maps "network_output" {:game_a id}))
 
-(defn get-ranked-similar-games [id n]
+(defn get-similar [engine-choice id]
+  "Get the ids of all games similar to that provided"
+  (mc/find-maps (engine-choices engine-choice "simple_stats")
+                {:game_a id}))
+
+(defn get-ranked-similar-games [engine-choice id n]
   "Get the hashes of the top n games similar to the game specified by id"
   (map
     #(merge (get-game-by-id (:game_b %)) {:rating (:rating %)})
-    (take n (sort-by :rating > (get-similar id)))))
+    (take n (sort-by :rating > (get-similar engine-choice id)))))
