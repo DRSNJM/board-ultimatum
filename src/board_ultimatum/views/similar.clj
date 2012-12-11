@@ -30,20 +30,20 @@
 (defpage [:post "/similar"] {:as params}
     (if
       (nil? (model/get-id-by-name (:game-name params)))
-        (do (flash/put! :error (str (:game-name params) " not found in database")) 
+        (do (flash/put! :error (str (:game-name params) " not found in database"))
             (redirect "/similar"))
       (common/with-javascripts (cons "/js/similar.js" common/*javascripts*)
-        (common/layout      
+        (common/layout
           [:h1 "Game Results"]
           [:h2 "Based on :"]
           (results/display-game
             0
-            (model/get-game-by-id (model/get-id-by-name (:game-name params))) 
+            (model/get-game-by-id (model/get-id-by-name (:game-name params)))
             false
             false)
           [:h2 "For a little variety, check out these games:"]
           (let [games (model/get-ranked-similar-games
-                        (model/get-id-by-name 
+                        (model/get-id-by-name
                           (:game-name params))
                         30)]
             (results/build-results-list
