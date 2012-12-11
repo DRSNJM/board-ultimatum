@@ -19,10 +19,14 @@
      :rating (format-rating (:rating game))})
 
 ;; AJAX handler for returning the top similar games
-(defpage [:post "/top-similar"] {:keys [bggID]}
-  (generate-string 
-    (let [games (model/get-ranked-similar-games (Integer/parseInt bggID) num-top-similar-games)]
-      {:games (apply list (map-indexed similar-game-elements games))})))
+(defpage [:post "/top-similar"] {:keys [bggID engine-choice]}
+  (generate-string
+    (let [games (model/get-ranked-similar-games
+                  engine-choice
+                  (Integer/parseInt bggID)
+                  num-top-similar-games)]
+      {:games (apply list (map-indexed similar-game-elements games))
+       :source engine-choice})))
 
 (defn game-weight-text [weight]
   (cond
@@ -108,7 +112,7 @@
             (:name game)
             (let [rating (:rating game)]
               (when-not (nil? rating) (str " - " (format-rating rating) "% Match")))]
-          [:div {:style "float:right;"} 
+          [:div {:style "float:right;"}
             (link-to
               (str "http://boardgamegeek.com/boardgame/" (:bgg_id game) "/")
               "BGG Rank: " (:rank game)

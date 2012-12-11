@@ -15,6 +15,7 @@ jQuery(document).ready(function ($) {
     var gameWell = $(this).parents('.game');
     gameWell.children('.recom').slideToggle('fast');
   });
+  $engineChoice = $('#main #engine-choice .btn-group');
   $('.open-recom').click(function(event) {
     $(this).unbind(event);
     var gameWell = $(this).parents('.game');
@@ -23,11 +24,15 @@ jQuery(document).ready(function ($) {
       length: 6, // The length of each line
       width: 4, // The line thickness
       radius: 9, // The radius of the inner circle
-      trail: 60, // Afterglow percentage
+      trail: 60 // Afterglow percentage
     };
     var spinner = new Spinner(opts).spin();
     var serializedID = gameWell.children(':input').serialize();
-    
+    if (serializedID.length > 0) {
+      serializedID += "&engine-choice=" +
+        encodeURIComponent($engineChoice.children('.active').text());
+    }
+
     $.ajax({
         url: "/top-similar",
         type: "post",
@@ -40,23 +45,23 @@ jQuery(document).ready(function ($) {
 
           gameWell.find('.spin').remove();
 
-          var games = jQuery.parseJSON(response)["games"];
+          var games = jQuery.parseJSON(response).games;
           if (games.length > 0) {
             for (var i = 0; i < games.length; i++) {
               var game = games[i];
               var $clone = $('#recom-template').clone();
               $clone.removeAttr('id');
-              $clone.find('img').attr('src', game['thumb']);
-              $clone.find('.title').html("<b>" + game['name'] + "</b></br>" + game['rating'] + "% match");
+              $clone.find('img').attr('src', game.thumb);
+              $clone.find('.title').html("<b>" + game.name + "</b></br>" + game.rating + "% match");
               gameWell.find('.similar').append($clone);
             }
             gameWell.find('.similar').children().fadeIn('slow');
           } else {
-            gameWell.find('.similar').text("No recommendations have been determined for this game.")
+            gameWell.find('.similar').text("No recommendations have been determined for this game.");
           }
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          gameWell.find('.similar').text('There was an error looking up similar games: ' + errorThrown)
+          gameWell.find('.similar').text('There was an error looking up similar games: ' + errorThrown);
         }
     });
   });
