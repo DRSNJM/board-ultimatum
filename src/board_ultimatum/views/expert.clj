@@ -169,6 +169,19 @@
           ["" 4.5] ["Great" 5]] 3)]]]
     (compare-game game-b)]])
 
+(defpartial get-valid-game-pairs
+  "For the given collection of ids return a list of game paris the current
+  expert has not seen."
+  [ids]
+  (let [pairs-expert-has-seen (relationship/pairs-seen-by
+                                (current-expert-id))]
+    (map-indexed compare-games
+                 (shuffle
+                   (map shuffle
+                        (remove
+                          (partial contains? pairs-expert-has-seen)
+                          (combo/combinations ids 2)))))))
+
 (defpartial expert-compare
   "The main body of /expert/compare when ids is greater than 1. Provides an
   interface for rating the quality of each game pair combination."
@@ -184,9 +197,9 @@
         [:p "For each pair below please rate how good of a recommendation each
             game is given the other."]]
        [:div#expert-compare
-        (form-to [:post "/expert/compare"]
-          (map-indexed compare-games
-                       (shuffle (map shuffle (combo/combinations ids 2))))
+        (form-to
+          [:post "/expert/compare"]
+          (get-valid-game-pairs ids)
           [:div.form-actions
            [:div.row-fluid
             [:button#main-button.btn.btn-large.span6.btn-primary
