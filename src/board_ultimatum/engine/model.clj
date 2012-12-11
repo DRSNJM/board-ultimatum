@@ -244,9 +244,7 @@
 (defn get-similar [id use-ml]
   "Get the ids of all games similar to that provided"
   (mc/find-maps 
-    (cond 
-      use-ml "network_output_ml"
-      :else "network_output_stats")    
+    "network_output_ml"   
     {:game_a id}))
 
 (defn get-ranked-similar-games [id n use-ml]
