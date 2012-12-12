@@ -1,4 +1,5 @@
 jQuery(document).ready(function ($) {
+  $('[rel=popover]').popover({});
   $('.pop-trigger').popover({
     html: true,
     content: function() {
