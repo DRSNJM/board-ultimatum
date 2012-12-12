@@ -46,6 +46,9 @@ jQuery(document).ready(function ($) {
 
           gameWell.find('.spin').remove();
 
+          $similar = gameWell.find('.similar');
+          // Clear content insider of similar if it exists.
+          $similar.html('');
           var games = jQuery.parseJSON(response).games;
           if (games.length > 0) {
             for (var i = 0; i < games.length; i++) {
@@ -54,7 +57,7 @@ jQuery(document).ready(function ($) {
               $clone.removeAttr('id');
               $clone.find('img').attr('src', game.thumb);
               $clone.find('.title').html("<b>" + game.name + "</b></br>" + game.rating + "% match");
-              gameWell.find('.similar').append($clone);
+              $similar.append($clone);
             }
             gameWell.find('.similar').children().fadeIn('slow');
           } else {
