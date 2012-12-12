@@ -9307,6 +9307,16 @@ html .ui-helper-clearfix {
   clear: left;
 }
 
+.results .tags,
+.results .desc {
+  cursor: pointer;
+}
+
+.results .tags:hover,
+.results .desc:hover {
+  color: black;
+}
+
 .selection {
   float: left;
   width: 100px;
