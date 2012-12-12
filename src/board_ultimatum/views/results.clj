@@ -90,7 +90,7 @@
     [:div "weight"]])
 
 (defpartial recom-trigger []
-  [:div.open-recom {:style "position:absolute;left:50%;bottom:7px;margin-left:-35px;cursor:pointer;"}
+  [:div.open-recom {:style "position:absolute;left:50%;bottom:7px;margin-left:-35px;"}
     [:div {:style "display:block;width:70px;"}
       [:div {:style "display:block;margin:0px auto;width:14px;"}
         [:i.icon-chevron-down]]
@@ -118,9 +118,9 @@
               "BGG Rank: " (:rank game)
               [:i.icon-share {:style "margin-left:5px;"}])]]]
       [:tr {:style "height:80px;"}
-        [:td.tags {:style "width:50%; cursor: pointer;"}
+        [:td.tags {:style "width:50%;"}
          (mechanics-categories game)]
-        [:td.desc {:style "width:50%;display:none; cursor: pointer;"}
+        [:td.desc {:style "width:50%;display:none;"}
          (:description game)]
         [:td {:style "width:11%;"}
           (length game)]
