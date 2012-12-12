@@ -29,7 +29,8 @@
              "Varied Results (ML)" "Neural Net"}
             "method")
           [:div.input-append
-           [:input#game-name {:type "text" :data-provide "typeahead" :name "game-name"}]
+           [:input#game-name {:type "text" :data-provide "typeahead"
+                              :autocomplete "off" :name "game-name"}]
            [:button {:type "submit" :class "btn"} "Search"]]]])))
 
 (defpage [:post "/similar"] {:as params}
