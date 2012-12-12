@@ -9506,10 +9506,16 @@ footer#footer {
   line-height: 20pt;
 }
 
+.query-params {
+  margin: 0;
+}
+
 .query-params li {
-  display: block;
-  float: left;
-  margin-left: 30px;
+  margin-left: 14pt;
+}
+
+.query-params ul {
+  margin: 0;
 }
 
 td.name {
