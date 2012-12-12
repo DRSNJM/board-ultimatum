@@ -90,7 +90,7 @@
     [:div "weight"]])
 
 (defpartial recom-trigger []
-  [:div.open-recom {:style "display:none;position:absolute;left:50%;bottom:7px;margin-left:-35px;"}
+  [:div.open-recom {:style "position:absolute;left:50%;bottom:7px;margin-left:-35px;"}
     [:div {:style "display:block;width:70px;"}
       [:div {:style "display:block;margin:0px auto;width:14px;"}
         [:i.icon-chevron-down]]

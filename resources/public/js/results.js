@@ -10,14 +10,15 @@ jQuery(document).ready(function ($) {
     $(this).closest('tr').find('.tags, .desc').toggle();
   });
 
-  $('.open-recom').click(function() {
-    $(this).find('.icon-chevron-down, .icon-chevron-up').toggle();
-    var gameWell = $(this).parents('.game');
-    gameWell.children('.recom').slideToggle('fast');
-  });
   $engineChoice = $('#main #engine-choice .btn-group');
   $('.open-recom').click(function(event) {
-    $(this).unbind(event);
+    var $recom = $(this).siblings('.recom');
+    if ($recom.css('display') == 'block') {
+      $recom.slideToggle('fast');
+      return;
+    } else {
+      $recom.slideToggle('fast');
+    }
     var gameWell = $(this).parents('.game');
     var opts = {
       lines: 11, // The number of lines to draw
