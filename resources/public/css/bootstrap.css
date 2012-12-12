@@ -9307,13 +9307,15 @@ html .ui-helper-clearfix {
   clear: left;
 }
 
-.results .tags,
-.results .desc {
+.game .open-recom,
+.game .tags,
+.game .desc {
   cursor: pointer;
 }
 
-.results .tags:hover,
-.results .desc:hover {
+.game .open-recom:hover,
+.game .tags:hover,
+.game .desc:hover {
   color: black;
 }
 
