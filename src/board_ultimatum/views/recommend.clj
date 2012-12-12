@@ -136,9 +136,8 @@
       [:div.well {:style "overflow:hidden;"}
        [:ul.query-params
         (map display-query-params (sanitize-query-params params))]]
-      [:div#engine-choice.row-fluid {:style "margin-bottom: 1em;"}
-       [:div.span6 {:style "padding: 5px 0; text-align: right; font-weight: bold;"}
-        "Choose a similar games provider:"]
+      [:div#engine-choice.row-fluid
+       [:div.choose-label.span6 "Choose a similar games provider:"]
        [:div.span6
         [:div.btn-group {:data-toggle "buttons-radio"}
          (map (partial choice-buttons "Simple Stats") engine-choices)]]]
