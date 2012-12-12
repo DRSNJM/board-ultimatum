@@ -23,13 +23,14 @@
         [:h1 "Liked a game?"]
         [:h2 "Enter the name below to find more that you will enjoy!"]
         [:div#recommend.row-fluid
-          [:form#game-params {:action "/similar" :method "post"}
-            [:div.input-append
-              [:input#game-name {:type "text" :data-provide "typeahead" :name "game-name"}]
-              [:button {:type "submit" :class "btn"} "Search"]]
-            (attr-display/build-radio-buttons 
-                (array-map "Similar Results (Stats)" "Simple Stats" "Varied Results (ML)" "Neural Net") 
-                "method")]])))
+         [:form#game-params {:action "/similar" :method "post"}
+          (attr-display/build-radio-buttons
+            {"Similar Results (Stats)" "Simple Stats"
+             "Varied Results (ML)" "Neural Net"}
+            "method")
+          [:div.input-append
+           [:input#game-name {:type "text" :data-provide "typeahead" :name "game-name"}]
+           [:button {:type "submit" :class "btn"} "Search"]]]])))
 
 (defpage [:post "/similar"] {:as params}
     (if
