@@ -69,12 +69,11 @@
 
 ;; Build radio preference selection buttons
 (defpartial build-radio-buttons [name-value form-name]
-  [:div
-    [:div {:class "btn-group radio-buttons" :data-toggle "buttons-radio"}
-      (map
-        #(identity [:button {:type "button" :value (val %) :class "btn"} (key %)])
-        name-value)]
-    [:input {:type "hidden" :name form-name :value ""}]])
+  [:div {:class "btn-group radio-buttons" :data-toggle "buttons-radio"}
+   (map
+     #(identity [:button {:type "button" :value (val %) :class "btn"} (key %)])
+     name-value)]
+  [:input {:type "hidden" :name form-name :value ""}])
 
 (defpartial player-checkboxes [num]
   [:div.selection
