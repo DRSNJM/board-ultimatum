@@ -9141,6 +9141,15 @@ html .ui-helper-clearfix {
   overflow: hidden;
 }
 
+#recommend #game-params .input-append {
+  float: left;
+}
+
+#recommend #game-params .radio-buttons {
+  float: left;
+  margin-right: 12pt;
+}
+
 #expert-select .game,
 #expert-compare .game {
   text-align: center;
@@ -9276,6 +9285,16 @@ html .ui-helper-clearfix {
 
 #expert-choices .hero-unit a.btn {
   float: right;
+}
+
+#engine-choice {
+  margin-bottom: 1em;
+}
+
+#engine-choice .choose-label {
+  padding: 5px 0;
+  font-weight: bold;
+  text-align: right;
 }
 
 .btn-group.tri-state .btn.option {
