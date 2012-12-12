@@ -6,6 +6,7 @@
             [board-ultimatum.views.results :as results]
             [clojure.string :as string])
   (:use [noir.core :only [defpage defpartial]]
+        [hiccup.core :only [html]]
         [clojure.pprint]))
 
 ;; Page for querying the logic based recommendation engine.
@@ -132,15 +133,21 @@
     (concat common/*javascripts* ["/js/bootstrap.js" "/js/results.js" "/js/spin.js"])
     (common/layout
       [:h1 "Have fun playing!"]
-      [:h3 "Query Params"]
-      [:div.well {:style "overflow:hidden;"}
-       [:ul.query-params
-        (map display-query-params (sanitize-query-params params))]]
       [:div#engine-choice.row-fluid
-       [:div.choose-label.span6 "Choose a similar games provider:"]
+       [:div.choose-label.span3 "Choose a similar games provider:"]
        [:div.span6
         [:div.btn-group {:data-toggle "buttons-radio"}
-         (map (partial choice-buttons "Simple Stats") engine-choices)]]]
+         (map (partial choice-buttons "Simple Stats") engine-choices)]]
+       [:div.span3 {:style "text-align: right"}
+        [:a#query-params-button.btn
+         {:href "#"
+          :data-placement "left"
+          :data-content (html [:ul.query-params
+                               (map display-query-params
+                                    (sanitize-query-params params))])
+          :rel "popover"
+          :title "Query Params"}
+         "Show Parameters"]]]
       (results/build-results-list
         (take 60 (model/find-games
                    (sanitize-query-params params)))
